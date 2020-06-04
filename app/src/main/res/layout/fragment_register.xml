@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintVertical_weight="0">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.35" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/usernamefieldwrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:hint="@string/username_label"
+            android:textAlignment="viewStart"
+            android:textColorHint="@color/darkpink"
+            app:hintTextAppearance="@style/MyHintStyle"
+            app:layout_constraintBottom_toTopOf="@+id/passcodewrap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guideline">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/inputedittextmargin"
+                android:layout_marginEnd="@dimen/inputedittextmargin"
+                android:ems="15"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:theme="@style/MyHintStyle" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passcodewrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:hint="@string/passcode_label"
+            android:textColorHint="@color/darkpink"
+            app:hintTextAppearance="@style/MyHintStyle"
+            app:layout_constraintBottom_toTopOf="@+id/dateselector"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/usernamefieldwrap"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passcode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/inputedittextmargin"
+                android:layout_marginEnd="@dimen/inputedittextmargin"
+                android:ems="15"
+                android:gravity="start"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:theme="@style/MyHintStyle" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <Button
+            android:id="@+id/registerbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/auth_button"
+            android:text="@string/registerbtn_txt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dateselector" />
+
+        <ImageButton
+            android:id="@+id/dateselector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:background="@drawable/ic_baseline_calendar_24"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/selectedDate"
+            app:layout_constraintEnd_toStartOf="@+id/selectedDate"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/selectedDate" />
+
+        <EditText
+            android:id="@+id/selectedDate"
+            android:layout_width="@dimen/selectedDateLength"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="date"
+            android:hint="@string/dateformat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/dateselector"
+            app:layout_constraintTop_toBottomOf="@id/passcodewrap"
+            app:layout_constraintBottom_toTopOf="@id/registerbutton"
+            android:importantForAutofill="no" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
