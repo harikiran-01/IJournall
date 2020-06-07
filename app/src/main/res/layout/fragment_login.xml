@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="AccessViewModel"
+            type="com.hk.ijournal.viewmodels.AccessViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/loginlayout"
@@ -36,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/inputedittextmargin"
                 android:layout_marginEnd="@dimen/inputedittextmargin"
+                android:text="@={AccessViewModel.Username}"
                 android:ems="15"
                 android:theme="@style/MyHintStyle"
                 android:inputType="textEmailAddress"
@@ -64,9 +72,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/inputedittextmargin"
                 android:layout_marginEnd="@dimen/inputedittextmargin"
-                android:theme="@style/MyHintStyle"
+                android:text="@={AccessViewModel.Passcode}"
                 android:ems="15"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:theme="@style/MyHintStyle"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

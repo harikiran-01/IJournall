@@ -3,6 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="AccessViewModel"
+            type="com.hk.ijournal.viewmodels.AccessViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/inputedittextmargin"
                 android:layout_marginEnd="@dimen/inputedittextmargin"
+                android:text="@={AccessViewModel.Username}"
                 android:ems="15"
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
@@ -62,6 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/inputedittextmargin"
                 android:layout_marginEnd="@dimen/inputedittextmargin"
+                android:text="@={AccessViewModel.Passcode}"
                 android:ems="15"
                 android:gravity="start"
                 android:inputType="textPassword"
@@ -88,15 +96,14 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:background="@drawable/ic_baseline_calendar_24"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@+id/selectedDate"
             app:layout_constraintEnd_toStartOf="@+id/selectedDate"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/selectedDate" />
+            app:layout_constraintTop_toTopOf="@+id/selectedDate"
+            android:contentDescription="@string/calendar_description" />
 
         <EditText
             android:id="@+id/selectedDate"
@@ -104,6 +111,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="date"
+            android:text="@{AccessViewModel.Dob.toString()}"
             android:hint="@string/dateformat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

@@ -9,5 +9,5 @@
     <!--login and register dimens-->
     <dimen name="inputedittextmargin">8dp</dimen>
     <dimen name="buttonradius">27dp</dimen>
-    <dimen name="selectedDateLength">120dp</dimen>
+    <dimen name="selectedDateLength">115dp</dimen>
 </resources>

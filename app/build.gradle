@@ -1,9 +1,12 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
-    dataBinding.enabled = true
+    buildFeatures{
+        dataBinding = true
+    }
     defaultConfig {
         applicationId "com.hk.ijournal"
         minSdkVersion 21
@@ -33,6 +36,22 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    //toasty
+    implementation 'com.github.GrenderG:Toasty:1.4.2'
     //viewpager2
     implementation "androidx.viewpager2:viewpager2:1.0.0"
+    //kotlin
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    //architecture components
+    def life_versions = "2.2.0"
+    implementation "android.arch.lifecycle:extensions:$life_versions"
+    annotationProcessor "android.arch.lifecycle:compiler:$life_versions"
+    //room
+    def room_version = "2.2.2"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+}
+repositories {
+    mavenCentral()
 }
