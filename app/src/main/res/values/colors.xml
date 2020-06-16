@@ -6,8 +6,10 @@
 
     <color name="darkpink">#A02B55</color>
     <color name="colorBlack">#000</color>
+    <color name="red">#FFE3190B</color>
 
     <!--colors for login and register-->
-    <color name="whiteTextColor">#fff</color>
+    <color name="colorWhite">#fff</color>
+    <color name="colorGray">#FF717170</color>
 
 </resources>

@@ -4,9 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="com.hk.ijournal.repository.models.AccessModel.AccessValidation" />
+
         <variable
             name="AccessViewModel"
             type="com.hk.ijournal.viewmodels.AccessViewModel" />
+
+        <variable
+            name="AccessBindingAdapter"
+            type="com.hk.ijournal.adapters.AccessBindingAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.35" />
+            app:layout_constraintGuide_percent="0.30" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/usernamefieldwrap"
@@ -31,6 +38,9 @@
             android:textAlignment="viewStart"
             android:textColorHint="@color/darkpink"
             app:hintTextAppearance="@style/MyHintStyle"
+            app:errorMsg='@{AccessViewModel.loginUserValidation.equals(AccessValidation.USERNAME_INVALID)?"Invalid Username":""}'
+            app:errorTextColor="@color/red"
+            app:focusState="@{AccessBindingAdapter.loginusernameFocusLiveData}"
             app:layout_constraintBottom_toTopOf="@+id/passcodewrap"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -38,12 +48,11 @@
             app:layout_constraintTop_toTopOf="@id/guideline">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/username"
+                android:id="@+id/loginusername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/inputedittextmargin"
-                android:layout_marginEnd="@dimen/inputedittextmargin"
-                android:text="@={AccessViewModel.Username}"
+                android:text="@={AccessViewModel.loginUsernameLive}"
+                app:onFocusChange="@{AccessBindingAdapter.focusChangeListener}"
                 android:ems="15"
                 android:theme="@style/MyHintStyle"
                 android:inputType="textEmailAddress"
@@ -59,6 +68,9 @@
             android:textAlignment="viewStart"
             android:textColorHint="@color/darkpink"
             app:hintTextAppearance="@style/MyHintStyle"
+            app:errorMsg='@{AccessViewModel.loginPasscodeValidation.equals(AccessValidation.PASSCODE_INVALID)?"Invalid Password":""}'
+            app:errorTextColor="@color/red"
+            app:focusState="@{AccessBindingAdapter.loginpasscodeFocusLiveData}"
             app:layout_constraintBottom_toTopOf="@+id/loginbutton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -67,25 +79,26 @@
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/passcode"
+                android:id="@+id/loginpasscode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/inputedittextmargin"
-                android:layout_marginEnd="@dimen/inputedittextmargin"
-                android:text="@={AccessViewModel.Passcode}"
+                android:text="@={AccessViewModel.loginPasscodeLive}"
+                app:onFocusChange="@{AccessBindingAdapter.focusChangeListener}"
                 android:ems="15"
                 android:inputType="textPassword"
-                android:theme="@style/MyHintStyle"/>
+                android:theme="@style/MyHintStyle" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
 
         <Button
             android:id="@+id/loginbutton"
-            style="@style/loginButton"
+            style="@style/authButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/loginbtn_txt"
+            app:enableOnPassValid="@{AccessViewModel.loginPasscodeValidation}"
+            app:enableOnUserValid="@{AccessViewModel.loginUserValidation}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

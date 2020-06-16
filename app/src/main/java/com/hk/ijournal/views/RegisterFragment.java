@@ -13,12 +13,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.hk.ijournal.R;
+import com.hk.ijournal.adapters.AccessBindingAdapter;
 import com.hk.ijournal.databinding.FragmentRegisterBinding;
-import com.hk.ijournal.models.AccessModel;
 import com.hk.ijournal.viewmodels.AccessViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -56,32 +55,24 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        accessViewModel = ViewModelProviders.of(this).get(AccessViewModel.class);
-        registerBinding.setLifecycleOwner(this);
+        accessViewModel = ViewModelProviders.of(getActivity()).get(AccessViewModel.class);
+        registerBinding.setLifecycleOwner(getActivity());
         registerBinding.setAccessViewModel(accessViewModel);
+        registerBinding.setAccessBindingAdapter(new AccessBindingAdapter());
         observeViewModel(accessViewModel);
     }
 
     private void observeViewModel(AccessViewModel accessViewModel) {
-        accessViewModel.getUser().observe(this, new Observer<AccessModel>() {
-            @Override
-            public void onChanged(AccessModel accessModel) {
 
-            }
-        });
-
-        accessViewModel.getAccessStatus().observe(this, new Observer<AccessModel.AccessStatus>() {
-            @Override
-            public void onChanged(AccessModel.AccessStatus accessStatus) {
-                switch (accessStatus){
-                    case REGISTER_SUCCESSFULL:{
-                        Toasty.info(Objects.requireNonNull(getActivity()), "Register Successful!", Toasty.LENGTH_SHORT, true).show();
-                        break;
-                    }
-                    case USER_ALREADY_EXISTS:{
-                        Toasty.info(Objects.requireNonNull(getActivity()), "User already exists!", Toasty.LENGTH_SHORT, true).show();
-                        break;
-                    }
+        accessViewModel.getAccessStatus().observe(this.getViewLifecycleOwner(), accessStatus -> {
+            switch (accessStatus) {
+                case REGISTER_SUCCESSFULL: {
+                    Toasty.info(Objects.requireNonNull(getActivity()), "Register Successful!", Toasty.LENGTH_SHORT, true).show();
+                    break;
+                }
+                case USER_ALREADY_EXISTS: {
+                    Toasty.info(Objects.requireNonNull(getActivity()), "User already exists!", Toasty.LENGTH_SHORT, true).show();
+                    break;
                 }
             }
         });

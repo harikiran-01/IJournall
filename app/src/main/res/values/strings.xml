@@ -13,5 +13,7 @@
     <string name="dateformat">DD-MM-YYYY</string>
     <string name="calendar_description">Calendar</string>
     <string name="logo_description">LOGO</string>
+    <string name="field">loginu</string>
+    <string name="dob_label">DOB</string>
 
 </resources>

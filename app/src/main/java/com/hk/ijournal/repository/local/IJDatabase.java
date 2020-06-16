@@ -1,4 +1,4 @@
-package com.hk.ijournal.models.repository.localdata.db;
+package com.hk.ijournal.repository.local;
 
 import android.content.Context;
 
@@ -6,8 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.hk.ijournal.models.DiaryUser;
-import com.hk.ijournal.models.repository.localdata.dao.UserDao;
+import com.hk.ijournal.repository.models.DiaryUser;
 
 @Database(entities = DiaryUser.class, exportSchema = false, version = 1)
 public abstract class IJDatabase extends RoomDatabase implements DBSchema {

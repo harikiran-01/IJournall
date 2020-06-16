@@ -1,4 +1,4 @@
-package com.hk.ijournal.models.repository.localdata.db;
+package com.hk.ijournal.repository.local;
 
 public interface DBSchema {
     String DBNAME = "Journals.db";

@@ -2,15 +2,20 @@ package com.hk.ijournal.views;
 
 import android.os.Bundle;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.hk.ijournal.R;
+import com.hk.ijournal.databinding.ActivityAccessBinding;
+import com.hk.ijournal.viewmodels.AccessViewModel;
 
 public class AccessActivity extends FragmentActivity {
-
+    AccessViewModel accessViewModel;
+    ActivityAccessBinding accessBinding;
     // The number of pages (wizard steps) to show in this demo.
     private static final int NUM_PAGES = 2;
 
@@ -28,12 +33,13 @@ public class AccessActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_access);
-
+        accessBinding = DataBindingUtil.setContentView(this, R.layout.activity_access);
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = findViewById(R.id.pager);
         pagerAdapter = new ScreenSlidePagerAdapter(this);
         viewPager.setAdapter(pagerAdapter);
+        accessViewModel = ViewModelProviders.of(this).get(AccessViewModel.class);
+        accessBinding.setLifecycleOwner(this);
     }
 
     @Override
@@ -43,15 +49,10 @@ public class AccessActivity extends FragmentActivity {
             // Back button. This calls finish() on this activity and pops the back stack.
             super.onBackPressed();
         } else {
-            // Otherwise, select the previous step.
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
         }
     }
 
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
     private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
         public ScreenSlidePagerAdapter(FragmentActivity fa) {
             super(fa);

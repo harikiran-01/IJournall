@@ -1,4 +1,4 @@
-package com.hk.ijournal.models;
+package com.hk.ijournal.repository.models;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -21,6 +21,7 @@ public class DiaryUser {
     private LocalDate dob;
 
     public DiaryUser() {
+        this("", "", null);
     }
 
     @Ignore
@@ -43,8 +44,6 @@ public class DiaryUser {
     public void setUid(@NonNull int uid) {
         this.uid = uid;
     }
-
-
 
     public String getUsername() {
         return username;

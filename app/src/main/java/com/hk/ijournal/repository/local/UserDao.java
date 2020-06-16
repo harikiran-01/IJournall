@@ -1,11 +1,11 @@
-package com.hk.ijournal.models.repository.localdata.dao;
+package com.hk.ijournal.repository.local;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.hk.ijournal.models.DiaryUser;
+import com.hk.ijournal.repository.models.DiaryUser;
 
 @Dao
 public interface UserDao {
@@ -15,6 +15,6 @@ public interface UserDao {
     @Delete
     void deleteUser(DiaryUser user);
 
-    @Query("select * from usertable where username like :userName")
+    @Query("select * from usertable where username = :userName")
     DiaryUser getUserbyName(String userName);
 }
