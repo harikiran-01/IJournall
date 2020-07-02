@@ -2,6 +2,7 @@ package com.hk.ijournal.viewmodels;
 
 import android.app.Application;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -33,6 +34,7 @@ public class AccessViewModel extends AndroidViewModel implements AccessRepositor
 
     public AccessViewModel(@NonNull Application application) {
         super(application);
+        Log.d("lifecycle", "accessVM constructor");
         accessRepository = new AccessRepository(application);
         bindLiveData();
     }
@@ -74,5 +76,4 @@ public class AccessViewModel extends AndroidViewModel implements AccessRepositor
     public void onAccessDataReceived(DiaryUser dbUser) {
         accessStatus.setValue(accessRepository.processAccessAndGetAccessStatus(dbUser));
     }
-
 }

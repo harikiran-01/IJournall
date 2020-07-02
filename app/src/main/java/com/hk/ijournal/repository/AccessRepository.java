@@ -59,7 +59,7 @@ public class AccessRepository {
 
     public void registerUserAndSendAccessData(AccessDataResponse accessDataResponse) {
         accessScreen = "register";
-        accessModel.setDiaryUser(new DiaryUser(accessModel.getLoginUsernameLive().getValue(), accessModel.getLoginPasscodeLive().getValue(), accessModel.getDobLiveData().getValue()));
+        accessModel.setDiaryUser(new DiaryUser(accessModel.getRegisterUsernameLive().getValue(), accessModel.getRegisterPasscodeLive().getValue(), accessModel.getDobLiveData().getValue()));
         if (accessModel.isUserValid(accessModel.getRegisterUserValidation(), accessModel.getRegisterPasscodeValidation()))
             checkUserInDb(accessDataResponse);
     }

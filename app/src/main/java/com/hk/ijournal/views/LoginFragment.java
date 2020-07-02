@@ -1,6 +1,7 @@
 package com.hk.ijournal.views;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.hk.ijournal.R;
 import com.hk.ijournal.adapters.AccessBindingAdapter;
@@ -16,8 +16,6 @@ import com.hk.ijournal.databinding.FragmentLoginBinding;
 import com.hk.ijournal.viewmodels.AccessViewModel;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 import es.dmoral.toasty.Toasty;
 
@@ -28,36 +26,40 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("lifecycle", "loginF onCreateView");
         loginBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
         loginBinding.loginbutton.setOnClickListener(this);
+
+        accessViewModel = LaunchActivity.obtainViewModel(requireActivity());
+        loginBinding.setLifecycleOwner(getViewLifecycleOwner());
+        loginBinding.setAccessViewModel(accessViewModel);
+        loginBinding.setAccessBindingAdapter(new AccessBindingAdapter());
         return loginBinding.getRoot();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        accessViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(AccessViewModel.class);
-        loginBinding.setLifecycleOwner(getActivity());
-        loginBinding.setAccessViewModel(accessViewModel);
-        loginBinding.setAccessBindingAdapter(new AccessBindingAdapter());
+        Log.d("lifecycle", "loginF onActivityCreated");
         observeViewModel(accessViewModel);
     }
 
     private void observeViewModel(AccessViewModel accessViewModel) {
 
-        accessViewModel.getAccessStatus().observe(this.getViewLifecycleOwner(), accessStatus -> {
+        accessViewModel.getAccessStatus().observe(getViewLifecycleOwner(), accessStatus -> {
+            Log.d("lifecycle", "loginF observeViewModel");
             switch (accessStatus) {
                 case LOGIN_SUCCESSFUL: {
-                    Toasty.info(Objects.requireNonNull(getActivity()), "Login Successful!", Toasty.LENGTH_SHORT, true).show();
+                    Toasty.info(requireActivity(), "Login Successful!", Toasty.LENGTH_SHORT, true).show();
                     LoginFragment.this.launchHomeActivity();
                     break;
                 }
                 case INVALID_LOGIN: {
-                    Toasty.info(Objects.requireNonNull(getActivity()), "Invalid Password!", Toasty.LENGTH_SHORT, true).show();
+                    Toasty.info(requireActivity(), "Invalid Password!", Toasty.LENGTH_SHORT, true).show();
                     break;
                 }
                 case USER_NOT_FOUND: {
-                    Toasty.info(Objects.requireNonNull(getActivity()), "User doesn't exist!", Toasty.LENGTH_SHORT, true).show();
+                    Toasty.info(requireActivity(), "User doesn't exist!", Toasty.LENGTH_SHORT, true).show();
                     break;
                 }
             }
@@ -65,7 +67,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     }
 
     private void launchHomeActivity() {
-
+        ((LaunchActivity) getActivity()).navigateTo(new HomeFragment(), false);
     }
 
     @Override

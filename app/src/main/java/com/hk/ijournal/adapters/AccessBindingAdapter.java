@@ -43,9 +43,7 @@ public class AccessBindingAdapter {
     public static void setToggleEnable(Button button, AccessModel.AccessValidation userValidation, AccessModel.AccessValidation passcodeValidation, String screenData, LocalDate dob) {
         boolean isFormInvalid = userValidation != null || passcodeValidation != null;
         if (!TextUtils.isEmpty(screenData)) {
-            if (screenData.equals("register")) {
-                isFormInvalid = isFormInvalid || dob == null;
-            }
+            if (screenData.equals("register")) isFormInvalid = isFormInvalid || (dob == null);
         }
         button.setEnabled(!isFormInvalid);
     }

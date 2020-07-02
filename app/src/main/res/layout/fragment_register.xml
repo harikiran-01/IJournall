@@ -17,15 +17,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintVertical_weight="0">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.30" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/usernamefieldwrap"
@@ -34,25 +27,28 @@
             android:gravity="start"
             android:hint="@string/username_label"
             android:textAlignment="viewStart"
-            android:textColorHint="@color/darkpink"
-            app:hintTextAppearance="@style/MyHintStyle"
+            android:layout_marginTop="40dp"
+            android:textColorHint="@color/colorPrimary"
             app:errorMsg='@{AccessViewModel.registerUserValidation.equals(AccessValidation.USERNAME_INVALID)?"Invalid Username":""}'
             app:errorTextColor="@color/red"
             app:focusState="@{AccessBindingAdapter.registerusernameFocusLiveData}"
+            app:errorEnabled="true"
             app:layout_constraintBottom_toTopOf="@+id/passcodewrap"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/guideline">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/registerusername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="15"
+                android:ems="12"
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
                 android:text="@={AccessViewModel.registerUsernameLive}"
-                android:theme="@style/MyHintStyle"
+
                 app:onFocusChange="@{AccessBindingAdapter.focusChangeListener}" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -61,15 +57,17 @@
             android:id="@+id/passcodewrap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
             android:gravity="start"
             android:hint="@string/passcode_label"
-            android:textColorHint="@color/darkpink"
-            app:hintTextAppearance="@style/MyHintStyle"
+            android:textColorHint="@color/colorPrimary"
+            app:errorEnabled="true"
             app:errorMsg='@{AccessViewModel.registerPasscodeValidation.equals(AccessValidation.PASSCODE_INVALID)?"Invalid Password":""}'
             app:errorTextColor="@color/red"
             app:focusState="@{AccessBindingAdapter.registerpasscodeFocusLiveData}"
-            app:layout_constraintBottom_toTopOf="@+id/dateselector"
+            app:layout_constraintBottom_toTopOf="@+id/selectedDate"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/usernamefieldwrap"
             app:passwordToggleEnabled="true">
@@ -78,12 +76,12 @@
                 android:id="@+id/registerpasscode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="15"
+                android:ems="12"
                 android:gravity="start"
                 android:inputType="textPassword"
                 android:singleLine="true"
                 android:text="@={AccessViewModel.registerPasscodeLive}"
-                android:theme="@style/MyHintStyle"
+
                 app:onFocusChange="@{AccessBindingAdapter.focusChangeListener}" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -116,37 +114,37 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@+id/dobLabel"
-            app:layout_constraintTop_toTopOf="@+id/selectedDate"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="@+id/selectedDate" />
 
         <TextView
             android:id="@+id/selectedDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
             android:hint="@string/dateformat"
             android:importantForAutofill="no"
             android:text="@{AccessViewModel.dobLiveData.toString()}"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@id/registerbutton"
+            app:layout_constraintBottom_toTopOf="@+id/registerbutton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/dateselector"
-            app:layout_constraintTop_toBottomOf="@id/passcodewrap"
-            app:layout_constraintVertical_bias="0.491" />
+            app:layout_constraintTop_toBottomOf="@+id/passcodewrap" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/registerbutton"
-            style="@style/authButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="@string/registerbtn_txt"
             app:enableOnDateValid="@{AccessViewModel.dobLiveData}"
             app:enableOnPassValid="@{AccessViewModel.registerPasscodeValidation}"
             app:enableOnUserValid="@{AccessViewModel.registerUserValidation}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dateselector"
+            app:layout_constraintTop_toBottomOf="@+id/selectedDate"
             app:screenData='@{"register"}' />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

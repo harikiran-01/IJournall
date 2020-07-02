@@ -1,16 +1,10 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    </style>
-
-    <!--login and register styling-->
-    <style name="MyHintStyle" parent="@android:style/TextAppearance">
-        <item name="android:textColor">@color/darkpink</item>
-        <item name="colorControlActivated">@color/darkpink</item>
     </style>
 
     <style name="authButton">

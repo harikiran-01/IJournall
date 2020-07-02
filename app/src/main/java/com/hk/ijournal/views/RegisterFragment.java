@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.hk.ijournal.R;
 import com.hk.ijournal.adapters.AccessBindingAdapter;
@@ -23,7 +22,6 @@ import com.hk.ijournal.viewmodels.AccessViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
-import java.util.Objects;
 
 import es.dmoral.toasty.Toasty;
 
@@ -38,6 +36,11 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         registerBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false);
         registerBinding.dateselector.setOnClickListener(this);
         registerBinding.registerbutton.setOnClickListener(this);
+
+        accessViewModel = LaunchActivity.obtainViewModel(requireActivity());
+        registerBinding.setLifecycleOwner(getActivity());
+        registerBinding.setAccessViewModel(accessViewModel);
+        registerBinding.setAccessBindingAdapter(new AccessBindingAdapter());
         return registerBinding.getRoot();
     }
 
@@ -45,8 +48,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getContext()),this, Calendar.getInstance().get(Calendar.YEAR),
-                Calendar.getInstance().get(Calendar.MONTH)+1,
+        datePickerDialog = new DatePickerDialog(requireContext(), this, Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH) + 1,
                 Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
         datePickerDialog.getDatePicker().setMaxDate(Calendar.getInstance().getTimeInMillis());
         datePickerDialog.setOnDateSetListener(this);
@@ -55,10 +58,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        accessViewModel = ViewModelProviders.of(getActivity()).get(AccessViewModel.class);
-        registerBinding.setLifecycleOwner(getActivity());
-        registerBinding.setAccessViewModel(accessViewModel);
-        registerBinding.setAccessBindingAdapter(new AccessBindingAdapter());
         observeViewModel(accessViewModel);
     }
 
@@ -67,11 +66,11 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         accessViewModel.getAccessStatus().observe(this.getViewLifecycleOwner(), accessStatus -> {
             switch (accessStatus) {
                 case REGISTER_SUCCESSFULL: {
-                    Toasty.info(Objects.requireNonNull(getActivity()), "Register Successful!", Toasty.LENGTH_SHORT, true).show();
+                    Toasty.info(requireActivity(), "Register Successful!", Toasty.LENGTH_SHORT, true).show();
                     break;
                 }
                 case USER_ALREADY_EXISTS: {
-                    Toasty.info(Objects.requireNonNull(getActivity()), "User already exists!", Toasty.LENGTH_SHORT, true).show();
+                    Toasty.info(requireActivity(), "User already exists!", Toasty.LENGTH_SHORT, true).show();
                     break;
                 }
             }
