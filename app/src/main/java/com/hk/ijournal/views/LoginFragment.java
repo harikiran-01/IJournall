@@ -29,11 +29,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         Log.d("lifecycle", "loginF onCreateView");
         loginBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
         loginBinding.loginbutton.setOnClickListener(this);
-
-        accessViewModel = LaunchActivity.obtainViewModel(requireActivity());
         loginBinding.setLifecycleOwner(getViewLifecycleOwner());
-        loginBinding.setAccessViewModel(accessViewModel);
-        loginBinding.setAccessBindingAdapter(new AccessBindingAdapter());
+        loginBinding.setAccessBindingAdapter(AccessBindingAdapter.INSTANCE);
         return loginBinding.getRoot();
     }
 
@@ -41,6 +38,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.d("lifecycle", "loginF onActivityCreated");
+        accessViewModel = LaunchActivity.obtainViewModel(requireActivity());
+        loginBinding.setAccessViewModel(accessViewModel);
         observeViewModel(accessViewModel);
     }
 

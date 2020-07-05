@@ -36,11 +36,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         registerBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false);
         registerBinding.dateselector.setOnClickListener(this);
         registerBinding.registerbutton.setOnClickListener(this);
-
-        accessViewModel = LaunchActivity.obtainViewModel(requireActivity());
-        registerBinding.setLifecycleOwner(getActivity());
-        registerBinding.setAccessViewModel(accessViewModel);
-        registerBinding.setAccessBindingAdapter(new AccessBindingAdapter());
+        registerBinding.setLifecycleOwner(getViewLifecycleOwner());
+        registerBinding.setAccessBindingAdapter(AccessBindingAdapter.INSTANCE);
         return registerBinding.getRoot();
     }
 
@@ -58,6 +55,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        accessViewModel = LaunchActivity.obtainViewModel(requireActivity());
+        registerBinding.setAccessViewModel(accessViewModel);
         observeViewModel(accessViewModel);
     }
 

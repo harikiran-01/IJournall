@@ -43,6 +43,7 @@ public class AccessFragment extends Fragment {
         Log.d("lifecycle", "accessF onCreate");
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

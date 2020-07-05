@@ -16,19 +16,10 @@ import com.hk.ijournal.viewmodels.AccessViewModel;
 
 public class LaunchActivity extends AppCompatActivity {
     ActivityLaunchBinding launchBinding;
+    private Fragment accessFragment;
 
     public static AccessViewModel obtainViewModel(FragmentActivity activity) {
-        return new ViewModelProvider(activity, new ViewModelProvider.AndroidViewModelFactory(activity.getApplication())).get(AccessViewModel.class);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.d("lifecycle", "launchA onCreate");
-        super.onCreate(savedInstanceState);
-        launchBinding = DataBindingUtil.setContentView(this, R.layout.activity_launch);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.view_fragment, new AccessFragment());
-        ft.commit();
+        return new ViewModelProvider(((LaunchActivity) activity).accessFragment).get(AccessViewModel.class);
     }
 
 //    @Override
@@ -47,5 +38,16 @@ public class LaunchActivity extends AppCompatActivity {
         ft.replace(R.id.view_fragment, newFragment);
         ft.commit();
         //ft.addToBackStack(null);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.d("lifecycle", "launchA onCreate");
+        super.onCreate(savedInstanceState);
+        launchBinding = DataBindingUtil.setContentView(this, R.layout.activity_launch);
+        accessFragment = new AccessFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.view_fragment, accessFragment);
+        ft.commit();
     }
 }
