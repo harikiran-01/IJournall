@@ -51,7 +51,8 @@ dependencies {
     //kotlin
     implementation "androidx.core:core-ktx:+"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
+    //leakcanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
     //room
     def room_version = "2.2.5"
     implementation "androidx.room:room-runtime:$room_version"

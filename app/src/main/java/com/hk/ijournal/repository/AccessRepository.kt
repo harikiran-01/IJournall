@@ -2,8 +2,7 @@ package com.hk.ijournal.repository
 
 import android.app.Application
 import android.os.AsyncTask
-import android.os.Build
-import androidx.annotation.RequiresApi
+import com.hk.ijournal.repository.local.IJDatabase
 import com.hk.ijournal.repository.local.IJDatabase.Companion.getDatabase
 import com.hk.ijournal.repository.local.UserDao
 import com.hk.ijournal.repository.models.AccessModel
@@ -12,17 +11,23 @@ import com.hk.ijournal.repository.models.DiaryUser
 import java.time.LocalDate
 
 class AccessRepository(application: Application) {
-    var accessModel: AccessModel
-        private set
+    private val ijDatabase: IJDatabase
+
+    val accessModel: AccessModel
     private var accessScreen = ""
 
-    var userDao: UserDao
+    val userDao: UserDao
+
+    init {
+        ijDatabase = getDatabase(application.applicationContext)
+        userDao = ijDatabase.userDao()
+        accessModel = AccessModel()
+    }
 
     fun setDobLiveData(dob: LocalDate) {
         accessModel.dobLiveData.value = dob
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun loginUserAndSendAccessData(accessDataResponse: AccessDataResponse) {
         accessScreen = "login"
         accessModel.diaryUser = DiaryUser(accessModel.loginUsernameLive.value.toString(), accessModel.loginPasscodeLive.value.toString())
@@ -49,39 +54,37 @@ class AccessRepository(application: Application) {
         } else accessModel.processLoginAndGetAccessStatus(dbUser)
     }
 
-    fun getUserByUserName(username: String, accessDataResponse: AccessDataResponse) {
+    private fun getUserByUserName(username: String, accessDataResponse: AccessDataResponse) {
         FindUserAsyncTask(userDao, accessDataResponse).execute(username)
     }
 
-    fun insertUser(diaryUser: DiaryUser?) {
+    private fun insertUser(diaryUser: DiaryUser?) {
         InsertUserAsyncTask(userDao).execute(diaryUser)
+    }
+
+    fun closeDB() {
+        ijDatabase.close()
     }
 
     interface AccessDataResponse {
         fun onAccessDataReceived(dbUser: DiaryUser?)
     }
 
-    private class InsertUserAsyncTask(var userDao: UserDao) : AsyncTask<DiaryUser, Void?, Void?>() {
+    private class InsertUserAsyncTask(private val userDao: UserDao) : AsyncTask<DiaryUser, Void?, Void?>() {
         override fun doInBackground(vararg params: DiaryUser): Void? {
             userDao.insertUser(params[0])
             return null
         }
     }
 
-    class FindUserAsyncTask(var userDao: UserDao, val accessResponse: AccessDataResponse) : AsyncTask<String, Void, DiaryUser?>() {
+    class FindUserAsyncTask(private val userDao: UserDao, private val accessResponse: AccessDataResponse) : AsyncTask<String, Void, DiaryUser?>() {
         override fun doInBackground(vararg username: String): DiaryUser? {
-            System.out.println("dbdeb $username[0]")
+            println("dbdeb $username[0]")
             return userDao.getUserbyName(username[0])
         }
 
         override fun onPostExecute(diaryUser: DiaryUser?) {
             accessResponse.onAccessDataReceived(diaryUser)
         }
-    }
-
-    init {
-        val ijDatabase = getDatabase(application.applicationContext)
-        userDao = ijDatabase.userDao()
-        accessModel = AccessModel()
     }
 }

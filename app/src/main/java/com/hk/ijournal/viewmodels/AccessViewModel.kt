@@ -17,26 +17,21 @@ import java.time.LocalDate
 class AccessViewModel(application: Application) : AndroidViewModel(application), AccessDataResponse {
     //username and passcode are two way binding variables
     //login livedata
-    var loginUsernameLive: MutableLiveData<String>
-        private set
-    var loginPasscodeLive: MutableLiveData<String>
-        private set
+    val loginUsernameLive: MutableLiveData<String>
+    val loginPasscodeLive: MutableLiveData<String>
 
     val loginUserValidation: LiveData<AccessValidation>
         get() = _loginUserValidation
     val loginPasscodeValidation: LiveData<AccessValidation>
         get() = _loginPasscodeValidation
 
-    private var _loginUserValidation: MutableLiveData<AccessValidation>
-    private var _loginPasscodeValidation: MutableLiveData<AccessValidation>
+    private val _loginUserValidation: MutableLiveData<AccessValidation>
+    private val _loginPasscodeValidation: MutableLiveData<AccessValidation>
 
     //register livedata
-    var registerUsernameLive: MutableLiveData<String>
-        private set
-    var registerPasscodeLive: MutableLiveData<String>
-        private set
-
-    var dobLiveData: MutableLiveData<LocalDate>
+    val registerUsernameLive: MutableLiveData<String>
+    val registerPasscodeLive: MutableLiveData<String>
+    val dobLiveData: MutableLiveData<LocalDate>
 
     val registerUserValidation: LiveData<AccessValidation>
         get() = _registerUserValidation
@@ -44,38 +39,15 @@ class AccessViewModel(application: Application) : AndroidViewModel(application),
     val registerPasscodeValidation: LiveData<AccessValidation>
         get() = _registerPasscodeValidation
 
-    private var _registerUserValidation: MutableLiveData<AccessValidation>
-    private var _registerPasscodeValidation: MutableLiveData<AccessValidation>
+    private val _registerUserValidation: MutableLiveData<AccessValidation>
+    private val _registerPasscodeValidation: MutableLiveData<AccessValidation>
 
     private val accessRepository: AccessRepository
 
     val accessStatus: LiveData<AccessStatus>
         get() = _accessStatus
 
-    private var _accessStatus: MutableLiveData<AccessStatus> = MutableLiveData()
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {
-        accessRepository.setDobLiveData(LocalDate.of(year, month, dayOfMonth))
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun loginUser() {
-        accessRepository.loginUserAndSendAccessData(this)
-    }
-
-    fun registerUser() {
-        accessRepository.registerUserAndSendAccessData(this)
-    }
-
-    override fun onAccessDataReceived(dbUser: DiaryUser?) {
-        _accessStatus.value = accessRepository.processAccessAndGetAccessStatus(dbUser)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("lifecycle", "accessVM cleared")
-    }
+    private val _accessStatus: MutableLiveData<AccessStatus> = MutableLiveData()
 
     init {
         Log.d("lifecycle", "accessVM constructor")
@@ -95,6 +67,28 @@ class AccessViewModel(application: Application) : AndroidViewModel(application),
         _registerPasscodeValidation = accessRepository.accessModel.getRegisterPasscodeValidation()
         _registerPasscodeValidation.value = AccessValidation.PASSCODE_INVALID
         dobLiveData = accessRepository.accessModel.dobLiveData
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {
+        accessRepository.setDobLiveData(LocalDate.of(year, month, dayOfMonth))
+    }
+
+    fun loginUser() {
+        accessRepository.loginUserAndSendAccessData(this)
+    }
+
+    fun registerUser() {
+        accessRepository.registerUserAndSendAccessData(this)
+    }
+
+    override fun onAccessDataReceived(dbUser: DiaryUser?) {
+        _accessStatus.value = accessRepository.processAccessAndGetAccessStatus(dbUser)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        accessRepository.closeDB()
+        Log.d("lifecycle", "accessVM cleared")
     }
 }

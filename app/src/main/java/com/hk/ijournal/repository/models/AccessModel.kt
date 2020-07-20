@@ -10,18 +10,17 @@ class AccessModel {
     var diaryUser: DiaryUser
 
     //login livedata
-    var loginUsernameLive: MutableLiveData<String> = MutableLiveData()
-        private set
-    var loginPasscodeLive: MutableLiveData<String> = MutableLiveData()
-        private set
+    val loginUsernameLive: MutableLiveData<String> = MutableLiveData()
+    val loginPasscodeLive: MutableLiveData<String> = MutableLiveData()
 
     //register livedata
-    var registerUsernameLive: MutableLiveData<String> = MutableLiveData()
-        private set
-    var registerPasscodeLive: MutableLiveData<String> = MutableLiveData()
-        private set
-    var dobLiveData: MutableLiveData<LocalDate> = MutableLiveData()
-        private set
+    val registerUsernameLive: MutableLiveData<String> = MutableLiveData()
+    val registerPasscodeLive: MutableLiveData<String> = MutableLiveData()
+    val dobLiveData: MutableLiveData<LocalDate> = MutableLiveData()
+
+    init {
+        diaryUser = DiaryUser()
+    }
 
     enum class AccessStatus {
         LOGIN_SUCCESSFUL, USER_NOT_FOUND, INVALID_LOGIN, REGISTER_SUCCESSFULL, USER_ALREADY_EXISTS
@@ -91,9 +90,5 @@ class AccessModel {
         return if (dbUser == null) {
             AccessStatus.REGISTER_SUCCESSFULL
         } else AccessStatus.USER_ALREADY_EXISTS
-    }
-
-    init {
-        diaryUser = DiaryUser()
     }
 }
