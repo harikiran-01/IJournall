@@ -35,16 +35,6 @@ class DiaryFragment : Fragment(), View.OnClickListener, CoroutineScope {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var fragmentDiaryBinding: FragmentDiaryBinding
 
-    companion object DiaryFragFactory {
-        fun newInstance(userId: Long): DiaryFragment {
-            val diaryFragment = DiaryFragment()
-            val args = Bundle()
-            args.putLong("uid", userId)
-            diaryFragment.arguments = args
-            return diaryFragment
-        }
-    }
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -73,13 +63,20 @@ class DiaryFragment : Fragment(), View.OnClickListener, CoroutineScope {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        diaryViewModel = ViewModelProvider(this,
-                DiaryViewModelFactory(requireActivity().application, requireArguments().getLong("uid"))).get(DiaryViewModel::class.java)
-        fragmentDiaryBinding.diaryViewModel = diaryViewModel
-        fragmentDiaryBinding.lifecycleOwner = viewLifecycleOwner
-        observeViewModel()
+        homeViewModel = ViewModelProvider(requireParentFragment().requireParentFragment()).get(HomeViewModel::class.java)
+        observeHomeVM()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun observeHomeVM() {
+        homeViewModel.userIdLive.observe(viewLifecycleOwner, Observer {
+            diaryViewModel = ViewModelProvider(this,
+                    DiaryViewModelFactory(requireActivity().application, it)).get(DiaryViewModel::class.java)
+            fragmentDiaryBinding.diaryViewModel = diaryViewModel
+            fragmentDiaryBinding.lifecycleOwner = viewLifecycleOwner
+            observeViewModel()
+        })
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeViewModel() {

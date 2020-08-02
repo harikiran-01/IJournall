@@ -7,28 +7,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import com.hk.ijournal.R
 import com.hk.ijournal.databinding.FragmentHomeBinding
 import com.hk.ijournal.viewmodels.HomeViewModel
-import com.hk.ijournal.views.dashboard.DashboardFragment
-import com.hk.ijournal.views.diary.DiaryFragment
-import com.hk.ijournal.views.notifications.NotificationsFragment
 
-class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
+class HomeFragment : Fragment() {
 
-    companion object {
-        fun newInstance(userId: Long): HomeFragment {
-            val homeFragment = HomeFragment()
-            val args = Bundle()
-            args.putLong("uid", userId)
-            homeFragment.arguments = args
-            return homeFragment
-        }
-    }
-
+    private val safeArgs: HomeFragmentArgs by navArgs()
     private lateinit var homeViewModel: HomeViewModel
-
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
 
     override fun onDestroy() {
@@ -43,18 +33,24 @@ class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         return fragmentHomeBinding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as AppCompatActivity).setSupportActionBar(fragmentHomeBinding.appBar)
         val navView = fragmentHomeBinding.navView
-        navView.setOnNavigationItemSelectedListener(this)
+        val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        val appBarConfiguration = AppBarConfiguration.Builder(
+                R.id.navigation_diary, R.id.navigation_dashboard, R.id.navigation_notifications)
+                .build()
+        (requireActivity() as AppCompatActivity).setSupportActionBar(fragmentHomeBinding.appBar)
+        NavigationUI.setupActionBarWithNavController(requireActivity() as AppCompatActivity, navController, appBarConfiguration)
+        NavigationUI.setupWithNavController(navView, navController)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        addStartFragment()
+        homeViewModel.setUserId(safeArgs.userId)
+
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,58 +69,4 @@ class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         fragmentHomeBinding.unbind()
         (requireActivity() as AppCompatActivity).setSupportActionBar(null)
     }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        loadFragment(item.title.toString())
-        return true
-    }
-
-    private fun addStartFragment() {
-        println("navideb addstart")
-        val userId = requireArguments().getLong("uid")
-        childFragmentManager.beginTransaction().add(R.id.nav_container, DiaryFragment.newInstance(userId), "Diary").commit()
-        homeViewModel.lastActiveFragmentTag = "Diary"
-    }
-
-    private fun loadFragment(itemTitle: String) {
-        val userId = requireArguments().getLong("uid")
-        println("navideb tag $itemTitle")
-        val fragment = childFragmentManager.findFragmentByTag(itemTitle) ?: when (itemTitle) {
-            "Diary" -> {
-                DiaryFragment.newInstance(userId)
-            }
-            "Dashboard" -> {
-                DashboardFragment()
-            }
-            "Notifications" -> {
-                NotificationsFragment()
-            }
-            else -> {
-                null
-            }
-        }
-
-        // show/hide fragment
-        if (fragment != null) {
-            val transaction = childFragmentManager.beginTransaction()
-
-            if (homeViewModel.lastActiveFragmentTag != "") {
-                val lastFragment = childFragmentManager.findFragmentByTag(homeViewModel.lastActiveFragmentTag)
-                if (lastFragment != null)
-                    transaction.hide(lastFragment)
-            }
-
-            if (!fragment.isAdded) {
-                println("navideb added $fragment")
-                transaction.add(R.id.nav_container, fragment, itemTitle)
-            } else {
-                transaction.show(fragment)
-            }
-
-            transaction.commit()
-            homeViewModel.lastActiveFragmentTag = itemTitle
-        }
-    }
-
-
 }

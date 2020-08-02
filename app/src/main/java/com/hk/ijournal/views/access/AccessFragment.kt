@@ -10,8 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -19,20 +17,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy
 import com.hk.ijournal.R
 import com.hk.ijournal.databinding.FragmentAccessBinding
-import com.hk.ijournal.repository.AccessRepository
-import com.hk.ijournal.viewmodels.AccessViewModel
 
-class AccessFragment private constructor() : Fragment() {
-
-    lateinit var onAccessPassListener: () -> Unit
-
-    companion object {
-        fun newInstance(): AccessFragment {
-            return AccessFragment()
-        }
-    }
-
-    lateinit var accessViewModel: AccessViewModel
+class AccessFragment : Fragment() {
 
     @StringRes
     private val tabTitles = intArrayOf(R.string.login_tab_text, R.string.register_tab_text)
@@ -71,27 +57,6 @@ class AccessFragment private constructor() : Fragment() {
         TabLayoutMediator(tabLayout, viewPager,
                 TabConfigurationStrategy { tab: TabLayout.Tab, position: Int -> tab.setText(tabTitles[position]) }
         ).attach()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        accessViewModel = ViewModelProvider(this).get(AccessViewModel::class.java)
-        observeVM()
-    }
-
-    fun registerOnAccessPassListener(listener: () -> Unit) {
-        onAccessPassListener = listener
-    }
-
-    private fun observeVM() {
-        accessViewModel.loginStatus.observe(viewLifecycleOwner, Observer {
-            if (it == AccessRepository.LoginStatus.LOGIN_SUCCESSFUL) {
-                val args = Bundle()
-                args.putLong("uid", accessViewModel.getUid())
-                arguments = args
-                onAccessPassListener.invoke()
-            }
-        })
     }
 
     override fun onDestroyView() {

@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.hk.ijournal.R
 import com.hk.ijournal.adapters.AccessBindingAdapter
 import com.hk.ijournal.databinding.FragmentRegisterBinding
@@ -71,7 +72,8 @@ class RegisterFragment : Fragment(), View.OnClickListener, OnDateSetListener {
     }
 
     private fun onRegisterSuccessful() {
-
+        findNavController().navigate(AccessFragmentDirections.accessToHome(accessViewModel.getUid()))
+        findNavController().popBackStack()
     }
 
     private fun showDatePicker() {

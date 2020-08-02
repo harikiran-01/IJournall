@@ -4,13 +4,14 @@ package com.hk.ijournal.views
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
 import com.hk.ijournal.R
-import com.hk.ijournal.views.access.AccessFragment
 import com.hk.ijournal.views.home.HomeFragment
 
 class LaunchActivity : AppCompatActivity() {
     var loginstatus: Boolean = false
-    private var accessFragment: AccessFragment? = null
+
+    //private var accessFragment : AccessFragment? = null
     private var homeFragment: HomeFragment? = null
 
     override fun onBackPressed() {
@@ -19,36 +20,19 @@ class LaunchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("lifecycle", "launchA onCreate")
-        setTheme(R.style.HomeTheme)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_launch)
+        setTheme(R.style.HomeTheme)
         conditionalNavigate()
+        setContentView(R.layout.activity_launch)
+        val navController = findNavController(R.id.main_nav_host)
+        val graph = navController.navInflater.inflate(R.navigation.app_navigation)
+        graph.startDestination = if (loginstatus) R.id.home_dest else R.id.access_dest
+        navController.graph = graph
     }
-
 
     private fun conditionalNavigate() {
-        if (loginstatus) showHomeScreen() else showAccessScreen()
-    }
 
-    private fun showAccessScreen() {
-        accessFragment = AccessFragment.newInstance()
-        supportFragmentManager.beginTransaction().add(R.id.main_nav_host, accessFragment!!, "access_frag").commitNow()
-        accessFragment!!.registerOnAccessPassListener {
-            navigateFromAccessToHome()
-        }
     }
-
-    private fun showHomeScreen() {
-        homeFragment = HomeFragment.newInstance(0)
-        supportFragmentManager.beginTransaction().add(R.id.main_nav_host, homeFragment!!, "home_frag").commit()
-    }
-
-    private fun navigateFromAccessToHome() {
-        homeFragment = HomeFragment.newInstance(accessFragment!!.requireArguments().getLong("uid"))
-        accessFragment = null
-        supportFragmentManager.beginTransaction().replace(R.id.main_nav_host, homeFragment!!, "home_frag").commit()
-    }
-
 
     override fun onDestroy() {
         super.onDestroy()
