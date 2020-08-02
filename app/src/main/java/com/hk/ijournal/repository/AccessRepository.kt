@@ -1,90 +1,141 @@
 package com.hk.ijournal.repository
 
-import android.app.Application
-import android.os.AsyncTask
-import com.hk.ijournal.repository.local.IJDatabase
-import com.hk.ijournal.repository.local.IJDatabase.Companion.getDatabase
+import android.text.TextUtils
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.hk.ijournal.repository.local.UserDao
-import com.hk.ijournal.repository.models.AccessModel
-import com.hk.ijournal.repository.models.AccessModel.AccessStatus
 import com.hk.ijournal.repository.models.DiaryUser
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
-class AccessRepository(application: Application) {
-    private val ijDatabase: IJDatabase
+class AccessRepository(private val userDao: UserDao, private val coroutineScope: CoroutineScope) {
+    private lateinit var diaryUser: DiaryUser
+    var uid: Long = 0
 
-    val accessModel: AccessModel
-    private var accessScreen = ""
+    //login livedata
+    val loginUsernameLive: MutableLiveData<String> = MutableLiveData()
+    val loginPasscodeLive: MutableLiveData<String> = MutableLiveData()
 
-    val userDao: UserDao
+    //register livedata
+    val registerUsernameLive: MutableLiveData<String> = MutableLiveData()
+    val registerPasscodeLive: MutableLiveData<String> = MutableLiveData()
+    val dobLiveData: MutableLiveData<LocalDate> = MutableLiveData()
 
-    init {
-        ijDatabase = getDatabase(application.applicationContext)
-        userDao = ijDatabase.userDao()
-        accessModel = AccessModel()
+    //access livedata
+    val loginStatus: MutableLiveData<LoginStatus> = MutableLiveData()
+    val registerStatus: MutableLiveData<RegisterStatus> = MutableLiveData()
+    val accessStatus: MutableLiveData<AccessStatus> = MutableLiveData()
+
+    enum class RegisterStatus {
+        REGISTER_SUCCESSFULL, USER_ALREADY_EXISTS
+    }
+
+    enum class AccessStatus {
+        ACCESS_SUCCESS
+    }
+
+    enum class LoginStatus {
+        LOGIN_SUCCESSFUL, USER_NOT_FOUND, INVALID_LOGIN
+    }
+
+    enum class AccessValidation {
+        USERNAME_INVALID, PASSCODE_INVALID, DOB_INVALID
+    }
+
+    fun getLoginUserValidation(): MutableLiveData<AccessValidation> {
+        //transforming based on username live data
+        return Transformations.map(loginUsernameLive) {
+            return@map if (isUsernameInvalid(it)) AccessValidation.USERNAME_INVALID
+            else
+                null
+        } as MutableLiveData<AccessValidation>
+    }
+
+    fun getLoginPasscodeValidation(): MutableLiveData<AccessValidation> {
+        //transforming based on passcode live data
+        return Transformations.map(loginPasscodeLive) {
+            return@map if (isPassCodeInvalid(it)) AccessValidation.PASSCODE_INVALID
+            else
+                null
+        } as MutableLiveData<AccessValidation>
+    }
+
+    fun getRegisterUserValidation(): MutableLiveData<AccessValidation> {
+        //transforming based on username live data
+        return Transformations.map(registerUsernameLive) {
+            return@map if (isUsernameInvalid(it)) AccessValidation.USERNAME_INVALID
+            else
+                null
+        } as MutableLiveData<AccessValidation>
+    }
+
+    fun getRegisterPasscodeValidation(): MutableLiveData<AccessValidation> {
+        //transforming based on passcode live data
+        return Transformations.map(registerPasscodeLive) {
+            return@map if (isPassCodeInvalid(it)) AccessValidation.PASSCODE_INVALID
+            else
+                null
+        } as MutableLiveData<AccessValidation>
+    }
+
+    private fun isUsernameInvalid(username: String?): Boolean {
+        return TextUtils.isEmpty(username)
+    }
+
+    private fun isPassCodeInvalid(passcode: String?): Boolean {
+        return passcode?.let { it.length < 4 } ?: true
+    }
+
+    private fun processLoginAndGetAccessStatus(dbUser: DiaryUser?): LoginStatus {
+        return isLoginSuccessful(dbUser)
+    }
+
+    private fun isLoginSuccessful(dbUser: DiaryUser?): LoginStatus {
+        return if (dbUser == null) LoginStatus.USER_NOT_FOUND
+        else if (dbUser.passcode == diaryUser.passcode) LoginStatus.LOGIN_SUCCESSFUL
+        else LoginStatus.INVALID_LOGIN
+    }
+
+    private fun processRegisterAndGetAccessStatus(dbUser: DiaryUser?): RegisterStatus {
+        return if (dbUser == null) {
+            RegisterStatus.REGISTER_SUCCESSFULL
+        } else RegisterStatus.USER_ALREADY_EXISTS
     }
 
     fun setDobLiveData(dob: LocalDate) {
-        accessModel.dobLiveData.value = dob
+        dobLiveData.value = dob
     }
 
-    fun loginUserAndSendAccessData(accessDataResponse: AccessDataResponse) {
-        accessScreen = "login"
-        accessModel.diaryUser = DiaryUser(accessModel.loginUsernameLive.value.toString(), accessModel.loginPasscodeLive.value.toString())
-        if (accessModel.isUserValid(accessModel.getLoginUserValidation(), accessModel.getLoginPasscodeValidation()))
-            checkUserInDb(accessDataResponse)
-    }
-
-    fun registerUserAndSendAccessData(accessDataResponse: AccessDataResponse) {
-        accessScreen = "register"
-        accessModel.diaryUser = DiaryUser(accessModel.registerUsernameLive.value.toString(), accessModel.registerPasscodeLive.value.toString(), accessModel.dobLiveData.value)
-        if (accessModel.isUserValid(accessModel.getRegisterUserValidation(), accessModel.getRegisterPasscodeValidation()))
-            checkUserInDb(accessDataResponse)
-    }
-
-    private fun checkUserInDb(accessDataResponse: AccessDataResponse) {
-        getUserByUserName(accessModel.diaryUser.username, accessDataResponse)
-    }
-
-    fun processAccessAndGetAccessStatus(dbUser: DiaryUser?): AccessStatus {
-        return if (accessScreen == "register") {
-            val status = accessModel.processRegisterAndGetAccessStatus(dbUser)
-            if (status == AccessStatus.REGISTER_SUCCESSFULL) insertUser(accessModel.diaryUser)
-            status
-        } else accessModel.processLoginAndGetAccessStatus(dbUser)
-    }
-
-    private fun getUserByUserName(username: String, accessDataResponse: AccessDataResponse) {
-        FindUserAsyncTask(userDao, accessDataResponse).execute(username)
-    }
-
-    private fun insertUser(diaryUser: DiaryUser?) {
-        InsertUserAsyncTask(userDao).execute(diaryUser)
-    }
-
-    fun closeDB() {
-        ijDatabase.close()
-    }
-
-    interface AccessDataResponse {
-        fun onAccessDataReceived(dbUser: DiaryUser?)
-    }
-
-    private class InsertUserAsyncTask(private val userDao: UserDao) : AsyncTask<DiaryUser, Void?, Void?>() {
-        override fun doInBackground(vararg params: DiaryUser): Void? {
-            userDao.insertUser(params[0])
-            return null
+    fun loginUserAndUpdateAccessStatus() {
+        diaryUser = DiaryUser(loginUsernameLive.value.toString(), loginPasscodeLive.value.toString())
+        coroutineScope.launch {
+            val dbUser = getMatchingUserinDb()
+            uid = dbUser?.uid ?: 0
+            loginStatus.value = processLoginAndGetAccessStatus(dbUser)
         }
     }
 
-    class FindUserAsyncTask(private val userDao: UserDao, private val accessResponse: AccessDataResponse) : AsyncTask<String, Void, DiaryUser?>() {
-        override fun doInBackground(vararg username: String): DiaryUser? {
-            println("dbdeb $username[0]")
-            return userDao.getUserbyName(username[0])
+    fun registerUserAndUpdateAccessStatus() {
+        var regStatus: RegisterStatus
+        diaryUser = DiaryUser(registerUsernameLive.value.toString(), registerPasscodeLive.value.toString(), dobLiveData.value)
+        coroutineScope.launch {
+            regStatus = processRegisterAndGetAccessStatus(getMatchingUserinDb())
+            //runJunk()
+            uid = insertUserInDbAndGetRowId(diaryUser)
+            if (uid > 0L)
+                registerStatus.value = regStatus
         }
-
-        override fun onPostExecute(diaryUser: DiaryUser?) {
-            accessResponse.onAccessDataReceived(diaryUser)
-        }
+        Log.i("after", "after coroutine")
     }
+
+    private suspend fun getMatchingUserinDb(): DiaryUser? {
+        return withContext(Dispatchers.IO) { userDao.getUserbyName(diaryUser.username) }
+    }
+
+    private suspend fun insertUserInDbAndGetRowId(diaryUser: DiaryUser): Long =
+            withContext(Dispatchers.IO) { userDao.insertUser(diaryUser) }
 }

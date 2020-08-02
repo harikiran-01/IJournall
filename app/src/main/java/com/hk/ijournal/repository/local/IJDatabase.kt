@@ -4,12 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.hk.ijournal.repository.models.DiaryPage
 import com.hk.ijournal.repository.models.DiaryUser
 
-@Database(entities = [DiaryUser::class], exportSchema = false, version = 2)
+@Database(entities = [DiaryUser::class, DiaryPage::class], exportSchema = false, version = 10)
 abstract class IJDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
-
+    abstract fun diaryDao(): DiaryDao
 
     companion object {
         //db schema
@@ -22,9 +23,7 @@ abstract class IJDatabase : RoomDatabase() {
         @Synchronized
         fun getDatabase(context: Context): IJDatabase {
             val tempInstance = INSTANCE
-            if (tempInstance != null) {
-                return tempInstance
-            }
+            if (tempInstance != null) return tempInstance
 
             synchronized(this) {
                 val instance = Room.databaseBuilder(

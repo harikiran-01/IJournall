@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.hk.ijournal.R
-import com.hk.ijournal.repository.models.AccessModel.AccessValidation
+import com.hk.ijournal.repository.AccessRepository.AccessValidation
 import java.time.LocalDate
 
 object AccessBindingAdapter {
