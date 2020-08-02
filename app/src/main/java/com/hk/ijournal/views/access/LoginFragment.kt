@@ -1,4 +1,4 @@
-package com.hk.ijournal.views
+package com.hk.ijournal.views.access
 
 import android.os.Bundle
 import android.util.Log
@@ -8,12 +8,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.hk.ijournal.R
 import com.hk.ijournal.adapters.AccessBindingAdapter
 import com.hk.ijournal.databinding.FragmentLoginBinding
-import com.hk.ijournal.repository.models.AccessModel.AccessStatus
+import com.hk.ijournal.repository.AccessRepository.LoginStatus
 import com.hk.ijournal.viewmodels.AccessViewModel
-import com.hk.ijournal.views.LaunchActivity.Companion.obtainViewModel
 import es.dmoral.toasty.Toasty
 
 class LoginFragment : Fragment(), View.OnClickListener {
@@ -32,32 +32,27 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        accessViewModel = ViewModelProvider(requireParentFragment()).get(AccessViewModel::class.java)
         Log.d("lifecycle", "loginF onActivityCreated")
-        accessViewModel = obtainViewModel(requireActivity())
         loginBinding.accessViewModel = accessViewModel
-        observeViewModel(accessViewModel)
+        observeViewModel()
     }
 
-    private fun observeViewModel(accessViewModel: AccessViewModel) {
-        accessViewModel.accessStatus.observe(viewLifecycleOwner, Observer { accessStatus: AccessStatus ->
+    private fun observeViewModel() {
+        accessViewModel.loginStatus.observe(viewLifecycleOwner, Observer { accessStatus: LoginStatus ->
             Log.d("lifecycle", "loginF observeViewModel")
             when (accessStatus) {
-                AccessStatus.LOGIN_SUCCESSFUL -> {
+                LoginStatus.LOGIN_SUCCESSFUL -> {
                     Toasty.info(requireActivity(), "Login Successful!", Toasty.LENGTH_SHORT, true).show()
-                    onLoginSuccessful()
                 }
-                AccessStatus.INVALID_LOGIN -> {
+                LoginStatus.INVALID_LOGIN -> {
                     Toasty.info(requireActivity(), "Invalid Password!", Toasty.LENGTH_SHORT, true).show()
                 }
-                AccessStatus.USER_NOT_FOUND -> {
+                LoginStatus.USER_NOT_FOUND -> {
                     Toasty.info(requireActivity(), "User doesn't exist!", Toasty.LENGTH_SHORT, true).show()
                 }
             }
         })
-    }
-
-    private fun onLoginSuccessful() {
-        (requireActivity() as LaunchActivity).launchHomeFragment()
     }
 
     override fun onClick(v: View) {

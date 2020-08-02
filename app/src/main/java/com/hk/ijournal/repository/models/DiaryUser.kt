@@ -11,7 +11,7 @@ import java.time.LocalDate
 @TypeConverters(DateConverter::class)
 data class DiaryUser @Ignore constructor(var username: String, var passcode: String, var dob: LocalDate?) {
     @PrimaryKey(autoGenerate = true)
-    var uid = 0
+    var uid: Long = 0
 
     constructor() : this("", "", null)
 

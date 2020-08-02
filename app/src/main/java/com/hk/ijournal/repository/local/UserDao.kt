@@ -9,10 +9,10 @@ import com.hk.ijournal.repository.models.DiaryUser
 @Dao
 interface UserDao {
     @Insert
-    fun insertUser(user: DiaryUser)
+    suspend fun insertUser(user: DiaryUser): Long
 
     @Delete
-    fun deleteUser(user: DiaryUser)
+    suspend fun deleteUser(user: DiaryUser)
 
     @Query("select * from usertable where username = :userName")
     fun getUserbyName(userName: String?): DiaryUser?

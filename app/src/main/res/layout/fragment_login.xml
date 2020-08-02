@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="com.hk.ijournal.repository.models.AccessModel.AccessValidation" />
+        <import type="com.hk.ijournal.repository.AccessRepository.AccessValidation" />
 
         <variable
             name="AccessViewModel"

@@ -7,6 +7,25 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
+    <style name="SplashScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen_bg</item>
+        <!-- enable window content transitions -->
+        <item name="android:windowActivityTransitions">true</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">@android:transition/slide_left</item>
+        <item name="android:windowExitTransition">@android:transition/slide_right</item>
+    </style>
+
+    <style name="HomeTheme" parent="AppTheme">
+        <!-- enable window content transitions -->
+        <item name="android:windowActivityTransitions">true</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">@android:transition/slide_right</item>
+        <item name="android:windowExitTransition">@android:transition/slide_right</item>
+    </style>
+
     <style name="authButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

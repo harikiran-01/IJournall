@@ -1,4 +1,4 @@
-package com.hk.ijournal.views.ui.dashboard
+package com.hk.ijournal.views.dashboard
 
 import android.os.Bundle
 import android.util.Log
@@ -6,20 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.hk.ijournal.R
 import com.hk.ijournal.viewmodels.DashboardViewModel
 
 class DashboardFragment : Fragment() {
 
-    val dashboardViewModel: DashboardViewModel
-
-    init {
-        dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
-    }
+    private lateinit var dashboardViewModel: DashboardViewModel
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        dashboardViewModel = ViewModelProvider(this).get(DashboardViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
         return root
     }

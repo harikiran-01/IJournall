@@ -7,15 +7,17 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.hk.ijournal.repository.AccessRepository
-import com.hk.ijournal.repository.AccessRepository.AccessDataResponse
-import com.hk.ijournal.repository.models.AccessModel.AccessStatus
-import com.hk.ijournal.repository.models.AccessModel.AccessValidation
-import com.hk.ijournal.repository.models.DiaryUser
+import com.hk.ijournal.repository.AccessRepository.AccessValidation
+import com.hk.ijournal.repository.AccessRepository.LoginStatus
+import com.hk.ijournal.repository.local.IJDatabase
 import java.time.LocalDate
 
-class AccessViewModel(application: Application) : AndroidViewModel(application), AccessDataResponse {
-    //username and passcode are two way binding variables
+class AccessViewModel(application: Application) : AndroidViewModel(application) {
+    private val ijDatabase: IJDatabase
+    private val accessRepository: AccessRepository
+
     //login livedata
     val loginUsernameLive: MutableLiveData<String>
     val loginPasscodeLive: MutableLiveData<String>
@@ -42,31 +44,43 @@ class AccessViewModel(application: Application) : AndroidViewModel(application),
     private val _registerUserValidation: MutableLiveData<AccessValidation>
     private val _registerPasscodeValidation: MutableLiveData<AccessValidation>
 
-    private val accessRepository: AccessRepository
+    val loginStatus: LiveData<LoginStatus>
+        get() = _loginStatus
 
-    val accessStatus: LiveData<AccessStatus>
+    private val _loginStatus: MutableLiveData<LoginStatus>
+
+    val registerStatus: LiveData<AccessRepository.RegisterStatus>
+        get() = _registerStatus
+
+    private val _registerStatus: MutableLiveData<AccessRepository.RegisterStatus>
+
+    val accessStatus: LiveData<AccessRepository.AccessStatus>
         get() = _accessStatus
 
-    private val _accessStatus: MutableLiveData<AccessStatus> = MutableLiveData()
+    private val _accessStatus: MutableLiveData<AccessRepository.AccessStatus>
 
     init {
         Log.d("lifecycle", "accessVM constructor")
-        accessRepository = AccessRepository(application)
+        ijDatabase = IJDatabase.getDatabase(application.applicationContext)
+        accessRepository = AccessRepository(ijDatabase.userDao(), viewModelScope)
         //login binding
-        loginUsernameLive = accessRepository.accessModel.loginUsernameLive
-        loginPasscodeLive = accessRepository.accessModel.loginPasscodeLive
-        _loginUserValidation = accessRepository.accessModel.getLoginUserValidation()
+        loginUsernameLive = accessRepository.loginUsernameLive
+        loginPasscodeLive = accessRepository.loginPasscodeLive
+        _loginUserValidation = accessRepository.getLoginUserValidation()
         _loginUserValidation.value = AccessValidation.USERNAME_INVALID
-        _loginPasscodeValidation = accessRepository.accessModel.getLoginPasscodeValidation()
+        _loginPasscodeValidation = accessRepository.getLoginPasscodeValidation()
         _loginPasscodeValidation.value = AccessValidation.PASSCODE_INVALID
         //register binding
-        registerUsernameLive = accessRepository.accessModel.registerUsernameLive
-        registerPasscodeLive = accessRepository.accessModel.registerPasscodeLive
-        _registerUserValidation = accessRepository.accessModel.getRegisterUserValidation()
+        registerUsernameLive = accessRepository.registerUsernameLive
+        registerPasscodeLive = accessRepository.registerPasscodeLive
+        _registerUserValidation = accessRepository.getRegisterUserValidation()
         _registerUserValidation.value = AccessValidation.USERNAME_INVALID
-        _registerPasscodeValidation = accessRepository.accessModel.getRegisterPasscodeValidation()
+        _registerPasscodeValidation = accessRepository.getRegisterPasscodeValidation()
         _registerPasscodeValidation.value = AccessValidation.PASSCODE_INVALID
-        dobLiveData = accessRepository.accessModel.dobLiveData
+        dobLiveData = accessRepository.dobLiveData
+        _loginStatus = accessRepository.loginStatus
+        _registerStatus = accessRepository.registerStatus
+        _accessStatus = accessRepository.accessStatus
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -74,21 +88,19 @@ class AccessViewModel(application: Application) : AndroidViewModel(application),
         accessRepository.setDobLiveData(LocalDate.of(year, month, dayOfMonth))
     }
 
-    fun loginUser() {
-        accessRepository.loginUserAndSendAccessData(this)
-    }
+    fun loginUser() = accessRepository.loginUserAndUpdateAccessStatus()
 
-    fun registerUser() {
-        accessRepository.registerUserAndSendAccessData(this)
-    }
+    fun registerUser() = accessRepository.registerUserAndUpdateAccessStatus()
 
-    override fun onAccessDataReceived(dbUser: DiaryUser?) {
-        _accessStatus.value = accessRepository.processAccessAndGetAccessStatus(dbUser)
-    }
+    fun getUid(): Long = accessRepository.uid
 
     override fun onCleared() {
         super.onCleared()
-        accessRepository.closeDB()
+        closeDB()
         Log.d("lifecycle", "accessVM cleared")
+    }
+
+    private fun closeDB() {
+        ijDatabase.close()
     }
 }
