@@ -1,4 +1,4 @@
-package com.hk.ijournal.views.notifications
+package com.hk.ijournal.views.home.notifications
 
 import android.os.Bundle
 import android.view.LayoutInflater

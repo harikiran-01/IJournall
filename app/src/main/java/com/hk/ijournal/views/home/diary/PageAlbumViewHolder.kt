@@ -1,4 +1,4 @@
-package com.hk.ijournal.views.diary
+package com.hk.ijournal.views.home.diary
 
 import android.view.View
 import android.widget.ImageView

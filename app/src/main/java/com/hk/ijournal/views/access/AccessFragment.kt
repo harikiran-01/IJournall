@@ -1,7 +1,6 @@
 package com.hk.ijournal.views.access
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -19,20 +16,15 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy
 import com.hk.ijournal.R
 import com.hk.ijournal.databinding.FragmentAccessBinding
-import com.hk.ijournal.repository.AccessRepository
-import com.hk.ijournal.viewmodels.AccessViewModel
 
-class AccessFragment private constructor() : Fragment() {
 
-    lateinit var onAccessPassListener: () -> Unit
+class AccessFragment : Fragment() {
 
     companion object {
         fun newInstance(): AccessFragment {
             return AccessFragment()
         }
     }
-
-    lateinit var accessViewModel: AccessViewModel
 
     @StringRes
     private val tabTitles = intArrayOf(R.string.login_tab_text, R.string.register_tab_text)
@@ -41,7 +33,7 @@ class AccessFragment private constructor() : Fragment() {
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
      */
-    private lateinit var viewPager: ViewPager2
+    private var viewPager: ViewPager2? = null
 
     private lateinit var accessBinding: FragmentAccessBinding
 
@@ -49,10 +41,6 @@ class AccessFragment private constructor() : Fragment() {
      * The pager adapter, which provides the pages to the view pager widget.
      */
     private var pagerAdapter: FragmentStateAdapter? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("lifecycle", "accessF onCreate")
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -62,53 +50,27 @@ class AccessFragment private constructor() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = accessBinding.pager
         pagerAdapter = ScreenSlidePagerAdapter(childFragmentManager, lifecycle)
-        viewPager.adapter = pagerAdapter
+        viewPager!!.adapter = pagerAdapter
         accessBinding.lifecycleOwner = this
         val tabLayout = accessBinding.accessTabs
-        TabLayoutMediator(tabLayout, viewPager,
+        TabLayoutMediator(tabLayout, viewPager!!,
                 TabConfigurationStrategy { tab: TabLayout.Tab, position: Int -> tab.setText(tabTitles[position]) }
         ).attach()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        accessViewModel = ViewModelProvider(this).get(AccessViewModel::class.java)
-        observeVM()
-    }
-
-    fun registerOnAccessPassListener(listener: () -> Unit) {
-        onAccessPassListener = listener
-    }
-
-    private fun observeVM() {
-        accessViewModel.loginStatus.observe(viewLifecycleOwner, Observer {
-            if (it == AccessRepository.LoginStatus.LOGIN_SUCCESSFUL) {
-                val args = Bundle()
-                args.putLong("uid", accessViewModel.getUid())
-                arguments = args
-                onAccessPassListener.invoke()
-            }
-        })
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("fragdeb", "aF onDView")
-    }
+        viewPager = null
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("fragdeb", "aF onD")
+        accessBinding.unbind()
     }
 
     private class ScreenSlidePagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fm, lifecycle) {
         // The number of tabs.
         private val tabCount = 2
         override fun createFragment(position: Int): Fragment {
-            Log.d("lifecycle", "viewpager createFragment")
             return if (position == 0)
                 LoginFragment()
             else RegisterFragment()
