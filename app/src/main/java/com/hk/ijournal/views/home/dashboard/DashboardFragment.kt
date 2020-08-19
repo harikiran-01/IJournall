@@ -1,7 +1,6 @@
-package com.hk.ijournal.views.dashboard
+package com.hk.ijournal.views.home.dashboard
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +22,7 @@ class DashboardFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("lifecycle", "dashF onCreate")
+        println("lifecycled dashF onC")
     }
 
 

@@ -1,7 +1,7 @@
 package com.hk.ijournal.repository
 
 import android.text.TextUtils
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.hk.ijournal.repository.local.UserDao
@@ -28,15 +28,11 @@ class AccessRepository(private val userDao: UserDao, private val coroutineScope:
     //access livedata
     val loginStatus: MutableLiveData<LoginStatus> = MutableLiveData()
     val registerStatus: MutableLiveData<RegisterStatus> = MutableLiveData()
-    val accessStatus: MutableLiveData<AccessStatus> = MutableLiveData()
 
     enum class RegisterStatus {
         REGISTER_SUCCESSFULL, USER_ALREADY_EXISTS
     }
 
-    enum class AccessStatus {
-        ACCESS_SUCCESS
-    }
 
     enum class LoginStatus {
         LOGIN_SUCCESSFUL, USER_NOT_FOUND, INVALID_LOGIN
@@ -46,40 +42,40 @@ class AccessRepository(private val userDao: UserDao, private val coroutineScope:
         USERNAME_INVALID, PASSCODE_INVALID, DOB_INVALID
     }
 
-    fun getLoginUserValidation(): MutableLiveData<AccessValidation> {
+    fun getLoginUserValidation(): LiveData<AccessValidation> {
         //transforming based on username live data
         return Transformations.map(loginUsernameLive) {
             return@map if (isUsernameInvalid(it)) AccessValidation.USERNAME_INVALID
             else
                 null
-        } as MutableLiveData<AccessValidation>
+        }
     }
 
-    fun getLoginPasscodeValidation(): MutableLiveData<AccessValidation> {
+    fun getLoginPasscodeValidation(): LiveData<AccessValidation> {
         //transforming based on passcode live data
         return Transformations.map(loginPasscodeLive) {
             return@map if (isPassCodeInvalid(it)) AccessValidation.PASSCODE_INVALID
             else
                 null
-        } as MutableLiveData<AccessValidation>
+        }
     }
 
-    fun getRegisterUserValidation(): MutableLiveData<AccessValidation> {
+    fun getRegisterUserValidation(): LiveData<AccessValidation> {
         //transforming based on username live data
         return Transformations.map(registerUsernameLive) {
             return@map if (isUsernameInvalid(it)) AccessValidation.USERNAME_INVALID
             else
                 null
-        } as MutableLiveData<AccessValidation>
+        }
     }
 
-    fun getRegisterPasscodeValidation(): MutableLiveData<AccessValidation> {
+    fun getRegisterPasscodeValidation(): LiveData<AccessValidation> {
         //transforming based on passcode live data
         return Transformations.map(registerPasscodeLive) {
             return@map if (isPassCodeInvalid(it)) AccessValidation.PASSCODE_INVALID
             else
                 null
-        } as MutableLiveData<AccessValidation>
+        }
     }
 
     private fun isUsernameInvalid(username: String?): Boolean {
@@ -95,9 +91,11 @@ class AccessRepository(private val userDao: UserDao, private val coroutineScope:
     }
 
     private fun isLoginSuccessful(dbUser: DiaryUser?): LoginStatus {
-        return if (dbUser == null) LoginStatus.USER_NOT_FOUND
-        else if (dbUser.passcode == diaryUser.passcode) LoginStatus.LOGIN_SUCCESSFUL
-        else LoginStatus.INVALID_LOGIN
+        return when {
+            dbUser == null -> LoginStatus.USER_NOT_FOUND
+            dbUser.passcode == diaryUser.passcode -> LoginStatus.LOGIN_SUCCESSFUL
+            else -> LoginStatus.INVALID_LOGIN
+        }
     }
 
     private fun processRegisterAndGetAccessStatus(dbUser: DiaryUser?): RegisterStatus {
@@ -124,12 +122,12 @@ class AccessRepository(private val userDao: UserDao, private val coroutineScope:
         diaryUser = DiaryUser(registerUsernameLive.value.toString(), registerPasscodeLive.value.toString(), dobLiveData.value)
         coroutineScope.launch {
             regStatus = processRegisterAndGetAccessStatus(getMatchingUserinDb())
-            //runJunk()
-            uid = insertUserInDbAndGetRowId(diaryUser)
+            println("regstatus $regStatus")
+            if (regStatus == RegisterStatus.REGISTER_SUCCESSFULL)
+                uid = insertUserInDbAndGetRowId(diaryUser)
             if (uid > 0L)
                 registerStatus.value = regStatus
         }
-        Log.i("after", "after coroutine")
     }
 
     private suspend fun getMatchingUserinDb(): DiaryUser? {

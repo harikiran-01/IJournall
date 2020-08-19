@@ -38,9 +38,15 @@ object AccessBindingAdapter {
 
     @JvmStatic
     @BindingAdapter(value = ["focusState", "errorMsg"], requireAll = false)
-    fun setErrorMsg(textInputLayout: TextInputLayout, focusState: Boolean, errorMessage: String?) {
+    fun setErrorMsg(textInputLayout: TextInputLayout, focusState: Boolean, errorMessage: AccessValidation?) {
         if (!focusState) {
-            if (TextUtils.isEmpty(errorMessage)) textInputLayout.error = null else textInputLayout.error = errorMessage
+            errorMessage?.let {
+                textInputLayout.error = when (it) {
+                    AccessValidation.USERNAME_INVALID -> "Invalid Username"
+                    AccessValidation.PASSCODE_INVALID -> "Passcode Invalid"
+                    else -> null
+                }
+            }
         } else textInputLayout.error = null
     }
 

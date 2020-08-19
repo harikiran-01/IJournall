@@ -1,4 +1,4 @@
-package com.hk.ijournal.views.diary
+package com.hk.ijournal.views.home.diary
 
 import android.content.res.ColorStateList
 import android.graphics.Paint
@@ -21,8 +21,7 @@ class SmileyRatingFragment : Fragment() {
     companion object RatingFragFactory {
         const val FRAG_NAME = "rating_frag"
         fun newInstance(): SmileyRatingFragment {
-            val smileyRatingFragment = SmileyRatingFragment()
-            return smileyRatingFragment
+            return SmileyRatingFragment()
         }
     }
 

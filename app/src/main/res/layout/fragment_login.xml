@@ -27,8 +27,7 @@
             android:gravity="start"
             android:hint="@string/username_label"
             android:textAlignment="viewStart"
-            android:layout_marginTop="50dp"
-            app:errorMsg='@{AccessViewModel.loginUserValidation.equals(AccessValidation.USERNAME_INVALID)?"Invalid Username":""}'
+            app:errorMsg='@{AccessViewModel.loginUserValidation}'
             app:errorTextColor="@color/red"
             app:focusState="@{AccessBindingAdapter.loginusernameFocusLiveData}"
             android:textColorHint="@color/colorPrimary"
@@ -37,7 +36,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.20"
+            app:layout_constraintVertical_bias="0.3"
             app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -60,7 +59,7 @@
             android:hint="@string/passcode_label"
             android:textAlignment="viewStart"
             android:textColorHint="@color/colorPrimary"
-            app:errorMsg='@{AccessViewModel.loginPasscodeValidation.equals(AccessValidation.PASSCODE_INVALID)?"Invalid Password":""}'
+            app:errorMsg='@{AccessViewModel.loginPasscodeValidation}'
             app:errorTextColor="@color/red"
             app:focusState="@{AccessBindingAdapter.loginpasscodeFocusLiveData}"
             app:layout_constraintBottom_toTopOf="@+id/loginbutton"
@@ -88,6 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:text="@string/loginbtn_txt"
+            android:onClick="@{()-> AccessViewModel.loginUser()}"
             app:enableOnPassValid="@{AccessViewModel.loginPasscodeValidation}"
             app:enableOnUserValid="@{AccessViewModel.loginUserValidation}"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -1,38 +1,47 @@
-package com.hk.ijournal.views.diary
+package com.hk.ijournal.views.home.diary
 
+import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.hk.ijournal.R
 import com.hk.ijournal.databinding.FragmentDiaryBinding
+import com.hk.ijournal.repository.local.IJDatabase
+import com.hk.ijournal.repository.models.ContentType
+import com.hk.ijournal.utils.SessionAuthManager
 import com.hk.ijournal.viewmodels.DiaryViewModel
 import com.hk.ijournal.viewmodels.DiaryViewModelFactory
-import com.hk.ijournal.viewmodels.HomeViewModel
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+import com.hk.ijournal.viewmodels.RelayViewModel
+import com.wajahatkarim3.roomexplorer.RoomExplorer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.util.*
 
-
-class DiaryFragment : Fragment(), View.OnClickListener, CoroutineScope {
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
+class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, DatePickerDialog.OnDateSetListener {
+    private val relayViewModel by activityViewModels<RelayViewModel>()
+    private lateinit var datePickerDialog: DatePickerDialog
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private val textWatcher = DebouncingEditTextWatcher(this) { typedContent, stoppedTyping ->
+    private val textWatcher = DebouncingEditTextWatcher(lifecycleScope) { typedContent, stoppedTyping ->
         diaryViewModel.postContent(typedContent, stoppedTyping)
     }
 
     private lateinit var diaryViewModel: DiaryViewModel
-    private lateinit var homeViewModel: HomeViewModel
     private lateinit var fragmentDiaryBinding: FragmentDiaryBinding
 
     companion object DiaryFragFactory {
@@ -45,12 +54,18 @@ class DiaryFragment : Fragment(), View.OnClickListener, CoroutineScope {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        println("lifecycled diaryF onCreate")
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.d("lifecycle", "diaryF onCreateView")
+        println("lifecycled diaryF onCreateView")
         fragmentDiaryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_diary, container, false)
         fragmentDiaryBinding.smileyRatingButton.setOnClickListener(this)
+        fragmentDiaryBinding.smileyRatingButton.setOnLongClickListener(this)
         fragmentDiaryBinding.prevDateButton.setOnClickListener(this)
         fragmentDiaryBinding.nextDateButton.setOnClickListener(this)
         fragmentDiaryBinding.diaryContent.addTextChangedListener(textWatcher)
@@ -60,14 +75,11 @@ class DiaryFragment : Fragment(), View.OnClickListener, CoroutineScope {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onDestroyView() {
-        Log.d("lifecycle", "diaryF onDView")
-        fragmentDiaryBinding.diaryContent.removeTextChangedListener(textWatcher)
-        fragmentDiaryBinding.unbind()
-        super.onDestroyView()
+        datePickerDialog = DatePickerDialog(requireContext(), this, Calendar.getInstance()[Calendar.YEAR],
+                Calendar.getInstance()[Calendar.MONTH] + 1,
+                Calendar.getInstance()[Calendar.DAY_OF_MONTH])
+        datePickerDialog.datePicker.maxDate = Calendar.getInstance().timeInMillis
+        datePickerDialog.setOnDateSetListener(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -76,6 +88,7 @@ class DiaryFragment : Fragment(), View.OnClickListener, CoroutineScope {
         diaryViewModel = ViewModelProvider(this,
                 DiaryViewModelFactory(requireActivity().application, requireArguments().getLong("uid"))).get(DiaryViewModel::class.java)
         fragmentDiaryBinding.diaryViewModel = diaryViewModel
+        fragmentDiaryBinding.diaryFragment = this
         fragmentDiaryBinding.lifecycleOwner = viewLifecycleOwner
         observeViewModel()
     }
@@ -83,21 +96,19 @@ class DiaryFragment : Fragment(), View.OnClickListener, CoroutineScope {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeViewModel() {
-        diaryViewModel.pageContent.observe(viewLifecycleOwner, Observer {
-            textWatcher.typedText = false
-            fragmentDiaryBinding.diaryContent.setText(it)
-            textWatcher.typedText = true
+        diaryViewModel._pageContent.observe(viewLifecycleOwner, Observer {
+            textWatcher.typedText = it.contentType == ContentType.TYPED
+            if (it.contentType == ContentType.LOADED)
+                fragmentDiaryBinding.diaryContent.setText(it.text)
         })
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("lifecycle", "diaryF onCreate")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("lifecycle", "diaryF onDestroyed")
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onDestroyView() {
+        println("lifecycled diaryF onDView")
+        fragmentDiaryBinding.diaryContent.removeTextChangedListener(textWatcher)
+        fragmentDiaryBinding.unbind()
+        super.onDestroyView()
     }
 
     private fun toggleRatingSelectorDialog() {
@@ -113,20 +124,34 @@ class DiaryFragment : Fragment(), View.OnClickListener, CoroutineScope {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.smiley_rating_button -> {
+                SessionAuthManager.logoutUser()
+                relayViewModel.onSessionEnd.set(true)
                 toggleRatingSelectorDialog()
-                //RoomExplorer.show(requireActivity(), IJDatabase::class.java, "Journals.db")
-            }
-
-            R.id.prevDateButton -> {
-                //parentFragmentManager.beginTransaction().detach(this).attach(this).commitNowAllowingStateLoss()
-                diaryViewModel.navigateToPrevPage()
-            }
-
-            R.id.nextDateButton -> {
-                //parentFragmentManager.beginTransaction().detach(this).attach(this).commitNowAllowingStateLoss()
-                diaryViewModel.navigateToNextPage()
             }
         }
+    }
+
+    fun showDatePicker() {
+        datePickerDialog.show()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        diaryViewModel.navigateToSelectedPage(LocalDate.of(year, month, dayOfMonth))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        println("lifecycled diaryF onDestroy")
+    }
+
+    override fun onLongClick(v: View): Boolean {
+        when (v.id) {
+            R.id.smiley_rating_button -> {
+                RoomExplorer.show(requireActivity(), IJDatabase::class.java, "Journals.db")
+            }
+        }
+        return true
     }
 }
 
@@ -155,6 +180,9 @@ internal class DebouncingEditTextWatcher(private val coroutineScope: CoroutineSc
                 }
             }
         }
+        if (!typedText)
+            typedText = true
     }
 }
+
 
