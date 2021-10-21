@@ -63,7 +63,7 @@ class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
         println("lifecycled diaryF onCreateView")
-        fragmentDiaryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_diary, container, false)
+        fragmentDiaryBinding = FragmentDiaryBinding.inflate(inflater, container, false)
         fragmentDiaryBinding.smileyRatingButton.setOnClickListener(this)
         fragmentDiaryBinding.smileyRatingButton.setOnLongClickListener(this)
         fragmentDiaryBinding.prevDateButton.setOnClickListener(this)
@@ -126,7 +126,8 @@ class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener
             R.id.smiley_rating_button -> {
                 SessionAuthManager.logoutUser()
                 relayViewModel.onSessionEnd.set(true)
-                toggleRatingSelectorDialog()
+                relayViewModel.onSessionEnd.set(false)
+                //toggleRatingSelectorDialog()
             }
         }
     }
@@ -137,7 +138,7 @@ class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        diaryViewModel.navigateToSelectedPage(LocalDate.of(year, month, dayOfMonth))
+        diaryViewModel.navigateToSelectedPage(LocalDate.of(year, month+1, dayOfMonth))
     }
 
     override fun onDestroy() {

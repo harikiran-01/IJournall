@@ -43,9 +43,18 @@ class LaunchActivity : AppCompatActivity() {
     }
 
     private fun observeVM() {
-        addImageCallback = relayViewModel.imagePickerClicked.observe { if (it.get()) openImagePicker() }
-        accessAuthCallback = relayViewModel.isAccessAuthorized.observe { if (it.get()) navigateFromAccessToHome() }
-        logoutCallback = relayViewModel.onSessionEnd.observe { if (it.get()) navigateFromHomeToAccess() }
+        addImageCallback = relayViewModel.imagePickerClicked.observe { if (it.get()){
+            openImagePicker()
+            it.set(false)
+            } }
+        accessAuthCallback = relayViewModel.isAccessAuthorized.observe { if (it.get()) {
+            navigateFromAccessToHome()
+            it.set(false)
+            } }
+        logoutCallback = relayViewModel.onSessionEnd.observe { if (it.get()) {
+            navigateFromHomeToAccess()
+            it.set(false)
+            } }
     }
 
     //extension inline higher order function to abstract "Observable" object's callback method
@@ -121,6 +130,7 @@ class LaunchActivity : AppCompatActivity() {
         val newUserId = accessFragment!!.requireArguments().getLong("uid")
         SessionAuthManager.createUserLoginSession(newUserId)
         homeFragment = HomeFragment.newInstance(newUserId)
+        print("bugbash is access child destroyed ${accessFragment?.childFragmentManager?.isDestroyed}")
         accessFragment = null
         supportFragmentManager.beginTransaction().replace(R.id.main_nav_host, homeFragment!!, "home_frag").commit()
     }

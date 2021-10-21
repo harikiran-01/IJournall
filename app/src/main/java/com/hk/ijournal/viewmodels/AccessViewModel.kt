@@ -62,7 +62,7 @@ class AccessViewModel(application: Application) : AndroidViewModel(application) 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {
-        accessRepository.setDobLiveData(LocalDate.of(year, month, dayOfMonth))
+        accessRepository.setDobLiveData(LocalDate.of(year, month+1, dayOfMonth))
     }
 
     fun loginUser() = accessRepository.loginUserAndUpdateAccessStatus()

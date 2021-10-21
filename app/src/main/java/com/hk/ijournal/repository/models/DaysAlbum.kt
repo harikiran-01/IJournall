@@ -13,7 +13,7 @@ enum class ImageSource {
         foreignKeys = [ForeignKey(
                 entity = DiaryPage::class, parentColumns = ["pid"],
                 childColumns = ["pid"],
-                onDelete = ForeignKey.CASCADE)], indices = [Index("aid", "pid")])
+                onDelete = ForeignKey.CASCADE)], indices = [Index("pid", "aid")])
 data class DayAlbum(var pid: Long, var imageUriString: String, var imageSource: String) {
     @PrimaryKey(autoGenerate = true)
     var aid: Long = 0

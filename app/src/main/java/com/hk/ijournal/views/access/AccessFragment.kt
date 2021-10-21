@@ -44,7 +44,7 @@ class AccessFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        accessBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_access, container, false)
+        accessBinding = FragmentAccessBinding.inflate(inflater, container, false)
         return accessBinding.root
     }
 

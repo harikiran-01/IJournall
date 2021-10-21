@@ -109,7 +109,6 @@ class PageAlbumFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         if (v?.id == R.id.addImageButton) {
             relayViewModel.imagePickerClicked.set(true)
-            relayViewModel.imagePickerClicked.set(false)
         }
     }
 

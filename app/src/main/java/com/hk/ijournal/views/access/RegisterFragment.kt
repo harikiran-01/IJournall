@@ -31,7 +31,7 @@ class RegisterFragment : Fragment(), OnDateSetListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        registerBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
+        registerBinding = FragmentRegisterBinding.inflate(inflater, container, false)
         return registerBinding.root
     }
 
@@ -83,7 +83,6 @@ class RegisterFragment : Fragment(), OnDateSetListener {
         args.putLong("uid", accessViewModel.getUid())
         requireParentFragment().arguments = args
         relayViewModel.isAccessAuthorized.set(true)
-        relayViewModel.isAccessAuthorized.set(false)
     }
 
 }

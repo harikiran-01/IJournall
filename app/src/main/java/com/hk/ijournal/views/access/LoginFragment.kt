@@ -24,7 +24,7 @@ class LoginFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        loginBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
+        loginBinding = FragmentLoginBinding.inflate(inflater, container, false)
         return loginBinding.root
     }
 
@@ -60,7 +60,10 @@ class LoginFragment : Fragment() {
         args.putLong("uid", accessViewModel.getUid())
         requireParentFragment().arguments = args
         relayViewModel.isAccessAuthorized.set(true)
-        relayViewModel.isAccessAuthorized.set(false)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        loginBinding.unbind()
+    }
 }

@@ -22,8 +22,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/usernamefieldwrap"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/edittext_horizontal_margin"
+            android:layout_marginEnd="@dimen/edittext_horizontal_margin"
             android:gravity="start"
             android:hint="@string/username_label"
             android:textAlignment="viewStart"
@@ -41,7 +43,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/loginusername"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="12"
                 android:inputType="textEmailAddress"
@@ -53,8 +55,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passcodewrap"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/edittext_horizontal_margin"
+            android:layout_marginEnd="@dimen/edittext_horizontal_margin"
             android:layout_marginTop="40dp"
             android:hint="@string/passcode_label"
             android:textAlignment="viewStart"
@@ -71,7 +75,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/loginpasscode"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="12"
                 android:inputType="textPassword"

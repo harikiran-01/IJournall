@@ -8,7 +8,7 @@ import com.hk.ijournal.repository.models.DayAlbum
 import com.hk.ijournal.repository.models.DiaryPage
 import com.hk.ijournal.repository.models.DiaryUser
 
-@Database(entities = [DiaryUser::class, DiaryPage::class, DayAlbum::class], exportSchema = false, version = 20)
+@Database(entities = [DiaryUser::class, DiaryPage::class, DayAlbum::class], exportSchema = false, version = 2)
 abstract class IJDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun diaryDao(): DiaryDao
