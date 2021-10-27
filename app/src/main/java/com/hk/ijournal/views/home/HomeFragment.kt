@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.hk.ijournal.R
 import com.hk.ijournal.databinding.FragmentHomeBinding
@@ -24,9 +24,7 @@ class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             return homeFragment
         }
     }
-
-    private lateinit var homeViewModel: HomeViewModel
-
+    private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +33,7 @@ class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         println("lifecycled homeF onCreate")
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         println("lifecycled homeF onCreateView")
         fragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         return fragmentHomeBinding.root
@@ -45,27 +43,12 @@ class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         super.onViewCreated(view, savedInstanceState)
         val navView = fragmentHomeBinding.navView
         navView.setOnNavigationItemSelectedListener(this)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         addStartFragment()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater)
         menuInflater.inflate(R.menu.toolbar_menu, menu)
-    }
-
-    override fun onDestroyView() {
-        println("lifecycled homeF onDView")
-        for (fragment in childFragmentManager.fragments) {
-            childFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
-        }
-        fragmentHomeBinding.unbind()
-        homeViewModel.lastActiveFragTag = ""
-        super.onDestroyView()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -115,6 +98,16 @@ class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             transaction.commit()
             homeViewModel.lastActiveFragTag = itemTitle
         }
+    }
+
+    override fun onDestroyView() {
+        println("lifecycled homeF onDView")
+        for (fragment in childFragmentManager.fragments) {
+            childFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
+        }
+        fragmentHomeBinding.unbind()
+        homeViewModel.lastActiveFragTag = ""
+        super.onDestroyView()
     }
 
     override fun onDestroy() {

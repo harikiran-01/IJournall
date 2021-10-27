@@ -5,12 +5,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hk.ijournal.repository.DiaryRepository
 import com.hk.ijournal.repository.local.IJDatabase
-import com.hk.ijournal.repository.models.Content
-import com.hk.ijournal.repository.models.DayAlbum
 import kotlinx.coroutines.flow.Flow
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -20,33 +17,19 @@ import java.time.LocalDate
 class DiaryViewModel(application: Application, userId: Long) : AndroidViewModel(application) {
     private val ijDatabase: IJDatabase
 
+    val diaryRepository: DiaryRepository
+
     //page livedata
-    private val _selectedDateLive: MutableLiveData<LocalDate>
     val selectedDateLive: LiveData<LocalDate>
-        get() = _selectedDateLive
+        get() = diaryRepository.selectedDateLive
 
     val saveStatus: LiveData<String>
-        get() = _saveStatus
-
-    private val _saveStatus: MutableLiveData<String>
-
-    val _pageContent: MutableLiveData<Content>
-
-    val dayAlbumLive: MutableLiveData<MutableList<DayAlbum>>
-
-    val currentExternalImgList: MutableLiveData<List<String>>
-
-    private val diaryRepository: DiaryRepository
+        get() = diaryRepository.saveStatus
 
     init {
         ijDatabase = IJDatabase.getDatabase(application.applicationContext)
         diaryRepository = DiaryRepository(ijDatabase.getDiaryPageDao(), userId, viewModelScope)
         //bind
-        _selectedDateLive = diaryRepository.selectedDateLive
-        _pageContent = diaryRepository.pageContentLive
-        _saveStatus = diaryRepository.saveStatus
-        dayAlbumLive = diaryRepository.albumLive
-        currentExternalImgList = diaryRepository.currentExternalImgList
         println("lifecycled diaryVM onCreate")
     }
 

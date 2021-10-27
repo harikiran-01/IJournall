@@ -1,5 +1,7 @@
 package com.hk.ijournal.views.home.diary
 
+import android.app.Activity
+import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -11,9 +13,8 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.hk.ijournal.R
@@ -21,6 +22,7 @@ import com.hk.ijournal.adapters.PageAlbumAdapter
 import com.hk.ijournal.databinding.FragmentPageAlbumBinding
 import com.hk.ijournal.utils.UriConverter
 import com.hk.ijournal.viewmodels.DiaryViewModel
+import com.hk.ijournal.viewmodels.DiaryViewModelFactory
 import com.hk.ijournal.viewmodels.RelayViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -31,36 +33,39 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
 
-class PageAlbumFragment : Fragment(), View.OnClickListener {
+class PageAlbumFragment : Fragment(), View.OnClickListener, LifecycleObserver {
     private lateinit var pageAlbumBinding: FragmentPageAlbumBinding
     private val relayViewModel by activityViewModels<RelayViewModel>()
-    private lateinit var diaryViewModel: DiaryViewModel
+    private val diaryViewModel: DiaryViewModel by viewModels (
+        ownerProducer = { requireParentFragment() })
     private var loadStream: Job? = null
     private val pageAlbumAdapter by lazy { PageAlbumAdapter(Glide.with(requireContext())) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        pageAlbumBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_page_album, container, false)
+                              savedInstanceState: Bundle?): View {
+        pageAlbumBinding = FragmentPageAlbumBinding.inflate(inflater, container, false)
         pageAlbumBinding.addImageButton.setOnClickListener(this)
         return pageAlbumBinding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        pageAlbumBinding.albumRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        pageAlbumBinding.albumRecyclerView.layoutManager = LinearLayoutManager(requireContext(),
+            LinearLayoutManager.HORIZONTAL, false)
+        pageAlbumBinding.albumRecyclerView.adapter = pageAlbumAdapter
+        pageAlbumBinding.lifecycleOwner = viewLifecycleOwner
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        diaryViewModel = ViewModelProvider(requireParentFragment()).get(DiaryViewModel::class.java)
-        pageAlbumBinding.albumRecyclerView.adapter = pageAlbumAdapter
         observeVM()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeVM() {
-        relayViewModel.imageUriCategory.observe(viewLifecycleOwner, Observer {
+        relayViewModel.imageUriCategory.observe(viewLifecycleOwner, {
             requireParentFragment().requireParentFragment().arguments?.getStringArrayList("imageuridata")?.let {
                 lifecycleScope.launchWhenCreated {
                     diaryViewModel.saveImagesData(it)
@@ -69,7 +74,7 @@ class PageAlbumFragment : Fragment(), View.OnClickListener {
             }
         })
 
-        diaryViewModel.currentExternalImgList.observe(viewLifecycleOwner, Observer {
+        diaryViewModel.diaryRepository.currentExternalImgList.observe(viewLifecycleOwner, {
             loadStream = lifecycleScope.launchWhenCreated {
                 println("persistdeb $it")
                 ensureActive()
@@ -83,7 +88,7 @@ class PageAlbumFragment : Fragment(), View.OnClickListener {
             }
         })
 
-        diaryViewModel.selectedDateLive.observe(viewLifecycleOwner, Observer {
+        diaryViewModel.selectedDateLive.observe(viewLifecycleOwner, {
             pageAlbumAdapter.clearAlbum()
             loadStream?.run {
                 if (isActive)
@@ -91,7 +96,7 @@ class PageAlbumFragment : Fragment(), View.OnClickListener {
             }
         })
 
-        diaryViewModel.dayAlbumLive.observe(viewLifecycleOwner, Observer { imageList ->
+        diaryViewModel.diaryRepository.albumLive.observe(viewLifecycleOwner, { imageList ->
             println("albdeb $imageList")
             if (imageList.isNotEmpty()) pageAlbumAdapter.addAlbum(imageList)
         }

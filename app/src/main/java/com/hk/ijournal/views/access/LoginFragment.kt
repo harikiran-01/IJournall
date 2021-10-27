@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.hk.ijournal.R
@@ -18,19 +19,19 @@ import com.hk.ijournal.viewmodels.RelayViewModel
 import es.dmoral.toasty.Toasty
 
 class LoginFragment : Fragment() {
-    private lateinit var accessViewModel: AccessViewModel
     private lateinit var loginBinding: FragmentLoginBinding
     private val relayViewModel by activityViewModels<RelayViewModel>()
+    private val accessViewModel: AccessViewModel by viewModels(
+        ownerProducer = { requireParentFragment() })
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         loginBinding = FragmentLoginBinding.inflate(inflater, container, false)
         return loginBinding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        accessViewModel = ViewModelProvider(requireParentFragment()).get(AccessViewModel::class.java)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         loginBinding.lifecycleOwner = viewLifecycleOwner
         loginBinding.accessBindingAdapter = AccessBindingAdapter
         loginBinding.accessViewModel = accessViewModel
@@ -52,7 +53,6 @@ class LoginFragment : Fragment() {
                 }
             }
         })
-
     }
 
     private fun launchHomeOnAccessValidation() {

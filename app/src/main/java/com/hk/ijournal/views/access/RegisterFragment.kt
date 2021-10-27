@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.hk.ijournal.R
@@ -25,10 +26,10 @@ import java.util.*
 
 class RegisterFragment : Fragment(), OnDateSetListener {
     private lateinit var datePickerDialog: DatePickerDialog
-    private lateinit var accessViewModel: AccessViewModel
     private lateinit var registerBinding: FragmentRegisterBinding
     private val relayViewModel by activityViewModels<RelayViewModel>()
-
+    private val accessViewModel: AccessViewModel by viewModels(
+        ownerProducer = { requireParentFragment() })
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         registerBinding = FragmentRegisterBinding.inflate(inflater, container, false)
@@ -44,19 +45,14 @@ class RegisterFragment : Fragment(), OnDateSetListener {
                 Calendar.getInstance()[Calendar.DAY_OF_MONTH])
         datePickerDialog.datePicker.maxDate = Calendar.getInstance().timeInMillis
         datePickerDialog.setOnDateSetListener(this)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        accessViewModel = ViewModelProvider(requireParentFragment()).get(AccessViewModel::class.java)
+        registerBinding.lifecycleOwner = viewLifecycleOwner
         registerBinding.accessViewModel = accessViewModel
         registerBinding.registerFragment = this
-        registerBinding.lifecycleOwner = viewLifecycleOwner
         registerBinding.accessBindingAdapter = AccessBindingAdapter
-        observeViewModel(accessViewModel)
+        observeViewModel()
     }
 
-    private fun observeViewModel(accessViewModel: AccessViewModel) {
+    private fun observeViewModel() {
         accessViewModel.registerStatus.observe(this.viewLifecycleOwner, Observer { accessStatus: RegisterStatus? ->
             when (accessStatus) {
                 RegisterStatus.REGISTER_SUCCESSFULL -> {

@@ -10,11 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import androidx.annotation.RequiresApi
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.hk.ijournal.R
 import com.hk.ijournal.databinding.FragmentDiaryBinding
@@ -34,6 +33,9 @@ import java.util.*
 
 class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, DatePickerDialog.OnDateSetListener {
     private val relayViewModel by activityViewModels<RelayViewModel>()
+    private val diaryViewModel : DiaryViewModel by viewModels {
+        DiaryViewModelFactory(requireActivity().application, requireArguments().getLong("uid"))
+    }
     private lateinit var datePickerDialog: DatePickerDialog
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -41,7 +43,6 @@ class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener
         diaryViewModel.postContent(typedContent, stoppedTyping)
     }
 
-    private lateinit var diaryViewModel: DiaryViewModel
     private lateinit var fragmentDiaryBinding: FragmentDiaryBinding
 
     companion object DiaryFragFactory {
@@ -61,13 +62,11 @@ class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View? {
+                              container: ViewGroup?, savedInstanceState: Bundle?): View {
         println("lifecycled diaryF onCreateView")
         fragmentDiaryBinding = FragmentDiaryBinding.inflate(inflater, container, false)
         fragmentDiaryBinding.smileyRatingButton.setOnClickListener(this)
         fragmentDiaryBinding.smileyRatingButton.setOnLongClickListener(this)
-        fragmentDiaryBinding.prevDateButton.setOnClickListener(this)
-        fragmentDiaryBinding.nextDateButton.setOnClickListener(this)
         fragmentDiaryBinding.diaryContent.addTextChangedListener(textWatcher)
         return fragmentDiaryBinding.root
     }
@@ -80,23 +79,15 @@ class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener
                 Calendar.getInstance()[Calendar.DAY_OF_MONTH])
         datePickerDialog.datePicker.maxDate = Calendar.getInstance().timeInMillis
         datePickerDialog.setOnDateSetListener(this)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        diaryViewModel = ViewModelProvider(this,
-                DiaryViewModelFactory(requireActivity().application, requireArguments().getLong("uid"))).get(DiaryViewModel::class.java)
+        fragmentDiaryBinding.lifecycleOwner = viewLifecycleOwner
         fragmentDiaryBinding.diaryViewModel = diaryViewModel
         fragmentDiaryBinding.diaryFragment = this
-        fragmentDiaryBinding.lifecycleOwner = viewLifecycleOwner
         observeViewModel()
     }
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeViewModel() {
-        diaryViewModel._pageContent.observe(viewLifecycleOwner, Observer {
+        diaryViewModel.diaryRepository.pageContentLive.observe(viewLifecycleOwner, Observer {
             textWatcher.typedText = it.contentType == ContentType.TYPED
             if (it.contentType == ContentType.LOADED)
                 fragmentDiaryBinding.diaryContent.setText(it.text)
@@ -120,7 +111,6 @@ class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener
                 ?: ft.add(R.id.rating_holder, SmileyRatingFragment.newInstance(), SmileyRatingFragment.FRAG_NAME).commit()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onClick(v: View) {
         when (v.id) {
             R.id.smiley_rating_button -> {

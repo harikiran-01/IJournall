@@ -63,7 +63,6 @@ class AccessFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         viewPager = null
-
         accessBinding.unbind()
     }
 
