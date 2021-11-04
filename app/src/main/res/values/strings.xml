@@ -4,6 +4,7 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="preference_file_key">SessionManager</string>
 
     <!--login and register strings-->
     <string name="username_label">Username</string>

@@ -26,13 +26,9 @@ class DiaryRepository(daoMap: MutableMap<IJDatabase.DaoMapKeys, RoomDao>, privat
     private var saveFileAndUpdateDbTask: Job? = null
     private var insertAlbumInDbAndDispatchSaveFileTask: Job? = null
     private var pageId: Long? = null
-
     val currentExternalImgList = MutableLiveData<List<String>>()
-
     private val diaryDao = daoMap[IJDatabase.DaoMapKeys.Page] as DiaryDao
-
     private val albumDao = daoMap[IJDatabase.DaoMapKeys.Album] as AlbumDao
-
     val selectedDateLive = MutableLiveData<LocalDate>()
 
     private var diaryPageLive: MutableLiveData<DiaryPage> = Transformations.map(selectedDateLive) { selectedDate ->
