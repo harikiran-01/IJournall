@@ -62,6 +62,7 @@ jobs:
           path: app/build/reports/androidTests/connected/
 
   debug-apk:
+    needs: [ instrumentation-test ]
     name : Generate DEBUG APK
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
