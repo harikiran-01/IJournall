@@ -32,6 +32,8 @@ jobs:
         with:
           name: debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+      - name: Upload to Slack
+      run: "curl -F file=@app/build/outputs/apk/debug/app-debug.apk -F \"initial_comment=Debug build\" -F channels=general -H \"Authorization: Bearer xoxb-2715965483335-2723924174342-85BIQIXTpmLV5H7uShv4KBDu\" https://slack.com/api/files.upload"
   
 #  release-apk:
 #    name: Generate Release APK
@@ -49,11 +51,3 @@ jobs:
 #        with:
 #          name: release-apk
 #          path: app/release/app-release.apk
-
-  upload-to-slack:
-    name: Upload APKs to Slack
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Upload to Slack
-        run: "curl -F file=@app/build/outputs/apk/debug/app-debug.apk -F \"initial_comment=Debug build\" -F channels=general -H \"Authorization: Bearer xoxb-2715965483335-2723924174342-85BIQIXTpmLV5H7uShv4KBDu\" https://slack.com/api/files.upload"
