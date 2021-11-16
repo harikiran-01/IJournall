@@ -35,7 +35,7 @@ jobs:
       - name: Upload to Slack
         env:
           SLACK_SECRET: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
-        run: "curl -F file=@app/build/outputs/apk/debug/app-debug.apk -F \"initial_comment=Debug build\" -F channels=general -H \"Authorization: Bearer $SLACK_SECRET\" https://slack.com/api/files.upload"
+        run: "curl -F file=@app/build/outputs/apk/debug/app-debug.apk -F \"initial_comment=Debug build\" -F channels=general,random -H \"Authorization: Bearer $SLACK_SECRET\" https://slack.com/api/files.upload"
   
 #  release-apk:
 #    name: Generate Release APK
