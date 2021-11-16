@@ -8,7 +8,7 @@ on:
       - '*'
       - '!master'
   pull_request:
-    branches: [ test_workflow ]
+    branches: [ workflow_test_branch ]
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   debug-apk:
