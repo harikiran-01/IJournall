@@ -33,7 +33,10 @@ jobs:
           name: debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
       - name: Upload to Slack
-        run: "curl -F file=@app/build/outputs/apk/debug/app-debug.apk -F \"initial_comment=Debug build\" -F channels=general -H \"Authorization: Bearer xoxb-2715965483335-2754508135152-ykmgmFsnU458zEwzzPx3sdM2\" https://slack.com/api/files.upload"
+        env:
+          SLACK_SECRET: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
+          run: |
+          "curl -F file=@app/build/outputs/apk/debug/app-debug.apk -F \"initial_comment=Debug build\" -F channels=general -H \"Authorization: Bearer $SLACK_SECRET\" https://slack.com/api/files.upload"
   
 #  release-apk:
 #    name: Generate Release APK
