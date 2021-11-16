@@ -42,33 +42,33 @@ jobs:
 #          name: unit_test_report
 #          path: app/build/reports/tests/testDebugUnitTest/
 
-  instrumentation-test:
-    # needs: [ unit-test ]
-    runs-on: macos-latest
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v2
-
-    # Runs a single command using the runners shell
-      - name: set up JDK 11.0.13
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11.0.13
-
-      - name: Run espresso tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: ./gradlew connectedCheck
-
-      - name: Upload test report
-        uses: actions/upload-artifact@v2
-        with:
-          name: instrumentation_test_report
-          path: app/build/reports/androidTests/connected/
+#  instrumentation-test:
+#    # needs: [ unit-test ]
+#    runs-on: windows-latest
+#    steps:
+#      - name: Checkout the code
+#        uses: actions/checkout@v2
+#
+#    # Runs a single command using the runners shell
+#      - name: set up JDK 11.0.13
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: 11.0.13
+#
+#      - name: Run espresso tests
+#        uses: reactivecircus/android-emulator-runner@v2
+#        with:
+#          api-level: 29
+#          script: ./gradlew connectedCheck
+#
+#      - name: Upload test report
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: instrumentation_test_report
+#          path: app/build/reports/androidTests/connected/
 
   debug-apk:
-    needs: [ instrumentation-test ]
+    # needs: [ instrumentation-test ]
     name : Generate DEBUG APK
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -92,7 +92,10 @@ jobs:
       - name: Upload to Slack
         env:
           SLACK_SECRET: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
-        run: "curl -F file=@app/build/outputs/apk/debug/app-debug.apk -F \"initial_comment=Debug build\" -F channels=general,random -H \"Authorization: Bearer $SLACK_SECRET\" https://slack.com/api/files.upload"
+          FILE_PATH: app/build/outputs/apk/debug/app-debug.apk
+          DESCRIPTION: Debug build
+          CHANNELS: general,random
+        run: "curl -F file=@$FILE_PATH -F \"initial_comment=$DESCRIPTION\" -F channels=$CHANNELS -H \"Authorization: Bearer $SLACK_SECRET\" https://slack.com/api/files.upload"
   
 #  release-apk:
 #    name: Generate Release APK
