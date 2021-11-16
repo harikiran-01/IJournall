@@ -33,19 +33,33 @@ jobs:
           name: debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
   
-  release-apk:
-    name: Generate Release APK
+#  release-apk:
+#    name: Generate Release APK
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: set up JDK 11.0.13
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: 11.0.13
+#      - name: Building release APK
+#        run: bash ./gradlew assembleRelease --stacktrace
+#      - name: Upload Apk Artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: release-apk
+#          path: app/release/app-release.apk
+
+  upload-to-slack:
+    name: Upload APKs to Slack
     runs-on: ubuntu-latest
     steps:
-      - uses : actions/checkout@v2
-      - name: set up JDK 11.0.13
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11.0.13
-      - name : building release APK
-        run : bash ./gradlew assembleRelease --stacktrace
-      - name : Upload Apk Artificat
-        uses : actions/upload-artifact@v2
-        with: 
-          name: release-apk
-          path: app/release/app-release.apk 
+      - uses: actions/checkout@v2
+      - name: Upload to Slack
+        run: curl -F file=@app/build/outputs/apk/debug/app-debug.apk
+        -F "initial_comment=Debug build"
+        -F channels=general
+        -H
+        "Authorization: Bearer xoxb-2715965483335-2723924174342-85BIQIXTpmLV5H7uShv4KBDu"
+        https://slack.com/api/files.upload
+
