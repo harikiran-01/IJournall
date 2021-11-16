@@ -65,7 +65,7 @@ class PageAlbumFragment : Fragment(), View.OnClickListener, LifecycleObserver {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeVM() {
-        relayViewModel.imageUriCategory.observe(viewLifecycleOwner, {
+        relayViewModel.imageUriCategory.observe(viewLifecycleOwner, Observer {
             requireParentFragment().requireParentFragment().arguments?.getStringArrayList("imageuridata")?.let {
                 lifecycleScope.launchWhenCreated {
                     diaryViewModel.saveImagesData(it)
@@ -74,7 +74,7 @@ class PageAlbumFragment : Fragment(), View.OnClickListener, LifecycleObserver {
             }
         })
 
-        diaryViewModel.diaryRepository.currentExternalImgList.observe(viewLifecycleOwner, {
+        diaryViewModel.diaryRepository.currentExternalImgList.observe(viewLifecycleOwner, Observer {
             loadStream = lifecycleScope.launchWhenCreated {
                 println("persistdeb $it")
                 ensureActive()
@@ -88,7 +88,7 @@ class PageAlbumFragment : Fragment(), View.OnClickListener, LifecycleObserver {
             }
         })
 
-        diaryViewModel.selectedDateLive.observe(viewLifecycleOwner, {
+        diaryViewModel.selectedDateLive.observe(viewLifecycleOwner, Observer {
             pageAlbumAdapter.clearAlbum()
             loadStream?.run {
                 if (isActive)
@@ -96,7 +96,7 @@ class PageAlbumFragment : Fragment(), View.OnClickListener, LifecycleObserver {
             }
         })
 
-        diaryViewModel.diaryRepository.albumLive.observe(viewLifecycleOwner, { imageList ->
+        diaryViewModel.diaryRepository.albumLive.observe(viewLifecycleOwner, Observer { imageList ->
             println("albdeb $imageList")
             if (imageList.isNotEmpty()) pageAlbumAdapter.addAlbum(imageList)
         }
