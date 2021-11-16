@@ -56,10 +56,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Upload to Slack
-        run: curl -F file=@app/build/outputs/apk/debug/app-debug.apk
-        -F "initial_comment=Debug build"
-        -F channels=general
-        -H
-        "Authorization: Bearer xoxb-2715965483335-2723924174342-85BIQIXTpmLV5H7uShv4KBDu"
-        https://slack.com/api/files.upload
+        run: curl -F file=@app/build/outputs/apk/debug/app-debug.apk -F "initial_comment=Debug build" -F channels=general -H
+        "Authorization: Bearer xoxb-2715965483335-2723924174342-85BIQIXTpmLV5H7uShv4KBDu" https://slack.com/api/files.upload
 
