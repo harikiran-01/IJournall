@@ -27,13 +27,13 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Building debug APK
         run: bash ./gradlew assembleDebug --stacktrace
-      - name : Upload Apk artifact
+      - name: Upload Apk artifact
         uses: actions/upload-artifact@v2
         with:
           name: debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
       - name: Upload to Slack
-      run: "curl -F file=@app/build/outputs/apk/debug/app-debug.apk -F \"initial_comment=Debug build\" -F channels=general -H \"Authorization: Bearer xoxb-2715965483335-2723924174342-85BIQIXTpmLV5H7uShv4KBDu\" https://slack.com/api/files.upload"
+        run: "curl -F file=@app/build/outputs/apk/debug/app-debug.apk -F \"initial_comment=Debug build\" -F channels=general -H \"Authorization: Bearer xoxb-2715965483335-2723924174342-85BIQIXTpmLV5H7uShv4KBDu\" https://slack.com/api/files.upload"
   
 #  release-apk:
 #    name: Generate Release APK
