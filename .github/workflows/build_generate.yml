@@ -95,6 +95,7 @@ jobs:
           file_path: app/build/outputs/apk/debug/app-debug.apk
           comment: Debug Apk
           channels: general,random
+          slack_secret: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
   
 #  release-apk:
 #    name: Generate Release APK

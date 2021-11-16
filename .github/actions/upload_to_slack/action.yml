@@ -10,6 +10,11 @@ inputs:
   channels:
     description: 'The channel names to which file must be uploaded'
     required: true
+  slack_secret:
+    description: 'Slack secret'
+    required: true
+
+
 
 runs:
   using: composite
@@ -17,7 +22,7 @@ runs:
     - run: "curl -F file=@$FILE_PATH -F \"initial_comment=$COMMENT\" -F channels=$CHANNELS -H \"Authorization: Bearer $SLACK_SECRET\" https://slack.com/api/files.upload"
       shell: bash
       env:
-        SLACK_SECRET: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
+        SLACK_SECRET: ${{ inputs.slack_secret }}
         FILE_PATH: ${{ inputs.file_path }}
         COMMENT: ${{ inputs.comment }}
         CHANNELS: ${{ inputs.channels }}
