@@ -1,0 +1,23 @@
+name: Upload To Slack
+description: "Receives file and generates output"
+inputs:
+  file_path:
+    description: 'Filepath of the Apk'
+    required: true
+  comment:
+    description: 'Comment to be sent along with the file'
+    required: true
+  channels:
+    description: 'The channel names to which file must be uploaded'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - run: "curl -F file=@$FILE_PATH -F \"initial_comment=$COMMENT\" -F channels=$CHANNELS -H \"Authorization: Bearer $SLACK_SECRET\" https://slack.com/api/files.upload"
+      shell: bash
+      env:
+        SLACK_SECRET: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
+        FILE_PATH: ${{ inputs.file_path }}
+        COMMENT: ${{ inputs.comment }}
+        CHANNELS: ${{ inputs.channels }}

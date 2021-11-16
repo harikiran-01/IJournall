@@ -82,20 +82,19 @@ jobs:
         with: 
           java-version: 11.0.13
       # Runs a set of commands using the runners shell
-      - name: Building debug APK
+      - name: Building Debug APK
         run: bash ./gradlew assembleDebug --stacktrace
-      - name: Upload Apk artifact
+      - name: Upload Apk Artifact
         uses: actions/upload-artifact@v2
         with:
           name: debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
       - name: Upload to Slack
-        env:
-          SLACK_SECRET: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
-          FILE_PATH: app/build/outputs/apk/debug/app-debug.apk
-          DESCRIPTION: Debug build
-          CHANNELS: general,random
-        run: "curl -F file=@$FILE_PATH -F \"initial_comment=$DESCRIPTION\" -F channels=$CHANNELS -H \"Authorization: Bearer $SLACK_SECRET\" https://slack.com/api/files.upload"
+        uses: ./.github/actions/upload_to_slack
+        with:
+          file_path: app/build/outputs/apk/debug/app-debug.apk
+          comment: Debug Apk
+          channels: general,random
   
 #  release-apk:
 #    name: Generate Release APK
