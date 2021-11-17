@@ -8,7 +8,7 @@ import java.time.LocalDate
 @TypeConverters(DateConverter::class)
 interface DiaryDao : RoomDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertPage(page: DiaryPage): Long
+    suspend fun insertPage(page: DiaryPage): Long?
 
     @Update
     suspend fun updatePage(page: DiaryPage)

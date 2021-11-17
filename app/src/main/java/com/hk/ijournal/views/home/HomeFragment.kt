@@ -5,7 +5,7 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import com.hk.ijournal.R
 import com.hk.ijournal.databinding.FragmentHomeBinding
 import com.hk.ijournal.viewmodels.HomeViewModel
@@ -13,7 +13,7 @@ import com.hk.ijournal.views.home.dashboard.DashboardFragment
 import com.hk.ijournal.views.home.diary.DiaryFragment
 import com.hk.ijournal.views.home.notifications.NotificationsFragment
 
-class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
+class HomeFragment : Fragment() {
 
     companion object {
         fun newInstance(userId: Long): HomeFragment {
@@ -26,10 +26,15 @@ class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
     }
     private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
+    private lateinit var onItemSelectedListener: NavigationBarView.OnItemSelectedListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        onItemSelectedListener = NavigationBarView.OnItemSelectedListener {
+            loadFragment(it.title.toString())
+            true
+        }
         println("lifecycled homeF onCreate")
     }
 
@@ -42,18 +47,13 @@ class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navView = fragmentHomeBinding.navView
-        navView.setOnNavigationItemSelectedListener(this)
+        navView.setOnItemSelectedListener(onItemSelectedListener)
         addStartFragment()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater)
         menuInflater.inflate(R.menu.toolbar_menu, menu)
-    }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        loadFragment(item.title.toString())
-        return true
     }
 
     private fun addStartFragment() {
