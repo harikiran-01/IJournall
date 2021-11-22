@@ -100,12 +100,12 @@ jobs:
 
       # Uploads the built apk to Slack channel
       - name: Upload to Slack
-        if: ${{ github.event_name == 'pull_request' }}
+        if: github.event_name == 'pull_request'
         uses: ./.github/actions/upload_to_slack
         with:
           file_path: app/build/outputs/apk/debug/app-debug.apk
           comment: Debug Apk
-          channels: build-delivery
+          channels: general
           slack_secret: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
 
 
@@ -138,5 +138,5 @@ jobs:
 #        with:
 #          file_path: app/build/outputs/apk/release/app-release.apk
 #          comment: Release Apk
-#          channels: build-delivery
-#          slack_secret: ${{ secrets.BUILD_DELIVERY_BOT }}
+#          channels: general
+#          slack_secret: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
