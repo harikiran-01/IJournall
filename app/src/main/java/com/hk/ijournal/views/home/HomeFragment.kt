@@ -1,12 +1,13 @@
 package com.hk.ijournal.views.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.navigation.NavigationBarView
 import com.hk.ijournal.R
+import com.hk.ijournal.common.CommonLib.LOGTAG
 import com.hk.ijournal.databinding.FragmentHomeBinding
 import com.hk.ijournal.viewmodels.HomeViewModel
 import com.hk.ijournal.views.home.dashboard.DashboardFragment
@@ -24,8 +25,10 @@ class HomeFragment : Fragment() {
             return homeFragment
         }
     }
+
     private val homeViewModel: HomeViewModel by viewModels()
-    private lateinit var fragmentHomeBinding: FragmentHomeBinding
+    private var _fragmentHomeBinding: FragmentHomeBinding? = null
+    private val fragmentHomeBinding get() = _fragmentHomeBinding!!
     private lateinit var onItemSelectedListener: NavigationBarView.OnItemSelectedListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +43,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         println("lifecycled homeF onCreateView")
-        fragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        _fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false)
         return fragmentHomeBinding.root
     }
 
@@ -66,6 +69,7 @@ class HomeFragment : Fragment() {
         val userId = requireArguments().getLong("uid")
         val fragment = childFragmentManager.findFragmentByTag(itemTitle) ?: when (itemTitle) {
             "Diary" -> {
+                Log.d(LOGTAG, "DiaryFragNewInstance")
                 DiaryFragment.newInstance(userId)
             }
             "Dashboard" -> {
@@ -103,9 +107,11 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         println("lifecycled homeF onDView")
         for (fragment in childFragmentManager.fragments) {
-            childFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
+            childFragmentManager.beginTransaction().remove(fragment).commitNow()
         }
+        fragmentHomeBinding.navView.setOnItemSelectedListener(null)
         fragmentHomeBinding.unbind()
+        _fragmentHomeBinding = null
         homeViewModel.lastActiveFragTag = ""
         super.onDestroyView()
     }

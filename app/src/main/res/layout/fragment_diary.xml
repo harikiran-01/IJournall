@@ -64,15 +64,15 @@
 
         <TextView
             android:id="@+id/selectedDate"
-            android:layout_width="120dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:hint="@string/dateformat"
+            android:longClickable="true"
+            android:onClick="@{()->DiaryFragment.showDatePicker()}"
             android:text="@{DiaryViewModel.selectedDateLive.toString()}"
             android:textAlignment="center"
             android:textSize="18sp"
-            android:longClickable="true"
-            android:onClick="@{()->DiaryFragment.showDatePicker()}"
             app:layout_constraintBottom_toBottomOf="@+id/smiley_rating_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/smiley_rating_button" />
