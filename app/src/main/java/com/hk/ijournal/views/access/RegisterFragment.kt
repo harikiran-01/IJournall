@@ -4,19 +4,18 @@ import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import androidx.annotation.RequiresApi
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.hk.ijournal.R
 import com.hk.ijournal.adapters.AccessBindingAdapter
+import com.hk.ijournal.common.CommonLib
 import com.hk.ijournal.databinding.FragmentRegisterBinding
 import com.hk.ijournal.repository.AccessRepository.RegisterStatus
 import com.hk.ijournal.viewmodels.AccessViewModel
@@ -26,13 +25,17 @@ import java.util.*
 
 class RegisterFragment : Fragment(), OnDateSetListener {
     private lateinit var datePickerDialog: DatePickerDialog
-    private lateinit var registerBinding: FragmentRegisterBinding
+    private var _registerBinding: FragmentRegisterBinding? = null
+    private val registerBinding get() = _registerBinding!!
     private val relayViewModel by activityViewModels<RelayViewModel>()
     private val accessViewModel: AccessViewModel by viewModels(
         ownerProducer = { requireParentFragment() })
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        registerBinding = FragmentRegisterBinding.inflate(inflater, container, false)
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _registerBinding = FragmentRegisterBinding.inflate(inflater, container, false)
         return registerBinding.root
     }
 
@@ -81,4 +84,18 @@ class RegisterFragment : Fragment(), OnDateSetListener {
         relayViewModel.isAccessAuthorized.set(true)
     }
 
+    override fun onDestroyView() {
+        registerBinding.accessBindingAdapter = null
+        registerBinding.accessViewModel = null
+        registerBinding.registerFragment = null
+        registerBinding.unbind()
+        _registerBinding = null
+        Log.d(CommonLib.LOGTAG, "RegisterFrag onDestroyView")
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(CommonLib.LOGTAG, "RegisterFrag onDestroy")
+    }
 }

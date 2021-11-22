@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.Observable
 import com.github.anrwatchdog.ANRWatchDog
 import com.hk.ijournal.R
+import com.hk.ijournal.databinding.ActivityLaunchBinding
 import com.hk.ijournal.utils.SessionAuthManager
 import com.hk.ijournal.viewmodels.RelayViewModel
 import com.hk.ijournal.views.access.AccessFragment
@@ -21,6 +22,7 @@ import pub.devrel.easypermissions.EasyPermissions
 class LaunchActivity : AppCompatActivity() {
     private var accessFragment: AccessFragment? = null
     private var homeFragment: HomeFragment? = null
+    private var launchBinding: ActivityLaunchBinding? = null
     private lateinit var addImageCallback: Observable.OnPropertyChangedCallback
     private lateinit var accessAuthCallback: Observable.OnPropertyChangedCallback
     private lateinit var logoutCallback: Observable.OnPropertyChangedCallback
@@ -35,7 +37,8 @@ class LaunchActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
         ANRWatchDog().start()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_launch)
+        launchBinding = ActivityLaunchBinding.inflate(layoutInflater)
+        setContentView(launchBinding?.root)
         //passing context to shared pref object
         SessionAuthManager.setContext(this)
         observeVM()

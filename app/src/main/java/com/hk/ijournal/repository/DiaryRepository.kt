@@ -75,7 +75,7 @@ class DiaryRepository(daoMap: MutableMap<IJDatabase.DaoMapKeys, RoomDao>, privat
         currentExternalImgList.value = mutableListOf()
         saveStatus.value = ""
         selectedDateLive.value = selectedDate
-        persistExternalImageOnLoad()
+        // persistExternalImageOnLoad()
     }
 
     fun loadPrevPage() {

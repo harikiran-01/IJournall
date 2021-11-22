@@ -1,19 +1,20 @@
 package com.hk.ijournal.views.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import com.hk.ijournal.R
+import com.hk.ijournal.common.CommonLib.LOGTAG
 import com.hk.ijournal.databinding.FragmentHomeBinding
 import com.hk.ijournal.viewmodels.HomeViewModel
 import com.hk.ijournal.views.home.dashboard.DashboardFragment
 import com.hk.ijournal.views.home.diary.DiaryFragment
 import com.hk.ijournal.views.home.notifications.NotificationsFragment
 
-class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
+class HomeFragment : Fragment() {
 
     companion object {
         fun newInstance(userId: Long): HomeFragment {
@@ -24,36 +25,38 @@ class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             return homeFragment
         }
     }
+
     private val homeViewModel: HomeViewModel by viewModels()
-    private lateinit var fragmentHomeBinding: FragmentHomeBinding
+    private var _fragmentHomeBinding: FragmentHomeBinding? = null
+    private val fragmentHomeBinding get() = _fragmentHomeBinding!!
+    private lateinit var onItemSelectedListener: NavigationBarView.OnItemSelectedListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        onItemSelectedListener = NavigationBarView.OnItemSelectedListener {
+            loadFragment(it.title.toString())
+            true
+        }
         println("lifecycled homeF onCreate")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         println("lifecycled homeF onCreateView")
-        fragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        _fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false)
         return fragmentHomeBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navView = fragmentHomeBinding.navView
-        navView.setOnNavigationItemSelectedListener(this)
+        navView.setOnItemSelectedListener(onItemSelectedListener)
         addStartFragment()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater)
         menuInflater.inflate(R.menu.toolbar_menu, menu)
-    }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        loadFragment(item.title.toString())
-        return true
     }
 
     private fun addStartFragment() {
@@ -66,6 +69,7 @@ class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         val userId = requireArguments().getLong("uid")
         val fragment = childFragmentManager.findFragmentByTag(itemTitle) ?: when (itemTitle) {
             "Diary" -> {
+                Log.d(LOGTAG, "DiaryFragNewInstance")
                 DiaryFragment.newInstance(userId)
             }
             "Dashboard" -> {
@@ -103,9 +107,11 @@ class HomeFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
     override fun onDestroyView() {
         println("lifecycled homeF onDView")
         for (fragment in childFragmentManager.fragments) {
-            childFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
+            childFragmentManager.beginTransaction().remove(fragment).commitNow()
         }
+        fragmentHomeBinding.navView.setOnItemSelectedListener(null)
         fragmentHomeBinding.unbind()
+        _fragmentHomeBinding = null
         homeViewModel.lastActiveFragTag = ""
         super.onDestroyView()
     }
