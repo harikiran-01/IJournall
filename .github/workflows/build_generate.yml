@@ -90,8 +90,8 @@ jobs:
           java-version: 11.0.13
 
       # Builds debug apk
-      - name: Building Debug APK
-        run: bash ./gradlew assembleDebug --stacktrace
+      #      - name: Building Debug APK
+      #        run: bash ./gradlew assembleDebug --stacktrace
 
       # Uploads the built apk as build artifact
       #      - name: Upload Apk Artifact
@@ -105,7 +105,7 @@ jobs:
         if: github.event.pull_request.merged == 'true'
         uses: ./.github/actions/upload_to_slack
         with:
-          file_path: app/build/outputs/apk/debug/app-debug.apk
+          file_path: app/proguard-rules.pro
           comment: Debug Apk for <https://github.com/harikiran-01/IJournall/pull/${{ github.event.number }}|PR> on branch ${{ github.head_ref }}
           channels: general
           slack_secret: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
