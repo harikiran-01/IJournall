@@ -101,6 +101,26 @@ jobs:
           path: app/proguard-rules.pro
 
 
+  upload-to-slack:
+    needs: [ debug-apk ]
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == 'true'
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: proguard
+
+      # Uploads the built apk to Slack channel
+      - name: Upload to Slack
+        if: github.event.pull_request.merged == 'true'
+        uses: ./.github/actions/upload_to_slack
+        with:
+          file_path: proguard.pro
+          comment: Debug Apk for <https://github.com/harikiran-01/IJournall/pull/${{ github.event.number }}|PR> on branch ${{ github.head_ref }}
+          channels: general
+          slack_secret: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
+
 #  release-apk:
 #    needs: [ instrumentation-test ]
 #    name: Generate Release APK
