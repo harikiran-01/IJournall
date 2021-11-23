@@ -93,19 +93,31 @@ jobs:
       #      - name: Building Debug APK
       #        run: bash ./gradlew assembleDebug --stacktrace
 
-      # Uploads the built apk as build artifact
-      #      - name: Upload Apk Artifact
-      #        uses: actions/upload-artifact@v2
-      #        with:
-      #          name: debug-apk
-      #          path: app/build/outputs/apk/debug/app-debug.apk
+      Uploads the built apk as build artifact
+      - name: Upload Apk Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: proguard
+        path: app/proguard-rules.pro
+
+
+
+  upload_to_slack:
+    if: github.event.pull_request.merged == 'true'
+    needs: [ debug-apk ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: proguard
 
       # Uploads the built apk to Slack channel
       - name: Upload to Slack
         if: github.event.pull_request.merged == 'true'
         uses: ./.github/actions/upload_to_slack
         with:
-          file_path: app/proguard-rules.prov
+          file_path: app/proguard-rules.pro
           comment: Debug Apk for <https://github.com/harikiran-01/IJournall/pull/${{ github.event.number }}|PR> on branch ${{ github.head_ref }}
           channels: general
           slack_secret: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
