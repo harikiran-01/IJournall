@@ -113,21 +113,21 @@ jobs:
           java-version: 11.0.13
 
       # Builds release apk
-      - name: Building Release APK
-        run: bash ./gradlew assembleRelease --stacktrace
+#      - name: Building Release APK
+#        run: bash ./gradlew assembleRelease --stacktrace
 
-      - name: Upload Apk Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-apk
-          path: app/build/outputs/apk/release/app-release.apk
+#      - name: Upload Apk Artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: release-apk
+#          path: app/build/outputs/apk/release/app-release.apk
 
       # Uploads the built apk to Slack channel
       - name: Upload to Slack
         if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
         uses: ./.github/actions/upload_to_slack
         with:
-          file_path: app/build/outputs/apk/release/app-release.apk
-          comment: Release Apk
+          file_path: app/proguard-rules.pro
+          comment: Release Apk for <https://github.com/harikiran-01/IJournall/pull/${{ github.event.number }}|PR> on branch- ${{ github.head_ref }}
           channels: general
           slack_secret: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
