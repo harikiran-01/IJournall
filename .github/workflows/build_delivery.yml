@@ -12,7 +12,7 @@ jobs:
 
   debug-apk:
     #needs: [ instrumentation-test ]
-    if: github.event.pull_request.merged == 'true'
+    if: github.event.pull_request.merged == true
     name: Generate Debug APK
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
