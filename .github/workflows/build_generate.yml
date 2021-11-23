@@ -10,7 +10,9 @@ on:
       - '!dev'
   pull_request:
     branches: [ dev ]
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+    types:
+      - closed
+      # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   #  lint:
   #    runs-on: ubuntu-latest
@@ -88,8 +90,8 @@ jobs:
           java-version: 11.0.13
 
       # Builds debug apk
-      - name: Building Debug APK
-        run: bash ./gradlew assembleDebug --stacktrace
+      #      - name: Building Debug APK
+      #        run: bash ./gradlew assembleDebug --stacktrace
 
       # Uploads the built apk as build artifact
       #      - name: Upload Apk Artifact
@@ -100,10 +102,10 @@ jobs:
 
       # Uploads the built apk to Slack channel
       - name: Upload to Slack
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == 'true'
+        if: github.event.pull_request.merged == 'true'
         uses: ./.github/actions/upload_to_slack
         with:
-          file_path: app/build/outputs/apk/debug/app-debug.apk
+          file_path: app/proguard-rules.prov
           comment: Debug Apk for <https://github.com/harikiran-01/IJournall/pull/${{ github.event.number }}|PR> on branch ${{ github.head_ref }}
           channels: general
           slack_secret: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
