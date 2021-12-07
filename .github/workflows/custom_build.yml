@@ -1,0 +1,13 @@
+name: Configuration Check
+on:
+  repository_dispatch:
+    types:
+      - custom-build
+
+jobs:
+  check:
+    name: Run check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say hello
+        run: echo Hello
