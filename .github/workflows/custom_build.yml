@@ -17,6 +17,8 @@ jobs:
 
       - name: App Checkout
         uses: actions/checkout@v2
+
+      - name: App Checkout
         run: git pull dev
 
       - run:  |
