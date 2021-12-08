@@ -21,7 +21,7 @@ jobs:
           ref: 'dev'
 
       - run:  |
-          sed -i -e 's/\bconst val API_QA = "13.229.188.140/v2\b"/const val API_QA = "52.221.203.54/v2"' $FILE_PATH
+          sed -i -e 's/\bconst val API_QA = "13.229.188.140/v2"\b/const val API_QA = "52.221.203.54/v2"' $FILE_PATH
           cat $FILE_PATH
         shell: bash
         env:
