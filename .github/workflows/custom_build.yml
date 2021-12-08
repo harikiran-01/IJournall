@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v2
 
       - run:  |
-          sed -i -e 's/LeakIssue/Leaking/g' $FILE_PATH \
+          sed -i -e 's/LeakIssue/Leaking/g' $FILE_PATH
           cat $FILE_PATH
         shell: bash
         env:
