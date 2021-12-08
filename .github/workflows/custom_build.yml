@@ -18,7 +18,9 @@ jobs:
       - name: App Checkout
         uses: actions/checkout@v2
 
-      - run: "cat $FILE_PATH"
+      - run:  |
+          sed -i -e 's/LeakIssue/Leaking/g' $FILE_PATH \
+          cat $FILE_PATH
         shell: bash
         env:
           FILE_PATH: app/src/main/java/com/hk/ijournal/common/CommonLib.kt
