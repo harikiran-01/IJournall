@@ -14,3 +14,11 @@ jobs:
         shell: bash
         env:
           API_IP: ${{ github.event.client_payload.api_ip }}
+
+      - name: App Checkout
+        uses: actions/checkout@v2
+
+      - run: "cat $FILE_PATH"
+        shell: bash
+        env:
+          FILE_PATH: app/src/main/java/com/hk/ijournal/common/CommonLib.kt
