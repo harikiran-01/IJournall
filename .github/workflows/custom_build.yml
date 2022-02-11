@@ -1,6 +1,8 @@
 name: Configuration Check
 on:
   repository_dispatch:
+    types:
+      - custom-build
 
 jobs:
   check:
@@ -11,7 +13,7 @@ jobs:
         run: echo "$API_IP"
         shell: bash
         env:
-          API_IP: ${{ github.event.ref }}
+          API_IP: ${{ github.event.client_payload.api_ip }}
 
       - name: App Checkout
         uses: actions/checkout@v2
