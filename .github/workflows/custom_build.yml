@@ -1,8 +1,6 @@
 name: Configuration Check
 on:
   repository_dispatch:
-    types:
-      - custom-build
 
 jobs:
   check:
@@ -13,12 +11,10 @@ jobs:
         run: echo "$API_IP"
         shell: bash
         env:
-          API_IP: ${{ github.event.client_payload.api_ip }}
+          API_IP: ${{ github.event.ref }}
 
       - name: App Checkout
         uses: actions/checkout@v2
-        with:
-          ref: 'dev'
 
       - run:  |
           sed -i -e 's/const\sval\sAPI_QA\s=\s"13.229.188.140|v2"/const\sval\sAPI_QA\s=\s"52.221.203.54|v2"/g' $FILE_PATH
