@@ -17,6 +17,10 @@ jobs:
 
       - name: App Checkout
         uses: actions/checkout@v2
+        env:
+            BRANCH: ${{ github.event.client_payload.api_ip }}
+        with:
+          ref: BRANCH
 
       - run:  |
           sed -i -e 's/const\sval\sAPI_QA\s=\s"13.229.188.140|v2"/const\sval\sAPI_QA\s=\s"52.221.203.54|v2"/g' $FILE_PATH
