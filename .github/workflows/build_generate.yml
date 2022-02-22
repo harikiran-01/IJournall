@@ -124,10 +124,9 @@ jobs:
 
       # Uploads the built apk to Slack channel
       - name: Upload to Slack
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
         uses: ./.github/actions/upload_to_slack
         with:
           file_path: app/proguard-rules.pro
-          comment: Release Apk for <https://github.com/harikiran-01/IJournall/pull/${{ github.event.number }}|PR> on branch- ${{ github.head_ref }}
+          comment: <!here> Release Apk for <https://github.com/harikiran-01/IJournall/pull/${{ github.event.number }}|PR> on branch- ${{ github.head_ref }}
           channels: general
           slack_secret: ${{ secrets.SLACK_UPLOAD_APK_BOT }}
