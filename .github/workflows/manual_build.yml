@@ -1,9 +1,11 @@
 # This is a basic workflow to help you get started with Actions
 name: Manual Workflow
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the develop branch
 on:
   workflow_dispatch:
+    inputs:
+      git-ref:
+        description: Git Ref (Optional)
+        required: false
       # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
@@ -15,8 +17,15 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: App Checkout
+      - name: Clone Repository (Latest)
         uses: actions/checkout@v2
+        if: github.event.inputs.git-ref == ''
+
+      - name: Clone Repository (Custom Ref)
+        uses: actions/checkout@v2
+        if: github.event.inputs.git-ref != ''
+        with:
+          ref: ${{ github.event.inputs.git-ref }}
 
       - name: Extract branch name
         shell: bash
