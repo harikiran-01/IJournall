@@ -14,8 +14,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import com.hk.ijournal.R
+import com.hk.ijournal.common.Constants
 import com.hk.ijournal.databinding.FragmentDiaryBinding
 import com.hk.ijournal.repository.local.IJDatabase
 import com.hk.ijournal.repository.models.ContentType
@@ -34,7 +36,9 @@ import java.util.*
 class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, DatePickerDialog.OnDateSetListener {
     private val relayViewModel by activityViewModels<RelayViewModel>()
     private val diaryViewModel : DiaryViewModel by viewModels {
-        DiaryViewModelFactory(requireActivity().application, requireArguments().getLong("uid"))
+        val savedStateHandle = SavedStateHandle()
+        savedStateHandle.set(Constants.USER_ID, requireArguments().getLong("uid"))
+        DiaryViewModelFactory(requireActivity().application, savedStateHandle)
     }
     private lateinit var datePickerDialog: DatePickerDialog
 

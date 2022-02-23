@@ -107,7 +107,7 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         println("lifecycled homeF onDView")
         for (fragment in childFragmentManager.fragments) {
-            childFragmentManager.beginTransaction().remove(fragment).commitNow()
+            childFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
         }
         fragmentHomeBinding.navView.setOnItemSelectedListener(null)
         fragmentHomeBinding.unbind()
