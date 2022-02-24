@@ -1,4 +1,4 @@
-package com.hk.ijournal.repository.models
+package com.hk.ijournal.repository.data.source.local.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey

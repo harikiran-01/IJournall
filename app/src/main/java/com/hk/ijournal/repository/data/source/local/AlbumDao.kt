@@ -1,10 +1,10 @@
-package com.hk.ijournal.repository.local
+package com.hk.ijournal.repository.data.source.local
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.hk.ijournal.repository.models.DayAlbum
+import com.hk.ijournal.repository.data.source.local.entities.DayAlbum
 
 @Dao
 interface AlbumDao : RoomDao {

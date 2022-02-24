@@ -1,10 +1,11 @@
-package com.hk.ijournal.repository.local
+package com.hk.ijournal.repository.data.source.local
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.hk.ijournal.repository.models.DiaryUser
+import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 
 @Dao
 interface UserDao {
@@ -15,5 +16,5 @@ interface UserDao {
     suspend fun deleteUser(user: DiaryUser)
 
     @Query("select * from usertable where username = :userName")
-    fun getUserbyName(userName: String?): DiaryUser?
+    suspend fun getUserbyName(userName: String?): DiaryUser?
 }

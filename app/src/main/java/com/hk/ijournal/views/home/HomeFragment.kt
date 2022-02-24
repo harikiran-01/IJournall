@@ -13,7 +13,9 @@ import com.hk.ijournal.viewmodels.HomeViewModel
 import com.hk.ijournal.views.home.dashboard.DashboardFragment
 import com.hk.ijournal.views.home.diary.DiaryFragment
 import com.hk.ijournal.views.home.notifications.NotificationsFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     companion object {

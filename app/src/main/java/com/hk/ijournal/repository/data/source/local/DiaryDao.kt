@@ -1,7 +1,7 @@
-package com.hk.ijournal.repository.local
+package com.hk.ijournal.repository.data.source.local
 
 import androidx.room.*
-import com.hk.ijournal.repository.models.DiaryPage
+import com.hk.ijournal.repository.data.source.local.entities.DiaryPage
 import com.hk.ijournal.utils.DateConverter
 import java.time.LocalDate
 @Dao

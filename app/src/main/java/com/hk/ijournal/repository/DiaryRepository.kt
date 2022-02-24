@@ -5,10 +5,13 @@ import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.hk.ijournal.repository.local.AlbumDao
-import com.hk.ijournal.repository.local.DiaryDao
-import com.hk.ijournal.repository.local.IJDatabase
-import com.hk.ijournal.repository.local.RoomDao
+import com.hk.ijournal.repository.data.source.local.entities.DayAlbum
+import com.hk.ijournal.repository.data.source.local.entities.DiaryPage
+import com.hk.ijournal.repository.data.source.local.entities.ImageSource
+import com.hk.ijournal.repository.data.source.local.AlbumDao
+import com.hk.ijournal.repository.data.source.local.DiaryDao
+import com.hk.ijournal.repository.data.source.local.IJDatabase
+import com.hk.ijournal.repository.data.source.local.RoomDao
 import com.hk.ijournal.repository.models.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow

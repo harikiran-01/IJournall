@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.hk.ijournal.R
-import com.hk.ijournal.repository.models.DayAlbum
+import com.hk.ijournal.repository.data.source.local.entities.DayAlbum
 import com.hk.ijournal.views.home.diary.PageAlbumViewHolder
 
 class PageAlbumAdapter(private val glide: RequestManager) : RecyclerView.Adapter<PageAlbumViewHolder>() {

@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="com.hk.ijournal.repository.AccessRepository.AccessValidation" />
+        <import type="com.hk.ijournal.repository.AccessRepositoryImpl.AccessValidation" />
 
         <variable
             name="AccessViewModel"
@@ -34,7 +34,7 @@
             android:hint="@string/username_label"
             android:textAlignment="viewStart"
             android:textColorHint="@color/colorPrimary"
-            app:errorMsg='@{AccessViewModel.accessRepository.registerUserValidation}'
+            app:errorMsg="@{AccessViewModel.registerUserValidation}"
             app:errorTextColor="@color/red"
             app:focusState="@{AccessBindingAdapter.registerusernameFocusLiveData}"
             app:errorEnabled="true"
@@ -53,7 +53,7 @@
                 android:ems="12"
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
-                android:text="@={AccessViewModel.accessRepository.registerUsernameLive}"
+                android:text="@={AccessViewModel.registerUsernameLive}"
 
                 app:onFocusChange="@{AccessBindingAdapter.focusChangeListener}" />
 
@@ -70,7 +70,7 @@
             android:hint="@string/passcode_label"
             android:textColorHint="@color/colorPrimary"
             app:errorEnabled="true"
-            app:errorMsg='@{AccessViewModel.accessRepository.registerPasscodeValidation}'
+            app:errorMsg="@{AccessViewModel.registerPasscodeValidation}"
             app:errorTextColor="@color/red"
             app:focusState="@{AccessBindingAdapter.registerpasscodeFocusLiveData}"
             app:layout_constraintBottom_toTopOf="@+id/selectedDate"
@@ -88,7 +88,7 @@
                 android:gravity="start"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:text="@={AccessViewModel.accessRepository.registerPasscodeLive}"
+                android:text="@={AccessViewModel.registerPasscodeLive}"
 
                 app:onFocusChange="@{AccessBindingAdapter.focusChangeListener}" />
 
@@ -132,7 +132,7 @@
             android:layout_marginTop="25dp"
             android:hint="@string/dateformat"
             android:importantForAutofill="no"
-            android:text="@{AccessViewModel.accessRepository.dobLiveData.toString()}"
+            android:text="@{AccessViewModel.dobLiveData.toString()}"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/registerbutton"
             app:layout_constraintEnd_toEndOf="parent"
@@ -147,9 +147,9 @@
             android:layout_marginTop="20dp"
             android:text="@string/registerbtn_txt"
             android:onClick="@{()->AccessViewModel.registerUser()}"
-            app:enableOnDateValid="@{AccessViewModel.accessRepository.dobLiveData}"
-            app:enableOnPassValid="@{AccessViewModel.accessRepository.registerPasscodeValidation}"
-            app:enableOnUserValid="@{AccessViewModel.accessRepository.registerUserValidation}"
+            app:enableOnDateValid="@{AccessViewModel.dobLiveData}"
+            app:enableOnPassValid="@{AccessViewModel.registerPasscodeValidation}"
+            app:enableOnUserValid="@{AccessViewModel.registerUserValidation}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

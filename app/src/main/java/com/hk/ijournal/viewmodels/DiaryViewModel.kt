@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.hk.ijournal.repository.DiaryRepository
-import com.hk.ijournal.repository.local.IJDatabase
+import com.hk.ijournal.repository.data.source.local.IJDatabase
 import kotlinx.coroutines.flow.Flow
 import java.io.ByteArrayOutputStream
 import java.io.File

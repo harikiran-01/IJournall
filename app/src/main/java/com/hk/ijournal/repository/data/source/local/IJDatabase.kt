@@ -1,12 +1,12 @@
-package com.hk.ijournal.repository.local
+package com.hk.ijournal.repository.data.source.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.hk.ijournal.repository.models.DayAlbum
-import com.hk.ijournal.repository.models.DiaryPage
-import com.hk.ijournal.repository.models.DiaryUser
+import com.hk.ijournal.repository.data.source.local.entities.DayAlbum
+import com.hk.ijournal.repository.data.source.local.entities.DiaryPage
+import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 
 @Database(entities = [DiaryUser::class, DiaryPage::class, DayAlbum::class], exportSchema = false, version = 2)
 abstract class IJDatabase : RoomDatabase() {
@@ -27,7 +27,7 @@ abstract class IJDatabase : RoomDatabase() {
 
     companion object {
         //db schema
-        private const val DBNAME = "Journals.db"
+        const val DBNAME = "Journals.db"
 
         @Volatile
         private var INSTANCE: IJDatabase? = null

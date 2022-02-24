@@ -17,8 +17,9 @@ import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrate
 import com.hk.ijournal.R
 import com.hk.ijournal.common.CommonLib
 import com.hk.ijournal.databinding.FragmentAccessBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class AccessFragment : Fragment() {
 
     companion object {

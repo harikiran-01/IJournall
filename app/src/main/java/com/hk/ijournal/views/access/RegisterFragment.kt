@@ -17,12 +17,14 @@ import androidx.lifecycle.Observer
 import com.hk.ijournal.adapters.AccessBindingAdapter
 import com.hk.ijournal.common.CommonLib
 import com.hk.ijournal.databinding.FragmentRegisterBinding
-import com.hk.ijournal.repository.AccessRepository.RegisterStatus
+import com.hk.ijournal.repository.AccessRepositoryImpl.RegisterStatus
 import com.hk.ijournal.viewmodels.AccessViewModel
 import com.hk.ijournal.viewmodels.RelayViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import java.util.*
 
+@AndroidEntryPoint
 class RegisterFragment : Fragment(), OnDateSetListener {
     private lateinit var datePickerDialog: DatePickerDialog
     private var _registerBinding: FragmentRegisterBinding? = null
@@ -79,7 +81,7 @@ class RegisterFragment : Fragment(), OnDateSetListener {
 
     private fun launchHomeOnAccessValidation() {
         val args = Bundle()
-        args.putLong("uid", accessViewModel.getUid())
+        args.putLong("uid", accessViewModel.uid)
         requireParentFragment().arguments = args
         relayViewModel.isAccessAuthorized.set(true)
     }

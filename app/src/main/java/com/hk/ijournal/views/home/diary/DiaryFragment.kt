@@ -19,7 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import com.hk.ijournal.R
 import com.hk.ijournal.common.Constants
 import com.hk.ijournal.databinding.FragmentDiaryBinding
-import com.hk.ijournal.repository.local.IJDatabase
+import com.hk.ijournal.repository.data.source.local.IJDatabase
 import com.hk.ijournal.repository.models.ContentType
 import com.hk.ijournal.utils.SessionAuthManager
 import com.hk.ijournal.viewmodels.DiaryViewModel

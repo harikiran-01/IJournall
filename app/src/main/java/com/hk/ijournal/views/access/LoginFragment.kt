@@ -12,11 +12,13 @@ import androidx.lifecycle.Observer
 import com.hk.ijournal.adapters.AccessBindingAdapter
 import com.hk.ijournal.common.CommonLib.LOGTAG
 import com.hk.ijournal.databinding.FragmentLoginBinding
-import com.hk.ijournal.repository.AccessRepository.LoginStatus
+import com.hk.ijournal.repository.AccessRepositoryImpl.LoginStatus
 import com.hk.ijournal.viewmodels.AccessViewModel
 import com.hk.ijournal.viewmodels.RelayViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
     private var _loginBinding: FragmentLoginBinding? = null
     private val loginBinding get() = _loginBinding!!
@@ -59,7 +61,7 @@ class LoginFragment : Fragment() {
 
     private fun launchHomeOnAccessValidation() {
         val args = Bundle()
-        args.putLong("uid", accessViewModel.getUid())
+        args.putLong("uid", accessViewModel.uid)
         requireParentFragment().arguments = args
         relayViewModel.isAccessAuthorized.set(true)
     }

@@ -15,10 +15,12 @@ import com.hk.ijournal.utils.SessionAuthManager
 import com.hk.ijournal.viewmodels.RelayViewModel
 import com.hk.ijournal.views.access.AccessFragment
 import com.hk.ijournal.views.home.HomeFragment
+import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class LaunchActivity : AppCompatActivity() {
     private var accessFragment: AccessFragment? = null
     private var homeFragment: HomeFragment? = null
@@ -134,14 +136,12 @@ class LaunchActivity : AppCompatActivity() {
         SessionAuthManager.createUserLoginSession(newUserId)
         homeFragment = HomeFragment.newInstance(newUserId)
         print("bugbash is access child destroyed ${accessFragment?.childFragmentManager?.isDestroyed}")
-        accessFragment = null
         supportFragmentManager.beginTransaction().replace(R.id.main_nav_host, homeFragment!!, "home_frag").commit()
     }
 
     private fun navigateFromHomeToAccess() {
         supportActionBar?.hide()
         accessFragment = AccessFragment.newInstance()
-        homeFragment = null
         supportFragmentManager.beginTransaction().replace(R.id.main_nav_host, accessFragment!!, "access_frag").commit()
     }
 
