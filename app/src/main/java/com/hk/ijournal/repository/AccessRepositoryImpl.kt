@@ -1,7 +1,6 @@
 package com.hk.ijournal.repository
 
 import android.text.TextUtils
-import androidx.lifecycle.LiveData
 import com.hk.ijournal.repository.data.source.local.UserLocalDataSource
 import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 import kotlinx.coroutines.*
@@ -13,7 +12,6 @@ class AccessRepositoryImpl
     enum class RegisterStatus {
         REGISTER_SUCCESSFULL, USER_ALREADY_EXISTS
     }
-
 
     enum class LoginStatus {
         LOGIN_SUCCESSFUL, USER_NOT_FOUND, INVALID_LOGIN
