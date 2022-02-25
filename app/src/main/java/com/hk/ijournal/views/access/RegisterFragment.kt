@@ -13,11 +13,12 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.hk.ijournal.adapters.AccessBindingAdapter
 import com.hk.ijournal.common.CommonLib
 import com.hk.ijournal.databinding.FragmentRegisterBinding
-import com.hk.ijournal.repository.AccessRepositoryImpl.RegisterStatus
+import com.hk.ijournal.repository.AccessRepositoryImpl
+import com.hk.ijournal.repository.AccessRepositoryImpl.AccessStatus
+import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 import com.hk.ijournal.viewmodels.AccessViewModel
 import com.hk.ijournal.viewmodels.RelayViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,16 +59,27 @@ class RegisterFragment : Fragment(), OnDateSetListener {
     }
 
     private fun observeViewModel() {
-        accessViewModel.registerStatus.observe(this.viewLifecycleOwner, Observer { accessStatus: RegisterStatus? ->
-            when (accessStatus) {
-                RegisterStatus.REGISTER_SUCCESSFULL -> {
-                    launchHomeOnAccessValidation()
-                    Toasty.info(requireActivity(), "Register Successful!", Toasty.LENGTH_SHORT, true).show()
+        accessViewModel.registerStatus.observe(this.viewLifecycleOwner) { accessUser: AccessRepositoryImpl.AccessUser ->
+            when (accessUser.accessStatus) {
+                AccessStatus.REGISTER_SUCCESSFULL -> {
+                    accessUser.diaryUser?.let { launchHomeOnSuccessfulAuth(it) }
+                    Toasty.info(
+                        requireActivity(),
+                        "Register Successful!",
+                        Toasty.LENGTH_SHORT,
+                        true
+                    ).show()
                 }
-                RegisterStatus.USER_ALREADY_EXISTS ->
-                    Toasty.info(requireActivity(), "User already exists!", Toasty.LENGTH_SHORT, true).show()
+                AccessStatus.USER_ALREADY_EXISTS ->
+                    Toasty.info(
+                        requireActivity(),
+                        "User already exists!",
+                        Toasty.LENGTH_SHORT,
+                        true
+                    ).show()
+                else -> {}
             }
-        })
+        }
     }
 
     fun showDatePicker() {
@@ -79,11 +91,8 @@ class RegisterFragment : Fragment(), OnDateSetListener {
         accessViewModel.onDateSelected(year, month, dayOfMonth)
     }
 
-    private fun launchHomeOnAccessValidation() {
-        val args = Bundle()
-        args.putLong("uid", accessViewModel.uid)
-        requireParentFragment().arguments = args
-        relayViewModel.isAccessAuthorized.set(true)
+    private fun launchHomeOnSuccessfulAuth(diaryUser: DiaryUser) {
+        relayViewModel.onUserAuthorized(diaryUser)
     }
 
     override fun onDestroyView() {

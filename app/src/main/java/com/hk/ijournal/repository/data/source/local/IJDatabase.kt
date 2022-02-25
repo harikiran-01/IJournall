@@ -14,17 +14,6 @@ abstract class IJDatabase : RoomDatabase() {
     abstract fun diaryDao(): DiaryDao
     abstract fun albumDao(): AlbumDao
 
-    enum class DaoMapKeys {
-        Album, Page
-    }
-
-    fun getDiaryPageDao(): MutableMap<DaoMapKeys, RoomDao> {
-        val diaryDaoMap = mutableMapOf<DaoMapKeys, RoomDao>()
-        diaryDaoMap[DaoMapKeys.Album] = albumDao()
-        diaryDaoMap[DaoMapKeys.Page] = diaryDao()
-        return diaryDaoMap
-    }
-
     companion object {
         //db schema
         const val DBNAME = "Journals.db"

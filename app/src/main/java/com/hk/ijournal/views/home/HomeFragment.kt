@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.navigation.NavigationBarView
 import com.hk.ijournal.R
 import com.hk.ijournal.common.CommonLib.LOGTAG
@@ -18,16 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    companion object {
-        fun newInstance(userId: Long): HomeFragment {
-            val homeFragment = HomeFragment()
-            val args = Bundle()
-            args.putLong("uid", userId)
-            homeFragment.arguments = args
-            return homeFragment
-        }
-    }
-
+    private val safeArgs: HomeFragmentArgs by navArgs()
     private val homeViewModel: HomeViewModel by viewModels()
     private var _fragmentHomeBinding: FragmentHomeBinding? = null
     private val fragmentHomeBinding get() = _fragmentHomeBinding!!
@@ -62,17 +54,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun addStartFragment() {
-        val userId = requireArguments().getLong("uid")
-        childFragmentManager.beginTransaction().add(R.id.nav_container, DiaryFragment.newInstance(userId), "Diary").commit()
+        childFragmentManager.beginTransaction().add(R.id.nav_container, DiaryFragment.newInstance(safeArgs.diaryUser), "Diary").commit()
         homeViewModel.lastActiveFragTag = "Diary"
     }
 
     private fun loadFragment(itemTitle: String) {
-        val userId = requireArguments().getLong("uid")
         val fragment = childFragmentManager.findFragmentByTag(itemTitle) ?: when (itemTitle) {
             "Diary" -> {
                 Log.d(LOGTAG, "DiaryFragNewInstance")
-                DiaryFragment.newInstance(userId)
+                DiaryFragment.newInstance(safeArgs.diaryUser)
             }
             "Dashboard" -> {
                 DashboardFragment()

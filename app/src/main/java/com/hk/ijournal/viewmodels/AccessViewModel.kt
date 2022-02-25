@@ -1,6 +1,5 @@
 package com.hk.ijournal.viewmodels
 
-import android.app.Application
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -8,7 +7,6 @@ import androidx.lifecycle.*
 import com.hk.ijournal.common.CommonLib.LOGTAG
 import com.hk.ijournal.repository.AccessRepository
 import com.hk.ijournal.repository.AccessRepositoryImpl
-import com.hk.ijournal.repository.AccessRepositoryImpl.LoginStatus
 import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -18,7 +16,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AccessViewModel @Inject constructor(private val accessRepositoryImpl: AccessRepository) : ViewModel() {
 
-    var uid = 0L
     //login livedata
     val loginUsernameLive: MutableLiveData<String> = MutableLiveData()
     val loginPasscodeLive: MutableLiveData<String> = MutableLiveData()
@@ -29,8 +26,8 @@ class AccessViewModel @Inject constructor(private val accessRepositoryImpl: Acce
     val dobLiveData: MutableLiveData<LocalDate> = MutableLiveData()
 
     //access livedata
-    val loginStatus: MutableLiveData<LoginStatus> = MutableLiveData()
-    val registerStatus: MutableLiveData<AccessRepositoryImpl.RegisterStatus> = MutableLiveData()
+    val loginStatus: MutableLiveData<AccessRepositoryImpl.AccessUser> = MutableLiveData()
+    val registerStatus: MutableLiveData<AccessRepositoryImpl.AccessUser> = MutableLiveData()
 
     fun getLoginUserValidation(): LiveData<AccessRepositoryImpl.AccessValidation> {
         //transforming based on username live data
@@ -78,7 +75,6 @@ class AccessViewModel @Inject constructor(private val accessRepositoryImpl: Acce
         val dbUser = accessRepositoryImpl.getMatchingUserinDb(loginUsernameLive.value.toString())
         dbUser.let {
             if (it.isSuccess) {
-                uid = it.getOrNull()?.uid ?: 0
                 loginStatus.value = accessRepositoryImpl.processLoginAndGetAccessStatus(it.getOrNull(), diaryUser)
             }
             else
@@ -87,19 +83,14 @@ class AccessViewModel @Inject constructor(private val accessRepositoryImpl: Acce
     }
 
     fun registerUser() = viewModelScope.launch {
-        var regStatus: AccessRepositoryImpl.RegisterStatus = AccessRepositoryImpl.RegisterStatus.USER_ALREADY_EXISTS
+        val diaryUser = DiaryUser(registerUsernameLive.value.toString(), registerPasscodeLive.value.toString(), dobLiveData.value)
         val dbUser = accessRepositoryImpl.getMatchingUserinDb(registerUsernameLive.value.toString())
         dbUser.let {
-            regStatus = if (it.isSuccess) {
-                accessRepositoryImpl.processRegisterAndGetAccessStatus(it.getOrNull())
+            if (it.isSuccess) {
+                registerStatus.value = accessRepositoryImpl.processRegisterAndGetAccessStatus(it.getOrNull(), diaryUser)
             } else
-                accessRepositoryImpl.processRegisterAndGetAccessStatus(null)
+                registerStatus.value = accessRepositoryImpl.processRegisterAndGetAccessStatus(null, diaryUser)
         }
-        println("regstatus $regStatus")
-        if (regStatus == AccessRepositoryImpl.RegisterStatus.REGISTER_SUCCESSFULL)
-            uid = accessRepositoryImpl.insertUserInDbAndGetRowId(DiaryUser(registerUsernameLive.value.toString(),registerPasscodeLive.value.toString(), dobLiveData.value))
-            if (uid > 0L)
-                registerStatus.value = regStatus
     }
 
     override fun onCleared() {

@@ -7,9 +7,9 @@ import java.time.LocalDate
 interface AccessRepository {
     fun isUsernameInvalid(username: String?): Boolean
     fun isPassCodeInvalid(passcode: String?): Boolean
-    fun processLoginAndGetAccessStatus(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessRepositoryImpl.LoginStatus
-    fun isLoginSuccessful(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessRepositoryImpl.LoginStatus
-    fun processRegisterAndGetAccessStatus(dbUser: DiaryUser?): AccessRepositoryImpl.RegisterStatus
+    fun processLoginAndGetAccessStatus(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessRepositoryImpl.AccessUser
+    fun isLoginSuccessful(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessRepositoryImpl.AccessUser
+    fun processRegisterAndGetAccessStatus(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessRepositoryImpl.AccessUser
     suspend fun getMatchingUserinDb(username: String): Result<DiaryUser>
     suspend fun insertUserInDbAndGetRowId(diaryUser: DiaryUser): Long
 }

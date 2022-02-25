@@ -14,18 +14,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import com.hk.ijournal.R
-import com.hk.ijournal.common.Constants
 import com.hk.ijournal.databinding.FragmentDiaryBinding
 import com.hk.ijournal.repository.data.source.local.IJDatabase
+import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 import com.hk.ijournal.repository.models.ContentType
 import com.hk.ijournal.utils.SessionAuthManager
 import com.hk.ijournal.viewmodels.DiaryViewModel
-import com.hk.ijournal.viewmodels.DiaryViewModelFactory
 import com.hk.ijournal.viewmodels.RelayViewModel
 import com.wajahatkarim3.roomexplorer.RoomExplorer
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -33,13 +32,10 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.*
 
+@AndroidEntryPoint
 class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, DatePickerDialog.OnDateSetListener {
     private val relayViewModel by activityViewModels<RelayViewModel>()
-    private val diaryViewModel : DiaryViewModel by viewModels {
-        val savedStateHandle = SavedStateHandle()
-        savedStateHandle.set(Constants.USER_ID, requireArguments().getLong("uid"))
-        DiaryViewModelFactory(requireActivity().application, savedStateHandle)
-    }
+    private val diaryViewModel : DiaryViewModel by viewModels()
     private lateinit var datePickerDialog: DatePickerDialog
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -50,10 +46,10 @@ class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener
     private lateinit var fragmentDiaryBinding: FragmentDiaryBinding
 
     companion object DiaryFragFactory {
-        fun newInstance(userId: Long): DiaryFragment {
+        fun newInstance(diaryUser: DiaryUser): DiaryFragment {
             val diaryFragment = DiaryFragment()
             val args = Bundle()
-            args.putLong("uid", userId)
+            args.putSerializable("diaryUser", diaryUser)
             diaryFragment.arguments = args
             return diaryFragment
         }
@@ -91,7 +87,7 @@ class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeViewModel() {
-        diaryViewModel.diaryRepository.pageContentLive.observe(viewLifecycleOwner, Observer {
+        diaryViewModel.pageContentLive.observe(viewLifecycleOwner, Observer {
             textWatcher.typedText = it.contentType == ContentType.TYPED
             if (it.contentType == ContentType.LOADED)
                 fragmentDiaryBinding.diaryContent.setText(it.text)

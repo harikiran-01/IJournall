@@ -4,6 +4,7 @@ import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 
 class RelayViewModel : ViewModel() {
 
@@ -12,16 +13,22 @@ class RelayViewModel : ViewModel() {
     }
 
     val imagePickerClicked = ObservableBoolean(false)
-    val isAccessAuthorized = ObservableBoolean(false)
+    val onUserAuthorized: LiveData<DiaryUser>
+        get() = _onUserAuthorized
     var onSessionEnd = ObservableBoolean(false)
 
-    val imageUriCategory: LiveData<Boolean>
-        get() = _imageUriCategory
+    val imageUriList: LiveData<List<String>>
+        get() = _imageUriList
 
-    private val _imageUriCategory = MutableLiveData<Boolean>()
+    private val _onUserAuthorized = MutableLiveData<DiaryUser>()
+    private val _imageUriList = MutableLiveData<List<String>>()
 
-    fun onImagePicked() {
-        _imageUriCategory.value = true
+    fun onImagesPicked(imagesUriList: List<String>) {
+        _imageUriList.value = imagesUriList
+    }
+
+    fun onUserAuthorized(diaryUser: DiaryUser) {
+        _onUserAuthorized.value = diaryUser
     }
 
 }

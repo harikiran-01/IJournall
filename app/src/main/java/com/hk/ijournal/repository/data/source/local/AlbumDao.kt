@@ -21,5 +21,5 @@ interface AlbumDao : RoomDao {
     suspend fun getExternalImgUriList(pageId: Long?, imageSource: String): List<String>
 
     @Query("update albumtable set imageUriString =:newUri , imageSource=:imageSource where imageUriString=:oldUri")
-    suspend fun updateUriAndSource(oldUri: String, newUri: String, imageSource: String)
+    suspend fun updateUriAndImageSource(oldUri: String, newUri: String, imageSource: String)
 }

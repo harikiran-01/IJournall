@@ -24,8 +24,8 @@ class UserLocalDataSource internal constructor(
         userDao.deleteUser(user)
     }
 
-    override suspend fun getUserbyName(userName: String): Result<DiaryUser> = withContext(ioDispatcher) {
-        return@withContext userDao.getUserbyName(userName)?.let {
+    override suspend fun getUserbyName(userName: String): Result<DiaryUser> {
+        return userDao.getUserbyName(userName)?.let {
             Result.success(it)
         } ?: Result.failure(Exception())
         }

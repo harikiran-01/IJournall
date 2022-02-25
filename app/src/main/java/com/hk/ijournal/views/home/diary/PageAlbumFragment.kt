@@ -60,12 +60,11 @@ class PageAlbumFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeVM() {
-        relayViewModel.imageUriCategory.observe(viewLifecycleOwner, Observer {
+        relayViewModel.imageUriList.observe(viewLifecycleOwner, Observer {
             requireParentFragment().requireParentFragment().arguments?.getStringArrayList("imageuridata")
                 ?.let {
                     lifecycleScope.launchWhenCreated {
-                        diaryViewModel.saveImagesData(it)
-
+                        diaryViewModel.saveImagesAsAlbum(it)
                     }
                 }
         })
@@ -84,19 +83,19 @@ class PageAlbumFragment : Fragment() {
 //            }
 //        })
 
-        diaryViewModel.selectedDateLive.observe(viewLifecycleOwner, Observer {
+        diaryViewModel.selectedDateLive.observe(viewLifecycleOwner) {
             pageAlbumAdapter.clearAlbum()
             loadStream?.run {
                 if (isActive)
                     cancel()
             }
-        })
+        }
 
-        diaryViewModel.diaryRepository.albumLive.observe(viewLifecycleOwner, Observer { imageList ->
+        diaryViewModel.albumLive.observe(viewLifecycleOwner
+        ) { imageList ->
             println("albdeb $imageList")
             if (imageList.isNotEmpty()) pageAlbumAdapter.addAlbum(imageList)
         }
-        )
     }
 
     private suspend fun asyncLoadBitmap(imageUri: String) = withContext(Dispatchers.IO) {

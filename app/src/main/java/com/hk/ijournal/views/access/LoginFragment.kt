@@ -8,11 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.hk.ijournal.adapters.AccessBindingAdapter
 import com.hk.ijournal.common.CommonLib.LOGTAG
 import com.hk.ijournal.databinding.FragmentLoginBinding
-import com.hk.ijournal.repository.AccessRepositoryImpl.LoginStatus
+import com.hk.ijournal.repository.AccessRepositoryImpl
+import com.hk.ijournal.repository.AccessRepositoryImpl.AccessStatus
+import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 import com.hk.ijournal.viewmodels.AccessViewModel
 import com.hk.ijournal.viewmodels.RelayViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,27 +44,27 @@ class LoginFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        accessViewModel.loginStatus.observe(viewLifecycleOwner, Observer { accessStatus: LoginStatus ->
-            when (accessStatus) {
-                LoginStatus.LOGIN_SUCCESSFUL -> {
-                    launchHomeOnAccessValidation()
-                    Toasty.info(requireActivity(), "Login Successful!", Toasty.LENGTH_SHORT, true).show()
+        accessViewModel.loginStatus.observe(viewLifecycleOwner) { accessUser: AccessRepositoryImpl.AccessUser ->
+            when (accessUser.accessStatus) {
+                AccessStatus.LOGIN_SUCCESSFUL -> {
+                    accessUser.diaryUser?.let { launchHomeOnSuccessfulAuth(it) }
+                    Toasty.info(requireActivity(), "Login Successful!", Toasty.LENGTH_SHORT, true)
+                        .show()
                 }
-                LoginStatus.INVALID_LOGIN -> {
-                    Toasty.info(requireActivity(), "Invalid Password!", Toasty.LENGTH_SHORT, true).show()
+                AccessStatus.INVALID_LOGIN -> {
+                    Toasty.info(requireActivity(), "Invalid Password!", Toasty.LENGTH_SHORT, true)
+                        .show()
                 }
-                LoginStatus.USER_NOT_FOUND -> {
-                    Toasty.info(requireActivity(), "User doesn't exist!", Toasty.LENGTH_SHORT, true).show()
+                AccessStatus.USER_NOT_FOUND -> {
+                    Toasty.info(requireActivity(), "User doesn't exist!", Toasty.LENGTH_SHORT, true)
+                        .show()
                 }
             }
-        })
+        }
     }
 
-    private fun launchHomeOnAccessValidation() {
-        val args = Bundle()
-        args.putLong("uid", accessViewModel.uid)
-        requireParentFragment().arguments = args
-        relayViewModel.isAccessAuthorized.set(true)
+    private fun launchHomeOnSuccessfulAuth(diaryUser: DiaryUser) {
+        relayViewModel.onUserAuthorized(diaryUser)
     }
 
     override fun onDestroyView() {
