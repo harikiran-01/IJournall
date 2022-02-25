@@ -27,15 +27,24 @@ class DiaryViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val pageUseCase: PageUseCase, private val albumUseCase: AlbumUseCase) : ViewModel() {
     private var pageId: Long? = null
+    private var userId: Long = 0
     private val _saveStatus = MutableLiveData<String>()
     private val _selectedDateLive = MutableLiveData<LocalDate>()
+    init {
+        print("DEBDEB ${savedStateHandle.get<DiaryUser>(Constants.DIARY_USER)!!}")
+        userId = savedStateHandle.get<DiaryUser>(Constants.DIARY_USER)!!.uid
+    }
 
     private var diaryPageLive: MutableLiveData<DiaryPage> = Transformations.map(selectedDateLive) { selectedDate ->
         runBlocking {
-            val page = pageUseCase.getPageforDate(selectedDate, savedStateHandle.get<DiaryUser>(Constants.USER_ID)!!.uid)
-            pageId = page?.pid!!
+            var page = pageUseCase.getPageforDate(selectedDate, userId)
+            page?.let {
+                pageId = it.pid
+            } ?: kotlin.run {
+                page = DiaryPage(selectedDate, savedStateHandle.get<DiaryUser>(Constants.DIARY_USER)!!.uid, "", 0)
+            }
             page
-        } ?: DiaryPage(selectedDate, savedStateHandle.get<DiaryUser>(Constants.USER_ID)!!.uid)
+        }
     } as MutableLiveData<DiaryPage>
 
     var albumLive: MutableLiveData<MutableList<DayAlbum>> = Transformations.map(diaryPageLive) { page ->
@@ -137,7 +146,7 @@ class DiaryViewModel @Inject constructor(
                 ensureActive()
                 imgFlow.collect {
                     val newImgUri = selectedDateLive.value?.let { it1 ->
-                        albumUseCase.saveImageInApp(savedStateHandle.get<DiaryUser>(Constants.USER_ID)!!.uid,
+                        albumUseCase.saveImageInApp(savedStateHandle.get<DiaryUser>(Constants.DIARY_USER)!!.uid,
                             it1, internalDirectory, it)
                     }
                     if (newImgUri != null) {

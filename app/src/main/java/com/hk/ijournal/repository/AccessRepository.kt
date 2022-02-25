@@ -9,7 +9,7 @@ interface AccessRepository {
     fun isPassCodeInvalid(passcode: String?): Boolean
     fun processLoginAndGetAccessStatus(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessRepositoryImpl.AccessUser
     fun isLoginSuccessful(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessRepositoryImpl.AccessUser
-    fun processRegisterAndGetAccessStatus(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessRepositoryImpl.AccessUser
+    suspend fun processRegisterAndGetAccessStatus(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessRepositoryImpl.AccessUser
     suspend fun getMatchingUserinDb(username: String): Result<DiaryUser>
     suspend fun insertUserInDbAndGetRowId(diaryUser: DiaryUser): Long
 }

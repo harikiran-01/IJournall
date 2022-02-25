@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.Observable
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph
 import androidx.navigation.findNavController
 import com.github.anrwatchdog.ANRWatchDog
 import com.hk.ijournal.R
@@ -45,7 +46,7 @@ class LaunchActivity : AppCompatActivity() {
         //passing context to shared pref object
         SessionAuthManager.setContext(this)
         observeVM()
-        navController = findNavController(R.id.nav_host_fragment)
+        navController = findNavController(R.id.nav_host_fragment_app)
         conditionalNavigate(navController)
     }
 

@@ -93,7 +93,6 @@ class PageAlbumFragment : Fragment() {
 
         diaryViewModel.albumLive.observe(viewLifecycleOwner
         ) { imageList ->
-            println("albdeb $imageList")
             if (imageList.isNotEmpty()) pageAlbumAdapter.addAlbum(imageList)
         }
     }

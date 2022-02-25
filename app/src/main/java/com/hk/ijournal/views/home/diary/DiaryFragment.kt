@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import com.hk.ijournal.R
 import com.hk.ijournal.databinding.FragmentDiaryBinding
 import com.hk.ijournal.repository.data.source.local.IJDatabase
@@ -34,6 +35,7 @@ import java.util.*
 
 @AndroidEntryPoint
 class DiaryFragment : Fragment(), View.OnClickListener, View.OnLongClickListener, DatePickerDialog.OnDateSetListener {
+    private val safeArgs : DiaryFragmentArgs by navArgs()
     private val relayViewModel by activityViewModels<RelayViewModel>()
     private val diaryViewModel : DiaryViewModel by viewModels()
     private lateinit var datePickerDialog: DatePickerDialog

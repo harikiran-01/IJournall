@@ -34,13 +34,14 @@ class AccessRepositoryImpl
     override fun isLoginSuccessful(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessUser {
         return when {
             dbUser == null -> AccessUser(AccessStatus.USER_NOT_FOUND, null)
-            dbUser.passcode == diaryUser.passcode -> AccessUser(AccessStatus.USER_NOT_FOUND, dbUser)
-            else -> AccessUser(AccessStatus.USER_NOT_FOUND, null)
+            dbUser.passcode == diaryUser.passcode -> AccessUser(AccessStatus.LOGIN_SUCCESSFUL, dbUser)
+            else -> AccessUser(AccessStatus.INVALID_LOGIN, null)
         }
     }
 
-    override fun processRegisterAndGetAccessStatus(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessUser {
+    override suspend fun processRegisterAndGetAccessStatus(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessUser {
         return if (dbUser == null) {
+            diaryUser.uid = insertUserInDbAndGetRowId(diaryUser)
             AccessUser(AccessStatus.REGISTER_SUCCESSFULL, diaryUser)
         } else AccessUser(AccessStatus.USER_ALREADY_EXISTS, null)
     }

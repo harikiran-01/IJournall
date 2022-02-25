@@ -19,4 +19,9 @@ data class DiaryUser @Ignore constructor(var username: String, var passcode: Str
     @Ignore
     constructor(username: String, passcode: String) : this(username, passcode, null)
 
+    @Override
+    override fun toString(): String {
+        return "uid: $uid, username: $username"
+    }
+
 }
