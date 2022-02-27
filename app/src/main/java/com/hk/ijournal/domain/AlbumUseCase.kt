@@ -1,5 +1,6 @@
 package com.hk.ijournal.domain
 
+import androidx.lifecycle.LiveData
 import com.hk.ijournal.repository.AlbumRepository
 import com.hk.ijournal.repository.data.source.local.entities.DayAlbum
 import com.hk.ijournal.repository.data.source.local.entities.DiaryPage
@@ -12,7 +13,7 @@ interface AlbumUseCase {
     suspend fun getAlbum(pid: Long): List<DayAlbum>?
     suspend fun insertAlbum(album: DayAlbum): Long
     suspend fun getExternalImgUriList(pageId: Long?, imageSource: String): List<String>
-    suspend fun saveImgsToDbAsAlbum(diaryPage: DiaryPage, externalImgUriList: List<String>): MutableList<DayAlbum>
+    suspend fun saveImgsToDbAsAlbum(pageId: Long, externalImgUriList: List<String>): List<DayAlbum>
     suspend fun updateUriAndImageSource(oldUri: String, newUri: String, imageSource: String)
     suspend fun saveImageInApp(userId: Long, selectedDate: LocalDate, internalDirectory: File, byteArrayOutputStream: ByteArrayOutputStream): String
     suspend fun saveImageToInternalFile(userId: Long, selectedDate: LocalDate, internalDirectory: File, byteArrayOutputStream: ByteArrayOutputStream): String

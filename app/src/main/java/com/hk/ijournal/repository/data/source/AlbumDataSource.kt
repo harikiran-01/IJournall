@@ -1,5 +1,6 @@
 package com.hk.ijournal.repository.data.source
 
+import androidx.lifecycle.LiveData
 import com.hk.ijournal.repository.data.source.local.entities.DayAlbum
 
 interface AlbumDataSource {

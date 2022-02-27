@@ -1,6 +1,7 @@
 package com.hk.ijournal.repository
 
 import androidx.core.net.toUri
+import androidx.lifecycle.LiveData
 import com.hk.ijournal.repository.data.source.local.AlbumLocalDataSource
 import com.hk.ijournal.repository.data.source.local.entities.DayAlbum
 import kotlinx.coroutines.CoroutineDispatcher
@@ -13,9 +14,7 @@ import java.time.LocalDate
 import java.util.*
 
 class AlbumRepoImpl(private val albumLocalDataSource: AlbumLocalDataSource, private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO): AlbumRepository {
-    override suspend fun getAlbum(pid: Long): List<DayAlbum>? {
-        return albumLocalDataSource.getAlbum(pid)
-    }
+    override suspend fun getAlbum(pid: Long): List<DayAlbum>? = albumLocalDataSource.getAlbum(pid)
 
     override suspend fun insertAlbum(album: DayAlbum): Long {
         return albumLocalDataSource.insertAlbum(album)

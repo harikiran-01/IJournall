@@ -30,7 +30,6 @@ class HomeFragment : Fragment() {
     private val homeViewModel: HomeViewModel by viewModels()
     private var _fragmentHomeBinding: FragmentHomeBinding? = null
     private val fragmentHomeBinding get() = _fragmentHomeBinding!!
-    private lateinit var onItemSelectedListener: NavigationBarView.OnItemSelectedListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

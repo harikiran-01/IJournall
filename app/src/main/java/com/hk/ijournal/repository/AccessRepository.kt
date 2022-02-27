@@ -11,5 +11,6 @@ interface AccessRepository {
     fun isLoginSuccessful(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessRepositoryImpl.AccessUser
     suspend fun processRegisterAndGetAccessStatus(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessRepositoryImpl.AccessUser
     suspend fun getMatchingUserinDb(username: String): Result<DiaryUser>
+    suspend fun getUser(uid: Long): Result<DiaryUser>
     suspend fun insertUserInDbAndGetRowId(diaryUser: DiaryUser): Long
 }

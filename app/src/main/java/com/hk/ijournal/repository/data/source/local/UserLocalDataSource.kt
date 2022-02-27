@@ -16,17 +16,21 @@ class UserLocalDataSource internal constructor(
     private val userDao: UserDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UserDataSource {
-    override suspend fun insertUser(user: DiaryUser): Long {
-        return userDao.insertUser(user)
-    }
+    override suspend fun insertUser(user: DiaryUser) =
+        withContext(ioDispatcher) { userDao.insertUser(user) }
 
-    override suspend fun deleteUser(user: DiaryUser) {
-        userDao.deleteUser(user)
-    }
+    override suspend fun deleteUser(user: DiaryUser) =
+        withContext(ioDispatcher) { userDao.deleteUser(user) }
 
-    override suspend fun getUserbyName(userName: String): Result<DiaryUser> {
-        return userDao.getUserbyName(userName)?.let {
+    override suspend fun getUserbyName(userName: String) = withContext(ioDispatcher) {
+        userDao.getUserbyName(userName)?.let {
             Result.success(it)
         } ?: Result.failure(Exception())
-        }
     }
+
+    override suspend fun getUserbyId(uid: Long) = withContext(ioDispatcher) {
+        userDao.getUserbyId(uid)?.let {
+            Result.success(it)
+        } ?: Result.failure(Exception())
+    }
+}

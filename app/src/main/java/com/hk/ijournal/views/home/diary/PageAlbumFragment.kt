@@ -11,7 +11,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -60,14 +59,13 @@ class PageAlbumFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeVM() {
-        relayViewModel.imageUriList.observe(viewLifecycleOwner, Observer {
-            requireParentFragment().requireParentFragment().arguments?.getStringArrayList("imageuridata")
-                ?.let {
+        relayViewModel.imageUriList.observe(viewLifecycleOwner) {
+            it?.let {
                     lifecycleScope.launchWhenCreated {
                         diaryViewModel.saveImagesAsAlbum(it)
                     }
                 }
-        })
+        }
 
 //        diaryViewModel.diaryRepository.currentExternalImgList.observe(viewLifecycleOwner, Observer {
 //            loadStream = lifecycleScope.launchWhenCreated {

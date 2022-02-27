@@ -26,12 +26,11 @@ import javax.inject.Inject
 class DiaryViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val pageUseCase: PageUseCase, private val albumUseCase: AlbumUseCase) : ViewModel() {
-    private var pageId: Long? = null
+    var pageId: Long? = null
     private var userId: Long = 0
     private val _saveStatus = MutableLiveData<String>()
     private val _selectedDateLive = MutableLiveData<LocalDate>()
     init {
-        print("DEBDEB ${savedStateHandle.get<DiaryUser>(Constants.DIARY_USER)!!}")
         userId = savedStateHandle.get<DiaryUser>(Constants.DIARY_USER)!!.uid
     }
 
@@ -41,18 +40,21 @@ class DiaryViewModel @Inject constructor(
             page?.let {
                 pageId = it.pid
             } ?: kotlin.run {
-                page = DiaryPage(selectedDate, savedStateHandle.get<DiaryUser>(Constants.DIARY_USER)!!.uid, "", 0)
+                page = DiaryPage(selectedDate, userId, "", 0)
             }
             page
         }
     } as MutableLiveData<DiaryPage>
 
-    var albumLive: MutableLiveData<MutableList<DayAlbum>> = Transformations.map(diaryPageLive) { page ->
+    private var _albumLive: MutableLiveData<List<DayAlbum>> = Transformations.map(diaryPageLive) { page ->
         runBlocking {
             val album = albumUseCase.getAlbum(page.pid)
             album
-        } ?: mutableListOf()
-    } as MutableLiveData<MutableList<DayAlbum>>
+        }
+    } as MutableLiveData<List<DayAlbum>>
+
+    val albumLive: LiveData<List<DayAlbum>>
+        get() = _albumLive
 
     val pageContentLive: MutableLiveData<Content> = Transformations.map(diaryPageLive) {
         it.run { Content(content, ContentType.LOADED) }
@@ -127,7 +129,10 @@ class DiaryViewModel @Inject constructor(
             currentExternalImgList.value = images
             diaryPageLive.value?.let { page ->
                 currentExternalImgList.value?.let {
-                    albumLive.value = albumUseCase.saveImgsToDbAsAlbum(page, it)
+                    pageId = pageId?: pageUseCase.insertPage(page)
+                    page.pid = pageId!!
+                    val newAlbum = albumUseCase.saveImgsToDbAsAlbum(page.pid, it).reversed().plus(albumLive.value as List<DayAlbum>)
+                    _albumLive.value = newAlbum
                 } }
         }
     }
@@ -146,7 +151,7 @@ class DiaryViewModel @Inject constructor(
                 ensureActive()
                 imgFlow.collect {
                     val newImgUri = selectedDateLive.value?.let { it1 ->
-                        albumUseCase.saveImageInApp(savedStateHandle.get<DiaryUser>(Constants.DIARY_USER)!!.uid,
+                        albumUseCase.saveImageInApp(userId,
                             it1, internalDirectory, it)
                     }
                     if (newImgUri != null) {

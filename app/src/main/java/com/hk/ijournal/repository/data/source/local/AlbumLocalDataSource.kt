@@ -1,5 +1,6 @@
 package com.hk.ijournal.repository.data.source.local
 
+import androidx.lifecycle.LiveData
 import com.hk.ijournal.repository.data.source.AlbumDataSource
 import com.hk.ijournal.repository.data.source.local.entities.DayAlbum
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,9 +19,7 @@ internal constructor(private val albumDao: AlbumDao,
         albumDao.insertAllAlbum(albumList)
     }
 
-    override suspend fun getAlbum(pid: Long): List<DayAlbum>? = withContext(ioDispatcher) {
-        return@withContext albumDao.getAlbum(pid)
-    }
+    override suspend fun getAlbum(pid: Long): List<DayAlbum>? = albumDao.getAlbum(pid)
 
     override suspend fun getExternalImgUriList(pageId: Long?, imageSource: String): List<String> = withContext(ioDispatcher) {
         return@withContext albumDao.getExternalImgUriList(pageId, imageSource)

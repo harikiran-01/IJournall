@@ -26,7 +26,7 @@ class PageAlbumAdapter(private val glide: RequestManager) : RecyclerView.Adapter
                 .into(holder.albumSingleImage)
     }
 
-    fun addAlbum(albumUriList: MutableList<DayAlbum>) {
+    fun addAlbum(albumUriList: List<DayAlbum>) {
         albumUriStringList.clear()
         albumUriStringList.addAll(albumUriList)
         notifyDataSetChanged()

@@ -15,4 +15,5 @@ interface UserDataSource {
     suspend fun deleteUser(user: DiaryUser)
 
     suspend fun getUserbyName(userName: String): Result<DiaryUser>
+    suspend fun getUserbyId(uid: Long): Result<DiaryUser>
 }

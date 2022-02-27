@@ -160,10 +160,9 @@ object HomeRepositoryModule {
     @Singleton
     @Provides
     fun provideAlbumUseCase(
-        @AppModule.DiaryRepo diaryRepository: DiaryRepository,
         @AppModule.AlbumRepo albumRepository: AlbumRepository
     ): AlbumUseCase {
-        return AlbumUseCaseImpl(diaryRepository, albumRepository)
+        return AlbumUseCaseImpl(albumRepository)
     }
 
 }

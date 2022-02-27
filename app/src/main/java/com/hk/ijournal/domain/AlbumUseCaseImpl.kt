@@ -1,5 +1,6 @@
 package com.hk.ijournal.domain
 
+import androidx.lifecycle.LiveData
 import com.hk.ijournal.repository.AlbumRepository
 import com.hk.ijournal.repository.DiaryRepository
 import com.hk.ijournal.repository.data.source.local.entities.DayAlbum
@@ -10,11 +11,9 @@ import java.io.File
 import java.time.LocalDate
 import javax.inject.Inject
 
-class AlbumUseCaseImpl internal constructor(private val diaryRepository: DiaryRepository, private val albumRepository: AlbumRepository) : AlbumUseCase{
+class AlbumUseCaseImpl internal constructor(private val albumRepository: AlbumRepository) : AlbumUseCase{
 
-    override suspend fun getAlbum(pid: Long): List<DayAlbum>? {
-        return albumRepository.getAlbum(pid)
-    }
+    override suspend fun getAlbum(pid: Long): List<DayAlbum>? = albumRepository.getAlbum(pid)
 
     override suspend fun insertAlbum(album: DayAlbum): Long {
         return albumRepository.insertAlbum(album)
@@ -28,11 +27,11 @@ class AlbumUseCaseImpl internal constructor(private val diaryRepository: DiaryRe
         albumRepository.updateUriAndImageSource(oldUri, newUri, imageSource)
     }
 
-    override suspend fun saveImgsToDbAsAlbum(diaryPage: DiaryPage, externalImgUriList: List<String>): MutableList<DayAlbum> {
+    override suspend fun saveImgsToDbAsAlbum(pageId: Long, externalImgUriList: List<String>): List<DayAlbum> {
         val dbImgUriList = mutableListOf<DayAlbum>()
-        val pageId = diaryRepository.insertPage(diaryPage)
+        // if page is not in db, then insert in db with empty content
         externalImgUriList.forEach {
-            dbImgUriList.add(DayAlbum(pageId!!, it, ImageSource.EXTERNAL.name))
+            dbImgUriList.add(DayAlbum(pageId, it, ImageSource.EXTERNAL.name))
         }
         albumRepository.insertAllAlbum(dbImgUriList)
         return dbImgUriList

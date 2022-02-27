@@ -17,4 +17,7 @@ interface UserDao {
 
     @Query("select * from usertable where username = :userName")
     suspend fun getUserbyName(userName: String?): DiaryUser?
+
+    @Query("select * from usertable where uid = :uid")
+    suspend fun getUserbyId(uid: Long): DiaryUser?
 }

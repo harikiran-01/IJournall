@@ -8,12 +8,12 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.Observable
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavArgument
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph
 import androidx.navigation.findNavController
 import com.github.anrwatchdog.ANRWatchDog
 import com.hk.ijournal.R
+import com.hk.ijournal.common.Constants
 import com.hk.ijournal.databinding.ActivityLaunchBinding
 import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 import com.hk.ijournal.utils.SessionAuthManager
@@ -107,7 +107,16 @@ class LaunchActivity : AppCompatActivity() {
     }
 
     private fun conditionalNavigate(navController: NavController) {
-        navController.graph.setStartDestination(if (SessionAuthManager.isUserLoggedIn()) R.id.home_dest else R.id.access_dest)
+        val graph = navController.navInflater.inflate(R.navigation.app_navigation)
+        if (SessionAuthManager.isUserLoggedIn()){
+            val userIdArg = NavArgument.Builder().setDefaultValue(relayViewModel.getUser(SessionAuthManager.getUID())).build()
+            graph.addArgument(Constants.DIARY_USER, userIdArg)
+            graph.setStartDestination(R.id.home_dest)
+        }
+        else
+            graph.setStartDestination(R.id.access_dest)
+
+        navController.graph = graph
     }
 
 //    private fun showAccessScreen() {

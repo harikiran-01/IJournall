@@ -50,6 +50,7 @@ class AccessRepositoryImpl
         return@withContext userLocalDataSource.getUserbyName(username)
     }
 
-    override suspend fun insertUserInDbAndGetRowId(diaryUser: DiaryUser): Long =
-            withContext(ioDispatcher) { userLocalDataSource.insertUser(diaryUser) }
+    override suspend fun getUser(uid: Long): Result<DiaryUser> = userLocalDataSource.getUserbyId(uid)
+
+    override suspend fun insertUserInDbAndGetRowId(diaryUser: DiaryUser) = userLocalDataSource.insertUser(diaryUser)
 }
