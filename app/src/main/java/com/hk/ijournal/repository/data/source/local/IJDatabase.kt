@@ -4,11 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.hk.ijournal.repository.data.source.local.dao.AlbumDao
+import com.hk.ijournal.repository.data.source.local.dao.DiaryDao
+import com.hk.ijournal.repository.data.source.local.dao.UserDao
 import com.hk.ijournal.repository.data.source.local.entities.DayAlbum
 import com.hk.ijournal.repository.data.source.local.entities.DiaryPage
 import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 
-@Database(entities = [DiaryUser::class, DiaryPage::class, DayAlbum::class], exportSchema = false, version = 2)
+@Database(entities = [DiaryUser::class, DiaryPage::class, DayAlbum::class], exportSchema = false, version = 1)
 abstract class IJDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun diaryDao(): DiaryDao

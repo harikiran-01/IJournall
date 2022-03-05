@@ -2,19 +2,15 @@ package com.hk.ijournal.views.home.diary
 
 import android.graphics.Bitmap
 import android.os.Build
-import android.os.Bundle
 import android.provider.MediaStore
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.hk.ijournal.adapters.PageAlbumAdapter
+import com.hk.ijournal.common.base.BaseFragment
 import com.hk.ijournal.databinding.FragmentPageAlbumBinding
 import com.hk.ijournal.utils.UriConverter
 import com.hk.ijournal.viewmodels.DiaryViewModel
@@ -25,46 +21,39 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
 
-class PageAlbumFragment : Fragment() {
-    private lateinit var pageAlbumBinding: FragmentPageAlbumBinding
+class PageAlbumFragment : BaseFragment<FragmentPageAlbumBinding, Nothing>() {
     private val relayViewModel by activityViewModels<RelayViewModel>()
     private val diaryViewModel: DiaryViewModel by viewModels(
         ownerProducer = { requireParentFragment() })
     private var loadStream: Job? = null
     private val pageAlbumAdapter by lazy { PageAlbumAdapter(Glide.with(requireContext())) }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        pageAlbumBinding = FragmentPageAlbumBinding.inflate(inflater, container, false)
-        pageAlbumBinding.pageAlbumFragment = this
-        return pageAlbumBinding.root
+    override fun getViewModelClass(): Class<Nothing>? {
+        return null
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        pageAlbumBinding.albumRecyclerView.layoutManager = LinearLayoutManager(requireContext(),
+    override fun getViewBinding(): FragmentPageAlbumBinding {
+        return FragmentPageAlbumBinding.inflate(layoutInflater)
+    }
+
+    override fun setUpViews() {
+        super.setUpViews()
+        binding.pageAlbumFragment = this
+        binding.albumRecyclerView.layoutManager = LinearLayoutManager(requireContext(),
             LinearLayoutManager.HORIZONTAL, false)
-        pageAlbumBinding.albumRecyclerView.adapter = pageAlbumAdapter
-        pageAlbumBinding.lifecycleOwner = viewLifecycleOwner
+        binding.albumRecyclerView.adapter = pageAlbumAdapter
+        binding.lifecycleOwner = viewLifecycleOwner
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        observeVM()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun observeVM() {
+    override fun observeData() {
+        super.observeData()
         relayViewModel.imageUriList.observe(viewLifecycleOwner) {
             it?.let {
-                    lifecycleScope.launchWhenCreated {
-                        diaryViewModel.saveImagesAsAlbum(it)
-                    }
+                viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+                    diaryViewModel.saveImagesAsAlbum(it)
                 }
+            }
         }
 
 //        diaryViewModel.diaryRepository.currentExternalImgList.observe(viewLifecycleOwner, Observer {
@@ -94,6 +83,14 @@ class PageAlbumFragment : Fragment() {
             if (imageList.isNotEmpty()) pageAlbumAdapter.addAlbum(imageList)
         }
     }
+
+    override fun doViewCleanup() {
+        binding.albumRecyclerView.adapter = null
+        relayViewModel.resetImagesPickedLiveData()
+        super.doViewCleanup()
+    }
+
+
 
     private suspend fun asyncLoadBitmap(imageUri: String) = withContext(Dispatchers.IO) {
         val bitmap = MediaStore.Images.Media.getBitmap(

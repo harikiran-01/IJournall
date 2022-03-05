@@ -55,7 +55,7 @@ class LaunchActivity : AppCompatActivity() {
             openImagePicker()
             it.set(false)
             } }
-        relayViewModel.onUserAuthorized.observe(this) { navigateFromAccessToHome(it) }
+        relayViewModel.onUserAuthorized.observe(this) { navigateFromAccessToFeed(it) }
         logoutCallback = relayViewModel.onSessionEnd.observe { if (it.get()) {
             navigateFromHomeToAccess()
             it.set(false)
@@ -111,7 +111,7 @@ class LaunchActivity : AppCompatActivity() {
         if (SessionAuthManager.isUserLoggedIn()){
             val userIdArg = NavArgument.Builder().setDefaultValue(relayViewModel.getUser(SessionAuthManager.getUID())).build()
             graph.addArgument(Constants.DIARY_USER, userIdArg)
-            graph.setStartDestination(R.id.home_dest)
+            graph.setStartDestination(R.id.feed_dest)
         }
         else
             graph.setStartDestination(R.id.access_dest)
@@ -132,11 +132,17 @@ class LaunchActivity : AppCompatActivity() {
 //    }
 
     private fun navigateFromAccessToHome(diaryUser: DiaryUser) {
-        supportActionBar?.show()
+        supportActionBar?.hide()
         with(diaryUser){
             SessionAuthManager.createUserLoginSession(diaryUser.uid)
             navController.navigate(AccessFragmentDirections.accessToHome(this))
         }
+    }
+
+    private fun navigateFromAccessToFeed(diaryUser: DiaryUser) {
+        SessionAuthManager.createUserLoginSession(diaryUser.uid)
+        supportActionBar?.hide()
+        navController.navigate(AccessFragmentDirections.accessToFeed(diaryUser))
     }
 
     private fun navigateFromHomeToAccess() {

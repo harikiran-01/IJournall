@@ -1,4 +1,4 @@
-package com.hk.ijournal.repository.data.source.local
+package com.hk.ijournal.repository.data.source.local.dao
 
 import androidx.room.*
 import com.hk.ijournal.repository.data.source.local.entities.DiaryPage
@@ -12,6 +12,9 @@ interface DiaryDao : RoomDao {
 
     @Update
     suspend fun updatePage(page: DiaryPage)
+
+    @Query("select * from diarytable where uid=:uid order by selectedDate desc")
+    suspend fun getAllPages(uid: Long): List<DiaryPage>
 
     @Query("select * from diarytable where selectedDate=:selectedDate and uid=:uid")
     suspend fun getPageforDate(selectedDate: LocalDate, uid: Long): DiaryPage?

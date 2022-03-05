@@ -96,6 +96,9 @@ dependencies {
     implementation 'com.wajahatkarim3:roomexplorer:0.0.2'
     //smiley rating
     implementation 'com.github.sujithkanna:smileyrating:2.0.0'
+
+    //ui
+    implementation 'com.airbnb.android:lottie:3.4.0'
 }
 
 // Allow references to generated code

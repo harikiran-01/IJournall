@@ -1,8 +1,7 @@
-package com.hk.ijournal.repository.data.source.local
+package com.hk.ijournal.repository.data.source.local.datasource
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
 import com.hk.ijournal.repository.data.source.UserDataSource
+import com.hk.ijournal.repository.data.source.local.dao.UserDao
 import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

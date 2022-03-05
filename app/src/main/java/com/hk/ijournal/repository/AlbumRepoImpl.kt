@@ -1,8 +1,7 @@
 package com.hk.ijournal.repository
 
 import androidx.core.net.toUri
-import androidx.lifecycle.LiveData
-import com.hk.ijournal.repository.data.source.local.AlbumLocalDataSource
+import com.hk.ijournal.repository.data.source.local.datasource.AlbumLocalDataSource
 import com.hk.ijournal.repository.data.source.local.entities.DayAlbum
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

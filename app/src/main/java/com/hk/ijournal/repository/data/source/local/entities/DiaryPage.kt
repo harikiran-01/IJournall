@@ -4,6 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
+import com.hk.ijournal.common.base.BaseAdapterViewType
+import com.hk.ijournal.common.base.ITEM_MINI_PAGE
 import com.hk.ijournal.utils.DateConverter
 import java.time.LocalDate
 
@@ -13,7 +15,7 @@ import java.time.LocalDate
                 childColumns = ["uid"],
                 onDelete = CASCADE)], indices = [Index("pid", "uid")])
 @TypeConverters(DateConverter::class)
-data class DiaryPage(var selectedDate: LocalDate, var uid: Long, var content: String, var rating: Int) {
+data class DiaryPage(var selectedDate: LocalDate, var uid: Long, var content: String, var rating: Int) : BaseAdapterViewType {
     @PrimaryKey(autoGenerate = true)
     var pid: Long = 0
 
@@ -22,5 +24,8 @@ data class DiaryPage(var selectedDate: LocalDate, var uid: Long, var content: St
 
     @Ignore
     constructor(selectedDate: LocalDate, uid: Long) : this(selectedDate, uid, "", 0)
+
+    @Ignore
+    override var viewType: Int = ITEM_MINI_PAGE
 
 }

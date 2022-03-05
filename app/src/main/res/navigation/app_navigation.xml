@@ -18,6 +18,16 @@
             app:popUpTo="@id/app_navigation"
             app:popUpToInclusive="true" />
 
+        <action
+            android:id="@+id/access_to_feed"
+            app:destination="@id/feed_dest"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/app_navigation"
+            app:popUpToInclusive="true" />
+
     </fragment>
 
     <fragment
@@ -40,5 +50,23 @@
             app:argType="com.hk.ijournal.repository.data.source.local.entities.DiaryUser" />
     </fragment>
 
+    <fragment
+        android:id="@+id/feed_dest"
+        android:name="com.hk.ijournal.feed.views.FeedFragment"
+        android:label="FeedFragment">
+
+        <action
+            android:id="@+id/feed_to_home"
+            app:destination="@id/home_dest"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim">
+        </action>
+
+        <argument
+            android:name="diaryUser"
+            app:argType="com.hk.ijournal.repository.data.source.local.entities.DiaryUser" />
+    </fragment>
 
 </navigation>
