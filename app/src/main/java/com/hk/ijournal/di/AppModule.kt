@@ -4,15 +4,13 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.Room
-import com.hk.ijournal.domain.AlbumUseCase
-import com.hk.ijournal.domain.AlbumUseCaseImpl
-import com.hk.ijournal.domain.PageUseCase
-import com.hk.ijournal.domain.PageUseCaseImpl
+import com.hk.ijournal.domain.*
 import com.hk.ijournal.repository.*
-import com.hk.ijournal.repository.data.source.local.AlbumLocalDataSource
-import com.hk.ijournal.repository.data.source.local.DiaryLocalDataSource
 import com.hk.ijournal.repository.data.source.local.IJDatabase
-import com.hk.ijournal.repository.data.source.local.UserLocalDataSource
+import com.hk.ijournal.repository.data.source.local.datasource.AlbumLocalDataSource
+import com.hk.ijournal.repository.data.source.local.datasource.DiaryLocalDataSource
+import com.hk.ijournal.repository.data.source.local.datasource.FeedLocalDataSource
+import com.hk.ijournal.repository.data.source.local.datasource.UserLocalDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -47,11 +45,19 @@ object AppModule {
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)
+    annotation class LocalFeedDataSource
+
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
     annotation class DiaryRepo
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)
     annotation class AlbumRepo
+
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class FeedRepo
 
     @Singleton
     @LocalUserDataSource
@@ -89,6 +95,18 @@ object AppModule {
         )
     }
 
+    @Singleton
+    @LocalFeedDataSource
+    @Provides
+    fun provideFeedLocalDataSource(
+        database: IJDatabase,
+        ioDispatcher: CoroutineDispatcher
+    ): FeedLocalDataSource {
+        return FeedLocalDataSource(
+            database.diaryDao(), ioDispatcher
+        )
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     @Singleton
     @DiaryRepo
@@ -109,6 +127,17 @@ object AppModule {
         ioDispatcher: CoroutineDispatcher
     ): AlbumRepository {
         return AlbumRepoImpl(albumLocalDataSource, ioDispatcher)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @Singleton
+    @FeedRepo
+    @Provides
+    fun provideFeedRepository(
+        @AppModule.LocalFeedDataSource feedLocalDataSource: FeedLocalDataSource,
+        ioDispatcher: CoroutineDispatcher
+    ): com.hk.ijournal.repository.FeedRepo {
+        return FeedRepoImpl(feedLocalDataSource, ioDispatcher)
     }
 
     @Singleton
@@ -147,7 +176,7 @@ object UserRepositoryModule {
 
 @Module
 @InstallIn(SingletonComponent::class)
-object HomeRepositoryModule {
+object HomeUseCaseModule {
 
     @Singleton
     @Provides
@@ -165,4 +194,16 @@ object HomeRepositoryModule {
         return AlbumUseCaseImpl(albumRepository)
     }
 
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object FeedRepositoryModule {
+    @Singleton
+    @Provides
+    fun provideFeedUseCase(
+        @AppModule.FeedRepo feedRepo: FeedRepo
+    ): FeedUseCase {
+        return FeedUseCaseImpl(feedRepo)
+    }
 }

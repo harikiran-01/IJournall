@@ -1,7 +1,7 @@
 package com.hk.ijournal.repository
 
 import android.text.TextUtils
-import com.hk.ijournal.repository.data.source.local.UserLocalDataSource
+import com.hk.ijournal.repository.data.source.local.datasource.UserLocalDataSource
 import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 import kotlinx.coroutines.*
 

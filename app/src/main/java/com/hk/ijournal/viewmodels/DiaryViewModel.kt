@@ -4,8 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.hk.ijournal.common.Constants
-import com.hk.ijournal.domain.PageUseCase
 import com.hk.ijournal.domain.AlbumUseCase
+import com.hk.ijournal.domain.PageUseCase
 import com.hk.ijournal.repository.data.source.local.entities.DayAlbum
 import com.hk.ijournal.repository.data.source.local.entities.DiaryPage
 import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
@@ -120,7 +120,7 @@ class DiaryViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        println("lifecycled diaryVM onCreate")
+        println("lifecycled diaryVM onCleared")
         super.onCleared()
     }
 
@@ -178,9 +178,15 @@ class DiaryViewModel @Inject constructor(
         _selectedDateLive.value = selectedDate
     }
 
+    fun resetSavedStatus() {
+        _saveStatus.value = ""
+    }
+
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             navigateToSelectedPage(LocalDate.now())
         }
     }
+
+
 }

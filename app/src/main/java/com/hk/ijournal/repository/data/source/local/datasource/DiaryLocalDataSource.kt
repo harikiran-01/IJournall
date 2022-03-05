@@ -1,6 +1,7 @@
-package com.hk.ijournal.repository.data.source.local
+package com.hk.ijournal.repository.data.source.local.datasource
 
 import com.hk.ijournal.repository.data.source.DiaryDataSource
+import com.hk.ijournal.repository.data.source.local.dao.DiaryDao
 import com.hk.ijournal.repository.data.source.local.entities.DiaryPage
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

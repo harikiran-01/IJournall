@@ -1,7 +1,7 @@
-package com.hk.ijournal.repository.data.source.local
+package com.hk.ijournal.repository.data.source.local.datasource
 
-import androidx.lifecycle.LiveData
 import com.hk.ijournal.repository.data.source.AlbumDataSource
+import com.hk.ijournal.repository.data.source.local.dao.AlbumDao
 import com.hk.ijournal.repository.data.source.local.entities.DayAlbum
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 
 class AlbumLocalDataSource
 internal constructor(private val albumDao: AlbumDao,
-            private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO): AlbumDataSource {
+                     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO): AlbumDataSource {
 
     override suspend fun insertAlbum(album: DayAlbum): Long = withContext(ioDispatcher) {
         return@withContext albumDao.insertAlbum(album)

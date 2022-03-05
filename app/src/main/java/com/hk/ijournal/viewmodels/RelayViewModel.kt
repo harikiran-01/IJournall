@@ -4,12 +4,10 @@ import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.hk.ijournal.repository.AccessRepository
 import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -46,6 +44,10 @@ class RelayViewModel @Inject constructor(private val accessRepository: AccessRep
             return@runBlocking userResult.getOrNull()
         else
             return@runBlocking null
+    }
+
+    fun resetImagesPickedLiveData() {
+        _imageUriList.value = listOf()
     }
 
 }

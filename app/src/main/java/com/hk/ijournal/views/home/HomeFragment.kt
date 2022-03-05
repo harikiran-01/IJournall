@@ -1,27 +1,21 @@
 package com.hk.ijournal.views.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavArgument
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
-import com.google.android.material.navigation.NavigationBarView
 import com.hk.ijournal.R
-import com.hk.ijournal.common.CommonLib.LOGTAG
 import com.hk.ijournal.common.Constants
 import com.hk.ijournal.databinding.FragmentHomeBinding
-import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
-import com.hk.ijournal.utils.SessionAuthManager
 import com.hk.ijournal.viewmodels.HomeViewModel
-import com.hk.ijournal.views.home.dashboard.DashboardFragment
-import com.hk.ijournal.views.home.diary.DiaryFragment
-import com.hk.ijournal.views.home.notifications.NotificationsFragment
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -38,7 +32,15 @@ class HomeFragment : Fragment() {
 //            loadFragment(it.title.toString())
 //            true
 //        }
-        println("lifecycled homeF onCreate")
+        // This callback will only be called when MyFragment is at least Started.
+        // This callback will only be called when MyFragment is at least Started.
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    findNavController().popBackStack()
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
