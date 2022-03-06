@@ -8,8 +8,6 @@ import com.hk.ijournal.databinding.FragmentFeedBinding
 import com.hk.ijournal.decoration.VerticalItemDecoration
 import com.hk.ijournal.feed.adapters.FeedAdapter
 import com.hk.ijournal.feed.viewmodel.FeedViewModel
-import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
-import com.hk.ijournal.views.LaunchActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -25,7 +23,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
         return FeedViewModel::class.java
     }
 
-    override fun getViewBinding(): FragmentFeedBinding {
+    override fun getViewBinding(): com.hk.ijournal.databinding.FragmentFeedBinding {
         return FragmentFeedBinding.inflate(layoutInflater)
     }
 
@@ -43,7 +41,11 @@ class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
     override fun setUpListeners() {
         super.setUpListeners()
         binding.addEntryBtn.setOnClickListener {
-            navigateFromFeedToHome(safeArgs.diaryUser)
+            findNavController().navigate(FeedFragmentDirections.feedToDayEntry(safeArgs.diaryUser))
+        }
+
+        binding.calendarBtn.setOnClickListener {
+            findNavController().navigate(FeedFragmentDirections.feedToCalendar(safeArgs.diaryUser))
         }
     }
 
@@ -54,10 +56,6 @@ class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
         }
     }
 
-    private fun navigateFromFeedToHome(diaryUser: DiaryUser) {
-        (requireActivity() as LaunchActivity).supportActionBar?.hide()
-        findNavController().navigate(FeedFragmentDirections.feedToHome(diaryUser))
-    }
 
     override fun doViewCleanup() {
         binding.miniPageRv.adapter = null

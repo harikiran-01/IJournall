@@ -55,7 +55,7 @@ class LaunchActivity : AppCompatActivity() {
             openImagePicker()
             it.set(false)
             } }
-        relayViewModel.onUserAuthorized.observe(this) { navigateFromAccessToFeed(it) }
+        relayViewModel.onUserAuthorized.observe(this) { navigateFromAccessToLanding(it) }
         logoutCallback = relayViewModel.onSessionEnd.observe { if (it.get()) {
             navigateFromHomeToAccess()
             it.set(false)
@@ -107,11 +107,11 @@ class LaunchActivity : AppCompatActivity() {
     }
 
     private fun conditionalNavigate(navController: NavController) {
-        val graph = navController.navInflater.inflate(R.navigation.app_navigation)
+        val graph = navController.navInflater.inflate(R.navigation.root_navigation)
         if (SessionAuthManager.isUserLoggedIn()){
             val userIdArg = NavArgument.Builder().setDefaultValue(relayViewModel.getUser(SessionAuthManager.getUID())).build()
             graph.addArgument(Constants.DIARY_USER, userIdArg)
-            graph.setStartDestination(R.id.feed_dest)
+            graph.setStartDestination(R.id.landing_dest)
         }
         else
             graph.setStartDestination(R.id.access_dest)
@@ -131,18 +131,18 @@ class LaunchActivity : AppCompatActivity() {
 //        supportFragmentManager.beginTransaction().add(R.id.main_nav_host, homeFragment!!, "home_frag").commit()
 //    }
 
-    private fun navigateFromAccessToHome(diaryUser: DiaryUser) {
-        supportActionBar?.hide()
-        with(diaryUser){
-            SessionAuthManager.createUserLoginSession(diaryUser.uid)
-            navController.navigate(AccessFragmentDirections.accessToHome(this))
-        }
-    }
+//    private fun navigateFromAccessToHome(diaryUser: DiaryUser) {
+//        supportActionBar?.hide()
+//        with(diaryUser){
+//            SessionAuthManager.createUserLoginSession(diaryUser.uid)
+//            navController.navigate(AccessFragmentDirections.accessToHome(this))
+//        }
+//    }
 
-    private fun navigateFromAccessToFeed(diaryUser: DiaryUser) {
+    private fun navigateFromAccessToLanding(diaryUser: DiaryUser) {
         SessionAuthManager.createUserLoginSession(diaryUser.uid)
         supportActionBar?.hide()
-        navController.navigate(AccessFragmentDirections.accessToFeed(diaryUser))
+        navController.navigate(AccessFragmentDirections.accessToLanding(diaryUser))
     }
 
     private fun navigateFromHomeToAccess() {

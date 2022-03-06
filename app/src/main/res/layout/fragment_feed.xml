@@ -5,17 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/abstbg"
-    android:paddingBottom="14dp"
-    android:paddingHorizontal="14dp"
-    tools:context="feed.views.FeedFragment">
+    tools:context=".feed.views.FeedFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mini_page_rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="50dp"
         android:orientation="vertical"
         android:nestedScrollingEnabled="true"
-        android:layout_marginTop="50dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/add_entry_btn"
@@ -47,7 +45,6 @@
         app:layout_constraintStart_toEndOf="@id/calendar_btn"
         app:layout_constraintEnd_toStartOf="@id/profile_btn"
         app:layout_constraintBottom_toBottomOf="parent"/>
-
 
     <ImageButton
         android:id="@+id/profile_btn"

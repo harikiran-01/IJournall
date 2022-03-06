@@ -8,7 +8,7 @@ import com.hk.ijournal.databinding.FeedMiniPageItemBinding
 import com.hk.ijournal.repository.data.source.local.entities.DiaryPage
 import javax.inject.Inject
 
-class MiniPageBinder @Inject constructor() : ViewDataBinder<FeedMiniPageItemBinding, DiaryPage>() {
+class LandingFeedBinder @Inject constructor() : ViewDataBinder<FeedMiniPageItemBinding, DiaryPage>() {
     override val viewType: Int
         get() = ITEM_MINI_PAGE
 

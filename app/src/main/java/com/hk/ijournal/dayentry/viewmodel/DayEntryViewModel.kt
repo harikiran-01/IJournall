@@ -1,4 +1,4 @@
-package com.hk.ijournal.viewmodels
+package com.hk.ijournal.dayentry.viewmodel
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
-class DiaryViewModel @Inject constructor(
+class DayEntryViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val pageUseCase: PageUseCase, private val albumUseCase: AlbumUseCase) : ViewModel() {
     var pageId: Long? = null

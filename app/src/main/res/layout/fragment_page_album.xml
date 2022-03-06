@@ -6,7 +6,7 @@
 
         <variable
             name="PageAlbumFragment"
-            type="com.hk.ijournal.views.home.diary.PageAlbumFragment" />
+            type="com.hk.ijournal.dayentry.views.PageAlbumFragment" />
     </data>
 
     <LinearLayout
@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:layout_margin="5dp"
-        tools:context=".views.home.diary.PageAlbumFragment">
+        tools:context=".dayentry.views.PageAlbumFragment">
 
         <ImageButton
             android:id="@+id/addImageButton"

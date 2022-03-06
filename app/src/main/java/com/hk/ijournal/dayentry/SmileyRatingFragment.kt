@@ -1,4 +1,4 @@
-package com.hk.ijournal.views.home.diary
+package com.hk.ijournal.dayentry
 
 import android.content.res.ColorStateList
 import android.graphics.Paint

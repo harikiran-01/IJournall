@@ -1,4 +1,4 @@
-package com.hk.ijournal.views.home.diary
+package com.hk.ijournal.dayentry.views
 
 import android.app.DatePickerDialog
 import android.os.Build
@@ -14,11 +14,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.hk.ijournal.R
 import com.hk.ijournal.common.base.BaseFragment
-import com.hk.ijournal.databinding.FragmentDiaryBinding
+import com.hk.ijournal.databinding.FragmentDayEntryBinding
+import com.hk.ijournal.dayentry.SmileyRatingFragment
+import com.hk.ijournal.dayentry.viewmodel.DayEntryViewModel
 import com.hk.ijournal.repository.data.source.local.IJDatabase
 import com.hk.ijournal.repository.models.ContentType
 import com.hk.ijournal.utils.SessionAuthManager
-import com.hk.ijournal.viewmodels.DiaryViewModel
 import com.hk.ijournal.viewmodels.RelayViewModel
 import com.wajahatkarim3.roomexplorer.RoomExplorer
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,15 +31,15 @@ import java.time.LocalDate
 import java.util.*
 
 @AndroidEntryPoint
-class DiaryFragment : BaseFragment<FragmentDiaryBinding, Nothing>(), View.OnClickListener, View.OnLongClickListener, DatePickerDialog.OnDateSetListener {
-    private val safeArgs : DiaryFragmentArgs by navArgs()
+class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), View.OnClickListener, View.OnLongClickListener, DatePickerDialog.OnDateSetListener {
+    private val safeArgs : DayEntryFragmentArgs by navArgs()
     private val relayViewModel by activityViewModels<RelayViewModel>()
-    private val diaryViewModel : DiaryViewModel by viewModels()
+    private val dayEntryViewModel : DayEntryViewModel by viewModels()
     private lateinit var datePickerDialog: DatePickerDialog
 
     @RequiresApi(Build.VERSION_CODES.O)
     private val textWatcher = DebouncingEditTextWatcher(lifecycleScope) { typedContent, stoppedTyping ->
-        diaryViewModel.postContent(typedContent, stoppedTyping)
+        dayEntryViewModel.postContent(typedContent, stoppedTyping)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -46,8 +47,8 @@ class DiaryFragment : BaseFragment<FragmentDiaryBinding, Nothing>(), View.OnClic
         return null
     }
 
-    override fun getViewBinding(): FragmentDiaryBinding {
-        return FragmentDiaryBinding.inflate(layoutInflater)
+    override fun getViewBinding(): FragmentDayEntryBinding {
+        return FragmentDayEntryBinding.inflate(layoutInflater)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -60,8 +61,8 @@ class DiaryFragment : BaseFragment<FragmentDiaryBinding, Nothing>(), View.OnClic
         datePickerDialog.datePicker.maxDate = Calendar.getInstance().timeInMillis
         datePickerDialog.setOnDateSetListener(this)
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.diaryViewModel = diaryViewModel
-        binding.diaryFragment = this
+        binding.dayEntryViewModel = dayEntryViewModel
+        binding.dayEntryFragment = this
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -75,7 +76,7 @@ class DiaryFragment : BaseFragment<FragmentDiaryBinding, Nothing>(), View.OnClic
     @RequiresApi(Build.VERSION_CODES.O)
     override fun observeData() {
         super.observeData()
-        diaryViewModel.pageContentLive.observe(viewLifecycleOwner, Observer {
+        dayEntryViewModel.pageContentLive.observe(viewLifecycleOwner, Observer {
             DebouncingEditTextWatcher.typedText = it.contentType == ContentType.TYPED
             if (it.contentType == ContentType.LOADED)
                 binding.diaryContent.setText(it.text)
@@ -85,7 +86,7 @@ class DiaryFragment : BaseFragment<FragmentDiaryBinding, Nothing>(), View.OnClic
     @RequiresApi(Build.VERSION_CODES.O)
     override fun doViewCleanup() {
         println("lifecycled diaryF onDView")
-        diaryViewModel.resetSavedStatus()
+        dayEntryViewModel.resetSavedStatus()
         DebouncingEditTextWatcher.typedText = false
         binding.diaryContent.removeTextChangedListener(textWatcher)
         super.doViewCleanup()
@@ -97,7 +98,10 @@ class DiaryFragment : BaseFragment<FragmentDiaryBinding, Nothing>(), View.OnClic
         existingFrag?.let {
             ft.remove(it).commit()
         }
-                ?: ft.add(R.id.rating_holder, SmileyRatingFragment.newInstance(), SmileyRatingFragment.FRAG_NAME).commit()
+                ?: ft.add(R.id.rating_holder,
+                    SmileyRatingFragment.newInstance(),
+                    SmileyRatingFragment.FRAG_NAME
+                ).commit()
     }
 
     override fun onClick(v: View) {
@@ -116,7 +120,7 @@ class DiaryFragment : BaseFragment<FragmentDiaryBinding, Nothing>(), View.OnClic
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        diaryViewModel.navigateToSelectedPage(LocalDate.of(year, month+1, dayOfMonth))
+        dayEntryViewModel.navigateToSelectedPage(LocalDate.of(year, month+1, dayOfMonth))
     }
 
     override fun onLongClick(v: View): Boolean {

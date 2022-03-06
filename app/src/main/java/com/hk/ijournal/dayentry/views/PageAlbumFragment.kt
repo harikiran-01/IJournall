@@ -1,4 +1,4 @@
-package com.hk.ijournal.views.home.diary
+package com.hk.ijournal.dayentry.views
 
 import android.graphics.Bitmap
 import android.os.Build
@@ -12,8 +12,8 @@ import com.bumptech.glide.Glide
 import com.hk.ijournal.adapters.PageAlbumAdapter
 import com.hk.ijournal.common.base.BaseFragment
 import com.hk.ijournal.databinding.FragmentPageAlbumBinding
+import com.hk.ijournal.dayentry.viewmodel.DayEntryViewModel
 import com.hk.ijournal.utils.UriConverter
-import com.hk.ijournal.viewmodels.DiaryViewModel
 import com.hk.ijournal.viewmodels.RelayViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,7 +23,7 @@ import java.io.ByteArrayOutputStream
 
 class PageAlbumFragment : BaseFragment<FragmentPageAlbumBinding, Nothing>() {
     private val relayViewModel by activityViewModels<RelayViewModel>()
-    private val diaryViewModel: DiaryViewModel by viewModels(
+    private val diaryViewModel: DayEntryViewModel by viewModels(
         ownerProducer = { requireParentFragment() })
     private var loadStream: Job? = null
     private val pageAlbumAdapter by lazy { PageAlbumAdapter(Glide.with(requireContext())) }
