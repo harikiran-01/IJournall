@@ -117,6 +117,7 @@ class DayEntryViewModel @Inject constructor(
             }
             _saveStatus.value = "Page Saved"
         } else _saveStatus.value = "Typing ..."
+
     }
 
     override fun onCleared() {

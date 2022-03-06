@@ -8,12 +8,10 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.Observable
-import androidx.navigation.NavArgument
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.github.anrwatchdog.ANRWatchDog
 import com.hk.ijournal.R
-import com.hk.ijournal.common.Constants
 import com.hk.ijournal.databinding.ActivityLaunchBinding
 import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
 import com.hk.ijournal.utils.SessionAuthManager
@@ -29,12 +27,8 @@ class LaunchActivity : AppCompatActivity() {
     private var launchBinding: ActivityLaunchBinding? = null
     private lateinit var addImageCallback: Observable.OnPropertyChangedCallback
     private lateinit var logoutCallback: Observable.OnPropertyChangedCallback
-    private lateinit var navController: NavController
     private val relayViewModel by viewModels<RelayViewModel>()
-
-    override fun onBackPressed() {
-        finishAfterTransition()
-    }
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         println("lifecycled launchA onCreate")
@@ -46,8 +40,10 @@ class LaunchActivity : AppCompatActivity() {
         //passing context to shared pref object
         SessionAuthManager.setContext(this)
         observeVM()
-        navController = findNavController(R.id.nav_host_fragment_app)
-        conditionalNavigate(navController)
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment_app) as NavHostFragment
+        navController = navHostFragment.navController
+        conditionalNavigate()
     }
 
     private fun observeVM() {
@@ -103,20 +99,14 @@ class LaunchActivity : AppCompatActivity() {
             startActivityForResult(Intent.createChooser(imgIntent, "Select Picture"), RelayViewModel.RequestCode.IMAGEADDED.ordinal)
         } else
             EasyPermissions.requestPermissions(this, "", 1, perm)
-
     }
 
-    private fun conditionalNavigate(navController: NavController) {
-        val graph = navController.navInflater.inflate(R.navigation.root_navigation)
+    private fun conditionalNavigate() {
         if (SessionAuthManager.isUserLoggedIn()){
-            val userIdArg = NavArgument.Builder().setDefaultValue(relayViewModel.getUser(SessionAuthManager.getUID())).build()
-            graph.addArgument(Constants.DIARY_USER, userIdArg)
-            graph.setStartDestination(R.id.landing_dest)
+            supportActionBar?.hide()
+            val diaryUser = relayViewModel.getUser(SessionAuthManager.getUID())
+            navController.navigate(AccessFragmentDirections.accessToLanding(diaryUser?: DiaryUser()))
         }
-        else
-            graph.setStartDestination(R.id.access_dest)
-
-        navController.graph = graph
     }
 
 //    private fun showAccessScreen() {

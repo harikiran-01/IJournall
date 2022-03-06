@@ -20,7 +20,6 @@
         android:padding="20dp"
         tools:context=".dayentry.views.DayEntryFragment">
 
-
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/homeguideline"
             android:layout_width="wrap_content"

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/root_navigation">
+    android:id="@+id/root_navigation"
+    app:startDestination="@id/access_dest">
 
     <fragment
         android:id="@+id/access_dest"
@@ -10,13 +11,19 @@
 
         <action
             android:id="@+id/access_to_landing"
-            app:destination="@id/landing_dest"
+            app:destination="@id/landing_navigation"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@id/root_navigation"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true">
+
+            <argument
+                android:name="diaryUser"
+                app:argType="com.hk.ijournal.repository.data.source.local.entities.DiaryUser" />
+
+        </action>
 
     </fragment>
 
@@ -40,24 +47,6 @@
             app:argType="com.hk.ijournal.repository.data.source.local.entities.DiaryUser" />
     </fragment>
 
-    <fragment
-        android:id="@+id/landing_dest"
-        android:name="com.hk.ijournal.landing.views.LandingFragment"
-        android:label="LandingFragment">
-
-        <action
-            android:id="@+id/landing_to_access"
-            app:destination="@id/access_dest"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@id/root_navigation"
-            app:popUpToInclusive="true" />
-
-        <argument
-            android:name="diaryUser"
-            app:argType="com.hk.ijournal.repository.data.source.local.entities.DiaryUser" />
-    </fragment>
+    <include app:graph="@navigation/landing_navigation"/>
 
 </navigation>

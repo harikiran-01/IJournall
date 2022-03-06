@@ -8,6 +8,7 @@ import com.hk.ijournal.databinding.FragmentFeedBinding
 import com.hk.ijournal.decoration.VerticalItemDecoration
 import com.hk.ijournal.feed.adapters.FeedAdapter
 import com.hk.ijournal.feed.viewmodel.FeedViewModel
+import com.hk.ijournal.views.LaunchActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -36,11 +37,13 @@ class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
             )
         )
         binding.miniPageRv.adapter = feedAdapter
+        viewModel.getAllPages()
     }
 
     override fun setUpListeners() {
         super.setUpListeners()
         binding.addEntryBtn.setOnClickListener {
+            (requireActivity() as LaunchActivity).supportActionBar?.hide()
             findNavController().navigate(FeedFragmentDirections.feedToDayEntry(safeArgs.diaryUser))
         }
 
@@ -51,13 +54,14 @@ class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
 
     override fun observeData() {
         super.observeData()
-        viewModel.allPages.observe(this){
-            feedAdapter.addItems(it)
+        viewModel.allPages.observe(viewLifecycleOwner){
+            feedAdapter.setItems(it)
         }
     }
 
 
     override fun doViewCleanup() {
+        feedAdapter.clear()
         binding.miniPageRv.adapter = null
         super.doViewCleanup()
     }

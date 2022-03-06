@@ -54,7 +54,6 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), View.
     @RequiresApi(Build.VERSION_CODES.O)
     override fun setUpViews() {
         super.setUpViews()
-        println("lifecycled diaryF onCreateView")
         datePickerDialog = DatePickerDialog(requireContext(), this, Calendar.getInstance()[Calendar.YEAR],
             Calendar.getInstance()[Calendar.MONTH] + 1,
             Calendar.getInstance()[Calendar.DAY_OF_MONTH])
@@ -85,7 +84,6 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), View.
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun doViewCleanup() {
-        println("lifecycled diaryF onDView")
         dayEntryViewModel.resetSavedStatus()
         DebouncingEditTextWatcher.typedText = false
         binding.diaryContent.removeTextChangedListener(textWatcher)

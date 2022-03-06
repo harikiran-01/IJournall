@@ -33,7 +33,6 @@ class HomeFragment : Fragment() {
 //            true
 //        }
         // This callback will only be called when MyFragment is at least Started.
-        // This callback will only be called when MyFragment is at least Started.
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {
                 override fun handleOnBackPressed() {
@@ -115,7 +114,6 @@ class HomeFragment : Fragment() {
             childFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
         }
         fragmentHomeBinding.navView.setOnItemSelectedListener(null)
-        fragmentHomeBinding.unbind()
         _fragmentHomeBinding = null
         homeViewModel.lastActiveFragTag = ""
         super.onDestroyView()
