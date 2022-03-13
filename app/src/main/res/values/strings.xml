@@ -24,11 +24,14 @@
     <string name="title_notifications">Notifications</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="diary_content_hint">Start Typing Here..</string>
+    <string name="diary_title_hint">Title</string>
+    <string name="diary_content_hint">Write Here..</string>
+    <string name="diary_image_with_title_hint">Write More Here..</string>
     <string name="rating_content_description">Select Rating</string>
     <string name="search_icon_title">Search</string>
     <string name="prev_date_button">previous date button</string>
     <string name="next_date_button">next date button</string>
     <string name="page_album_pic">page album pic</string>
+    <string name="save_btn">SAVE</string>
 
 </resources>

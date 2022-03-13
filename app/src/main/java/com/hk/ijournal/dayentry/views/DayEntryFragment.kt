@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.widget.DatePicker
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
@@ -12,16 +11,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import com.hk.ijournal.R
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hk.ijournal.common.base.BaseFragment
 import com.hk.ijournal.databinding.FragmentDayEntryBinding
-import com.hk.ijournal.dayentry.SmileyRatingFragment
+import com.hk.ijournal.dayentry.adapters.EntryContentAdapter
+import com.hk.ijournal.dayentry.models.TextModel
 import com.hk.ijournal.dayentry.viewmodel.DayEntryViewModel
-import com.hk.ijournal.repository.data.source.local.IJDatabase
-import com.hk.ijournal.repository.models.ContentType
-import com.hk.ijournal.utils.SessionAuthManager
+import com.hk.ijournal.decoration.VerticalItemDecoration
+import com.hk.ijournal.repository.data.source.local.entities.ImageContent
 import com.hk.ijournal.viewmodels.RelayViewModel
-import com.wajahatkarim3.roomexplorer.RoomExplorer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -29,17 +27,21 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), View.OnClickListener, View.OnLongClickListener, DatePickerDialog.OnDateSetListener {
+class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DatePickerDialog.OnDateSetListener {
     private val safeArgs : DayEntryFragmentArgs by navArgs()
     private val relayViewModel by activityViewModels<RelayViewModel>()
     private val dayEntryViewModel : DayEntryViewModel by viewModels()
     private lateinit var datePickerDialog: DatePickerDialog
 
+    @Inject
+    lateinit var entryContentAdapter: EntryContentAdapter
+
     @RequiresApi(Build.VERSION_CODES.O)
     private val textWatcher = DebouncingEditTextWatcher(lifecycleScope) { typedContent, stoppedTyping ->
-        dayEntryViewModel.postContent(typedContent, stoppedTyping)
+        // no ops
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -54,62 +56,75 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), View.
     @RequiresApi(Build.VERSION_CODES.O)
     override fun setUpViews() {
         super.setUpViews()
+        setupDatePicker()
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            dayEntryViewModel = dayEntryViewModel
+            dayEntryFragment = this@DayEntryFragment
+        }
+        initAdapter()
+    }
+
+    private fun initAdapter() {
+        with(binding) {
+            contentRv.apply {
+                layoutManager = object : LinearLayoutManager(requireContext()) {
+                    override fun canScrollVertically(): Boolean { return false }
+                }
+                addItemDecoration(VerticalItemDecoration(30))
+                adapter = entryContentAdapter
+            }
+        }
+        entryContentAdapter.addItem(TextModel("Hey", "#A02B55"))
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setupDatePicker() {
         datePickerDialog = DatePickerDialog(requireContext(), this, Calendar.getInstance()[Calendar.YEAR],
             Calendar.getInstance()[Calendar.MONTH] + 1,
             Calendar.getInstance()[Calendar.DAY_OF_MONTH])
-        datePickerDialog.datePicker.maxDate = Calendar.getInstance().timeInMillis
-        datePickerDialog.setOnDateSetListener(this)
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.dayEntryViewModel = dayEntryViewModel
-        binding.dayEntryFragment = this
+        datePickerDialog.apply {
+            datePicker.maxDate = Calendar.getInstance().timeInMillis
+            setOnDateSetListener(this@DayEntryFragment)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun setUpListeners() {
         super.setUpListeners()
-        binding.smileyRatingButton.setOnClickListener(this)
-        binding.smileyRatingButton.setOnLongClickListener(this)
-        binding.diaryContent.addTextChangedListener(textWatcher)
+        with(binding) {
+            saveBtn.setOnClickListener {
+                dayEntryViewModel?.savePage(binding.title.text.toString(), entryContentAdapter.dataList)
+            }
+
+            addImageBtn.setOnClickListener {
+                relayViewModel.imagePickerClicked.set(true)
+            }
+
+            relayViewModel.imageUriList.observe(viewLifecycleOwner) { imageUris ->
+                imageUris?.let {
+                    viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+                        val imageContentList = imageUris.map { ImageContent(it, "") }
+                        entryContentAdapter.addItems(imageContentList)
+                        //dayEntryViewModel.saveImagesAsAlbum(it)
+                    }
+                }
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun observeData() {
         super.observeData()
-        dayEntryViewModel.pageContentLive.observe(viewLifecycleOwner, Observer {
-            DebouncingEditTextWatcher.typedText = it.contentType == ContentType.TYPED
-            if (it.contentType == ContentType.LOADED)
-                binding.diaryContent.setText(it.text)
+
+        dayEntryViewModel.pageTitleLive.observe(viewLifecycleOwner, Observer {
+            binding.title.setText(it)
         })
-    }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun doViewCleanup() {
-        dayEntryViewModel.resetSavedStatus()
-        DebouncingEditTextWatcher.typedText = false
-        binding.diaryContent.removeTextChangedListener(textWatcher)
-        super.doViewCleanup()
-    }
-
-    private fun toggleRatingSelectorDialog() {
-        val ft = childFragmentManager.beginTransaction()
-        val existingFrag = childFragmentManager.findFragmentByTag(SmileyRatingFragment.FRAG_NAME)
-        existingFrag?.let {
-            ft.remove(it).commit()
-        }
-                ?: ft.add(R.id.rating_holder,
-                    SmileyRatingFragment.newInstance(),
-                    SmileyRatingFragment.FRAG_NAME
-                ).commit()
-    }
-
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.smiley_rating_button -> {
-                SessionAuthManager.logoutUser()
-                relayViewModel.onSessionEnd.set(true)
-                //toggleRatingSelectorDialog()
-            }
-        }
+//        dayEntryViewModel.pageContentLive.observe(viewLifecycleOwner, Observer {
+//            if (it.contentType == ContentType.LOADED)
+//                binding.content.setText(it.text)
+//        })
     }
 
     fun showDatePicker() {
@@ -119,15 +134,6 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), View.
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         dayEntryViewModel.navigateToSelectedPage(LocalDate.of(year, month+1, dayOfMonth))
-    }
-
-    override fun onLongClick(v: View): Boolean {
-        when (v.id) {
-            R.id.smiley_rating_button -> {
-                RoomExplorer.show(requireActivity(), IJDatabase::class.java, "Journals.db")
-            }
-        }
-        return true
     }
 }
 

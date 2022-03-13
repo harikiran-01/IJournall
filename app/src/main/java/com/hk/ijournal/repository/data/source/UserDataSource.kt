@@ -1,19 +1,15 @@
 package com.hk.ijournal.repository.data.source
 
-import androidx.lifecycle.LiveData
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
+import com.hk.ijournal.repository.data.source.local.entities.User
 
 /**
  * Main entry point for accessing user data.
  */
 interface UserDataSource {
-    suspend fun insertUser(user: DiaryUser): Long
+    suspend fun insertUser(user: User): Long
 
-    suspend fun deleteUser(user: DiaryUser)
+    suspend fun deleteUser(user: User)
 
-    suspend fun getUserbyName(userName: String): Result<DiaryUser>
-    suspend fun getUserbyId(uid: Long): Result<DiaryUser>
+    suspend fun getUserbyName(userName: String): Result<User>
+    suspend fun getUserbyId(uid: Long): Result<User>
 }

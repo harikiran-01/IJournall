@@ -7,7 +7,7 @@ import java.time.LocalDate
 
 @Entity(tableName = "usertable", indices = [Index("uid")])
 @TypeConverters(DateConverter::class)
-data class DiaryUser @Ignore constructor(var username: String, var passcode: String, var dob: LocalDate?): Serializable{
+data class User @Ignore constructor(var username: String, var passcode: String, var dob: LocalDate?): Serializable{
     @PrimaryKey(autoGenerate = true)
     var uid: Long = 0
 

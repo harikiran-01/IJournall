@@ -13,7 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.github.anrwatchdog.ANRWatchDog
 import com.hk.ijournal.R
 import com.hk.ijournal.databinding.ActivityLaunchBinding
-import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
+import com.hk.ijournal.repository.data.source.local.entities.User
 import com.hk.ijournal.utils.SessionAuthManager
 import com.hk.ijournal.viewmodels.RelayViewModel
 import com.hk.ijournal.views.access.AccessFragmentDirections
@@ -105,7 +105,7 @@ class LaunchActivity : AppCompatActivity() {
         if (SessionAuthManager.isUserLoggedIn()){
             supportActionBar?.hide()
             val diaryUser = relayViewModel.getUser(SessionAuthManager.getUID())
-            navController.navigate(AccessFragmentDirections.accessToLanding(diaryUser?: DiaryUser()))
+            navController.navigate(AccessFragmentDirections.accessToLanding(diaryUser?: User()))
         }
     }
 
@@ -129,7 +129,7 @@ class LaunchActivity : AppCompatActivity() {
 //        }
 //    }
 
-    private fun navigateFromAccessToLanding(diaryUser: DiaryUser) {
+    private fun navigateFromAccessToLanding(diaryUser: User) {
         SessionAuthManager.createUserLoginSession(diaryUser.uid)
         supportActionBar?.hide()
         navController.navigate(AccessFragmentDirections.accessToLanding(diaryUser))

@@ -5,27 +5,42 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1796875" />
         <entry key="app/src/main/res/drawable/auth_button_disabled.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/auth_button_enabled.xml" value="0.125" />
         <entry key="app/src/main/res/drawable/calendar_btn_selector.xml" value="0.1085" />
+        <entry key="app/src/main/res/drawable/content_input_style.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/day_entry_content.xml" value="0.1475" />
         <entry key="app/src/main/res/drawable/feed_mini_page_item_shape.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/floating_options_bg.xml" value="0.1475" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_photo_alternate_24.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.108" />
+        <entry key="app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_image_48.xml" value="0.1475" />
+        <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_calendar.xml" value="0.1085" />
         <entry key="app/src/main/res/drawable/ic_profile.xml" value="0.1085" />
+        <entry key="app/src/main/res/drawable/ic_round_arrow_left_24.xml" value="0.1455" />
+        <entry key="app/src/main/res/drawable/ic_round_arrow_right_24.xml" value="0.1455" />
+        <entry key="app/src/main/res/drawable/ic_twotone_palette_48.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/image_shape.xml" value="0.1085" />
+        <entry key="app/src/main/res/drawable/linear_layout_vertical_divider.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/profile_btn_selector.xml" value="0.1085" />
         <entry key="app/src/main/res/layout/activity_launch.xml" value="0.1" />
         <entry key="app/src/main/res/layout/album_single_image.xml" value="0.11145833333333334" />
         <entry key="app/src/main/res/layout/calendar_day_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/calendar_fragment.xml" value="0.2832417805989583" />
         <entry key="app/src/main/res/layout/calendar_month_header_layout.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/feed_mini_page_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/day_entry_content.xml" value="0.1375" />
+        <entry key="app/src/main/res/layout/feed_mini_page_item.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/floating_options_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_day_entry.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_day_entry.xml" value="0.23333333333333334" />
         <entry key="app/src/main/res/layout/fragment_diary.xml" value="0.1503623188405797" />
-        <entry key="app/src/main/res/layout/fragment_feed.xml" value="0.192481884057971" />
+        <entry key="app/src/main/res/layout/fragment_feed.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1381340579710145" />
         <entry key="app/src/main/res/layout/fragment_page_album.xml" value="0.11141304347826086" />
         <entry key="app/src/main/res/layout/fragment_register.xml" value="0.1503623188405797" />
+        <entry key="app/src/main/res/layout/image_with_title.xml" value="0.16614583333333333" />
         <entry key="app/src/main/res/layout/landing_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.20677083333333332" />
         <entry key="app/src/main/res/menu/toolbar_menu.xml" value="0.1" />

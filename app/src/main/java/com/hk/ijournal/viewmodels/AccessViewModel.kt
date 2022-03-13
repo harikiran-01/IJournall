@@ -7,7 +7,7 @@ import androidx.lifecycle.*
 import com.hk.ijournal.common.CommonLib.LOGTAG
 import com.hk.ijournal.repository.AccessRepository
 import com.hk.ijournal.repository.AccessRepositoryImpl
-import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
+import com.hk.ijournal.repository.data.source.local.entities.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -71,7 +71,7 @@ class AccessViewModel @Inject constructor(private val accessRepositoryImpl: Acce
     }
 
     fun loginUser() = viewModelScope.launch {
-        val diaryUser = DiaryUser(loginUsernameLive.value.toString(), loginPasscodeLive.value.toString())
+        val diaryUser = User(loginUsernameLive.value.toString(), loginPasscodeLive.value.toString())
         val dbUser = accessRepositoryImpl.getMatchingUserinDb(loginUsernameLive.value.toString())
         dbUser.let {
             if (it.isSuccess) {
@@ -83,7 +83,7 @@ class AccessViewModel @Inject constructor(private val accessRepositoryImpl: Acce
     }
 
     fun registerUser() = viewModelScope.launch {
-        val diaryUser = DiaryUser(registerUsernameLive.value.toString(), registerPasscodeLive.value.toString(), dobLiveData.value)
+        val diaryUser = User(registerUsernameLive.value.toString(), registerPasscodeLive.value.toString(), dobLiveData.value)
         val dbUser = accessRepositoryImpl.getMatchingUserinDb(registerUsernameLive.value.toString())
         dbUser.let {
             if (it.isSuccess) {

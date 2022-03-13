@@ -24,20 +24,24 @@ class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
         return FeedViewModel::class.java
     }
 
-    override fun getViewBinding(): com.hk.ijournal.databinding.FragmentFeedBinding {
+    override fun getViewBinding(): FragmentFeedBinding {
         return FragmentFeedBinding.inflate(layoutInflater)
     }
 
     override fun setUpViews() {
         super.setUpViews()
-        binding.miniPageRv.layoutManager = LinearLayoutManager(requireContext())
-        binding.miniPageRv.addItemDecoration(
-            VerticalItemDecoration(
-                30
-            )
-        )
-        binding.miniPageRv.adapter = feedAdapter
+        initAdapter()
         viewModel.getAllPages()
+    }
+
+    private fun initAdapter() {
+        with(binding) {
+            miniPageRv.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                addItemDecoration(VerticalItemDecoration(30))
+                adapter = feedAdapter
+            }
+        }
     }
 
     override fun setUpListeners() {

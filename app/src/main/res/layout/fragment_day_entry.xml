@@ -17,121 +17,177 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="20dp"
-        tools:context=".dayentry.views.DayEntryFragment">
+        android:background="@color/colorBlack"
+        android:paddingHorizontal="14dp">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/homeguideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.10" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/albumguideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.30" />
-
-        <ImageButton
-            android:id="@+id/smiley_rating_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/ic_baseline_insert_emoticon_24"
-            android:contentDescription="@string/rating_content_description"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <EditText
-            android:id="@+id/diaryContent"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:autofillHints="@string/diary_content_hint"
-            android:background="@drawable/content_input_style"
-            android:ems="10"
-            android:gravity="start|top"
-            android:hint="@string/diary_content_hint"
-            android:inputType="textMultiLine"
-            android:padding="5dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/albumguideline" />
-
-        <TextView
-            android:id="@+id/selectedDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:hint="@string/dateformat"
-            android:longClickable="true"
-            android:onClick="@{()->DayEntryFragment.showDatePicker()}"
-            android:text="@{DayEntryViewModel.selectedDateLive.toString()}"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/smiley_rating_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/smiley_rating_button" />
-
-        <ImageButton
-            android:id="@+id/prevDateButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="5dp"
-            android:background="@null"
-            android:onClick="@{()->DayEntryViewModel.navigateToPrevPage()}"
-            android:contentDescription="@string/prev_date_button"
-            android:src="@drawable/ic_round_arrow_left_24"
-            app:layout_constraintBottom_toBottomOf="@+id/selectedDate"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintEnd_toStartOf="@+id/selectedDate"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintTop_toTopOf="@+id/selectedDate" />
-
-        <ImageButton
-            android:id="@+id/nextDateButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="5dp"
-            android:background="@null"
-            android:onClick="@{()->DayEntryViewModel.navigateToNextPage()}"
-            android:contentDescription="@string/next_date_button"
-            android:src="@drawable/ic_round_arrow_right_24"
-            app:layout_constraintBottom_toBottomOf="@+id/selectedDate"
-            app:layout_constraintStart_toEndOf="@+id/selectedDate"
-            app:layout_constraintTop_toTopOf="@+id/selectedDate" />
-
-        <TextView
-            android:id="@+id/saveStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:text="@{DayEntryViewModel.saveStatus}"
-            app:layout_constraintBottom_toTopOf="@id/homeguideline"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/album_holder"
-            android:name="com.hk.ijournal.dayentry.views.PageAlbumFragment"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/content_input_style"
-            app:layout_constraintBottom_toTopOf="@id/albumguideline"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/homeguideline" />
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/rating_holder"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="25dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/smiley_rating_button" />
+            android:background="@color/colorBlack"
+            android:elevation="10dp"
+            android:paddingVertical="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/close_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:background="@drawable/auth_button_enabled"
+                android:src="@drawable/ic_baseline_close_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/page_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:background="?android:selectableItemBackground"
+                android:src="@drawable/ic_baseline_search_24"
+                app:layout_constraintEnd_toStartOf="@id/save_btn"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/save_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:background="@drawable/auth_button_enabled"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:text="@string/save_btn"
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                tools:context=".dayentry.views.DayEntryFragment">
+
+                <TextView
+                    android:id="@+id/selectedDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:hint="@string/dateformat"
+                    android:onClick="@{()->DayEntryFragment.showDatePicker()}"
+                    android:text="@{DayEntryViewModel.selectedDateLive.toString()}"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorWhite"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/prevDateButton"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@null"
+                    android:contentDescription="@string/prev_date_button"
+                    android:onClick="@{()->DayEntryViewModel.navigateToPrevPage()}"
+                    android:src="@drawable/ic_round_arrow_left_24"
+                    app:layout_constraintBottom_toBottomOf="@+id/selectedDate"
+                    app:layout_constraintEnd_toStartOf="@+id/selectedDate"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintTop_toTopOf="@+id/selectedDate" />
+
+                <ImageButton
+                    android:id="@+id/nextDateButton"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="5dp"
+                    android:background="@null"
+                    android:contentDescription="@string/next_date_button"
+                    android:onClick="@{()->DayEntryViewModel.navigateToNextPage()}"
+                    android:src="@drawable/ic_round_arrow_right_24"
+                    app:layout_constraintBottom_toBottomOf="@+id/selectedDate"
+                    app:layout_constraintStart_toEndOf="@+id/selectedDate"
+                    app:layout_constraintTop_toTopOf="@+id/selectedDate" />
+
+                <EditText
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:autofillHints="@string/diary_title_hint"
+                    android:fontFamily="sans-serif-black"
+                    android:hint="@string/diary_title_hint"
+                    android:inputType="textMultiLine"
+                    android:lines="1"
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorGray"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/selectedDate" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/content_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/title"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <HorizontalScrollView
+            android:id="@+id/floating_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="36dp"
+            android:layout_marginBottom="20dp"
+            android:paddingVertical="5dp"
+            android:background="@drawable/floating_options_bg"
+            android:nestedScrollingEnabled="true"
+            android:orientation="horizontal"
+            android:elevation="30dp"
+            android:translationZ="10dp"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:shadowRadius="5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:showDividers="middle"
+                android:divider="@drawable/linear_layout_vertical_divider">
+
+                <ImageButton
+                    android:id="@+id/add_image_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackground"
+                    android:src="@drawable/ic_baseline_image_48" />
+
+                <ImageButton
+                    android:id="@+id/change_bg_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackground"
+                    android:src="@drawable/ic_twotone_palette_48" />
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

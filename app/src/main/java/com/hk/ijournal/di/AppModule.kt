@@ -4,10 +4,12 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.Room
-import com.hk.ijournal.domain.*
+import com.hk.ijournal.domain.FeedUseCase
+import com.hk.ijournal.domain.FeedUseCaseImpl
+import com.hk.ijournal.domain.PageUseCase
+import com.hk.ijournal.domain.PageUseCaseImpl
 import com.hk.ijournal.repository.*
 import com.hk.ijournal.repository.data.source.local.IJDatabase
-import com.hk.ijournal.repository.data.source.local.datasource.AlbumLocalDataSource
 import com.hk.ijournal.repository.data.source.local.datasource.DiaryLocalDataSource
 import com.hk.ijournal.repository.data.source.local.datasource.FeedLocalDataSource
 import com.hk.ijournal.repository.data.source.local.datasource.UserLocalDataSource
@@ -41,19 +43,11 @@ object AppModule {
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)
-    annotation class LocalAlbumDataSource
-
-    @Qualifier
-    @Retention(AnnotationRetention.RUNTIME)
     annotation class LocalFeedDataSource
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)
     annotation class DiaryRepo
-
-    @Qualifier
-    @Retention(AnnotationRetention.RUNTIME)
-    annotation class AlbumRepo
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)
@@ -83,17 +77,17 @@ object AppModule {
         )
     }
 
-    @Singleton
-    @LocalAlbumDataSource
-    @Provides
-    fun provideAlbumLocalDataSource(
-        database: IJDatabase,
-        ioDispatcher: CoroutineDispatcher
-    ): AlbumLocalDataSource {
-        return AlbumLocalDataSource(
-            database.albumDao(), ioDispatcher
-        )
-    }
+//    @Singleton
+//    @LocalAlbumDataSource
+//    @Provides
+//    fun provideAlbumLocalDataSource(
+//        database: IJDatabase,
+//        ioDispatcher: CoroutineDispatcher
+//    ): AlbumLocalDataSource {
+//        return AlbumLocalDataSource(
+//            database.albumDao(), ioDispatcher
+//        )
+//    }
 
     @Singleton
     @LocalFeedDataSource
@@ -116,17 +110,6 @@ object AppModule {
         ioDispatcher: CoroutineDispatcher
     ): DiaryRepository {
         return DiaryRepositoryImpl(diaryLocalDataSource, ioDispatcher)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Singleton
-    @AlbumRepo
-    @Provides
-    fun provideAlbumRepository(
-        @AppModule.LocalAlbumDataSource albumLocalDataSource: AlbumLocalDataSource,
-        ioDispatcher: CoroutineDispatcher
-    ): AlbumRepository {
-        return AlbumRepoImpl(albumLocalDataSource, ioDispatcher)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -184,14 +167,6 @@ object HomeUseCaseModule {
         @AppModule.DiaryRepo diaryRepository: DiaryRepository
     ): PageUseCase {
         return PageUseCaseImpl(diaryRepository)
-    }
-
-    @Singleton
-    @Provides
-    fun provideAlbumUseCase(
-        @AppModule.AlbumRepo albumRepository: AlbumRepository
-    ): AlbumUseCase {
-        return AlbumUseCaseImpl(albumRepository)
     }
 
 }

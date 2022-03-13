@@ -95,6 +95,8 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation 'com.wajahatkarim3:roomexplorer:0.0.2'
+    implementation 'com.google.code.gson:gson:2.8.6'
+
     //smiley rating
     implementation 'com.github.sujithkanna:smileyrating:2.0.0'
 

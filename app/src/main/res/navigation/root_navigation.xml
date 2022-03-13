@@ -21,7 +21,7 @@
 
             <argument
                 android:name="diaryUser"
-                app:argType="com.hk.ijournal.repository.data.source.local.entities.DiaryUser" />
+                app:argType="com.hk.ijournal.repository.data.source.local.entities.User" />
 
         </action>
 
@@ -44,7 +44,7 @@
 
         <argument
             android:name="diaryUser"
-            app:argType="com.hk.ijournal.repository.data.source.local.entities.DiaryUser" />
+            app:argType="com.hk.ijournal.repository.data.source.local.entities.User" />
     </fragment>
 
     <include app:graph="@navigation/landing_navigation"/>
