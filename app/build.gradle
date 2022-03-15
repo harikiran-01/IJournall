@@ -96,6 +96,9 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation 'com.wajahatkarim3:roomexplorer:0.0.2'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.11.1'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.11.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.1'
 
     //smiley rating
     implementation 'com.github.sujithkanna:smileyrating:2.0.0'

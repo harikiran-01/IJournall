@@ -11,7 +11,7 @@ import com.hk.ijournal.common.base.ITEM_DAY_IMAGE
 import com.hk.ijournal.common.base.ViewDataBinder
 import com.hk.ijournal.databinding.ImageWithTitleBinding
 import com.hk.ijournal.dayentry.models.PageContentModel
-import com.hk.ijournal.repository.data.source.local.entities.ImageContent
+import com.hk.ijournal.dayentry.models.ImageContent
 import javax.inject.Inject
 
 class ImageContentBinder @Inject constructor() :

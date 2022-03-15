@@ -15,11 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hk.ijournal.common.base.BaseFragment
 import com.hk.ijournal.databinding.FragmentDayEntryBinding
 import com.hk.ijournal.dayentry.adapters.EntryContentAdapter
-import com.hk.ijournal.dayentry.models.TextModel
 import com.hk.ijournal.dayentry.viewmodel.DayEntryViewModel
 import com.hk.ijournal.decoration.VerticalItemDecoration
-import com.hk.ijournal.repository.data.source.local.entities.ImageContent
+import com.hk.ijournal.repository.data.source.local.IJDatabase
+import com.hk.ijournal.dayentry.models.ImageContent
 import com.hk.ijournal.viewmodels.RelayViewModel
+import com.wajahatkarim3.roomexplorer.RoomExplorer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -33,7 +34,7 @@ import javax.inject.Inject
 class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DatePickerDialog.OnDateSetListener {
     private val safeArgs : DayEntryFragmentArgs by navArgs()
     private val relayViewModel by activityViewModels<RelayViewModel>()
-    private val dayEntryViewModel : DayEntryViewModel by viewModels()
+    private val dayEntryVM : DayEntryViewModel by viewModels()
     private lateinit var datePickerDialog: DatePickerDialog
 
     @Inject
@@ -59,7 +60,7 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
         setupDatePicker()
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            dayEntryViewModel = dayEntryViewModel
+            dayEntryViewModel = dayEntryVM
             dayEntryFragment = this@DayEntryFragment
         }
         initAdapter()
@@ -75,7 +76,6 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
                 adapter = entryContentAdapter
             }
         }
-        entryContentAdapter.addItem(TextModel("Hey", "#A02B55"))
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -93,6 +93,11 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
     override fun setUpListeners() {
         super.setUpListeners()
         with(binding) {
+
+            pageSearch.setOnClickListener {
+                RoomExplorer.show(requireActivity(), IJDatabase::class.java, "Journals.db")
+            }
+
             saveBtn.setOnClickListener {
                 dayEntryViewModel?.savePage(binding.title.text.toString(), entryContentAdapter.dataList)
             }
@@ -106,7 +111,6 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
                     viewLifecycleOwner.lifecycleScope.launchWhenCreated {
                         val imageContentList = imageUris.map { ImageContent(it, "") }
                         entryContentAdapter.addItems(imageContentList)
-                        //dayEntryViewModel.saveImagesAsAlbum(it)
                     }
                 }
             }
@@ -117,14 +121,11 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
     override fun observeData() {
         super.observeData()
 
-        dayEntryViewModel.pageTitleLive.observe(viewLifecycleOwner, Observer {
-            binding.title.setText(it)
+        dayEntryVM.currentPage.observe(viewLifecycleOwner, Observer {
+            binding.title.setText(it.title)
+            entryContentAdapter.setItems(it.contentList)
         })
 
-//        dayEntryViewModel.pageContentLive.observe(viewLifecycleOwner, Observer {
-//            if (it.contentType == ContentType.LOADED)
-//                binding.content.setText(it.text)
-//        })
     }
 
     fun showDatePicker() {
@@ -133,7 +134,7 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        dayEntryViewModel.navigateToSelectedPage(LocalDate.of(year, month+1, dayOfMonth))
+        dayEntryVM.navigateToSelectedPage(LocalDate.of(year, month+1, dayOfMonth))
     }
 }
 
@@ -145,8 +146,6 @@ internal class DebouncingEditTextWatcher(private val coroutineScope: CoroutineSc
     companion object {
         var typedText: Boolean = false
     }
-
-
 
     private var editTextJob: Job? = null
 

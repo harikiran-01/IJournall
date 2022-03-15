@@ -18,7 +18,7 @@ import java.time.LocalDate
 @TypeConverters(DateConverter::class, DayEntryConverter::class)
 data class Page(val selectedDate: LocalDate, val uid: Long, var title: String, var contentList: List<PageContentModel>) : PageContentModel {
     @PrimaryKey(autoGenerate = true)
-    var pid: Long = 0
+    var pid = 0L
 
     @RequiresApi(Build.VERSION_CODES.O)
     constructor() : this(LocalDate.now(), 0, "", listOf())

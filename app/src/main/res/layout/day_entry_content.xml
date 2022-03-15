@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
+    <data>
+
+        <variable
+            name="TextModel"
+            type="com.hk.ijournal.dayentry.models.TextModel" />
+
+    </data>
+
 <EditText xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/content"
@@ -10,6 +19,7 @@
     android:background="@null"
     android:gravity="start|top"
     android:hint="@string/diary_content_hint"
+    android:text="@={TextModel.content}"
     android:inputType="textMultiLine"
     android:textColor="@color/colorWhite"
     android:textColorHint="@color/colorGray"

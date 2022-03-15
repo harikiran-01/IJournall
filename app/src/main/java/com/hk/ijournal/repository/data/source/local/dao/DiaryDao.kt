@@ -21,5 +21,4 @@ interface DiaryDao : RoomDao {
 
     @Query("select pid from diarytable where selectedDate=:selectedDate and uid=:uid")
     suspend fun getPageIdForDate(selectedDate: LocalDate, uid: Long): Long?
-
 }

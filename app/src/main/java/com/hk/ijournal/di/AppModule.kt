@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.Room
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.hk.ijournal.domain.FeedUseCase
 import com.hk.ijournal.domain.FeedUseCaseImpl
 import com.hk.ijournal.domain.PageUseCase
@@ -13,6 +15,7 @@ import com.hk.ijournal.repository.data.source.local.IJDatabase
 import com.hk.ijournal.repository.data.source.local.datasource.DiaryLocalDataSource
 import com.hk.ijournal.repository.data.source.local.datasource.FeedLocalDataSource
 import com.hk.ijournal.repository.data.source.local.datasource.UserLocalDataSource
+import com.hk.ijournal.utils.ContentTypeAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -121,6 +124,12 @@ object AppModule {
         ioDispatcher: CoroutineDispatcher
     ): com.hk.ijournal.repository.FeedRepo {
         return FeedRepoImpl(feedLocalDataSource, ioDispatcher)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGson(): Gson {
+        return GsonBuilder().registerTypeAdapter(ContentTypeAdapter::class.java, ContentTypeAdapter()).create()
     }
 
     @Singleton

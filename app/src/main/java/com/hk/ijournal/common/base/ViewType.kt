@@ -13,6 +13,7 @@ const val ITEM_DAY_IMAGE = 4
 @IntDef(
     ITEM_NONE,
     ITEM_MINI_PAGE,
+    ITEM_DAY_CONTENT,
     ITEM_DAY_TEXT,
     ITEM_DAY_IMAGE
 )

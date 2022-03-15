@@ -10,7 +10,7 @@ import com.hk.ijournal.dayentry.models.PageContentModel
 import com.hk.ijournal.dayentry.models.TextModel
 import javax.inject.Inject
 
-class TextContentBinder  @Inject constructor() :
+class TextContentBinder @Inject constructor() :
     ViewDataBinder<DayEntryContentBinding, TextModel>(), PageContentModel {
 
     override val viewType: Int
@@ -20,8 +20,9 @@ class TextContentBinder  @Inject constructor() :
         get() = ITEM_DAY_CONTENT
 
     override fun createBinder(parent: ViewGroup): DayEntryContentBinding {
-        return DayEntryContentBinding.inflate(
+        val binding = DayEntryContentBinding.inflate(
             LayoutInflater.from(parent.context), parent, false)
+        return binding
     }
 
     override fun bindData(binding: DayEntryContentBinding, data: TextModel, position: Int) {

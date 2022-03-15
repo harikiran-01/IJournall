@@ -1,6 +1,5 @@
 package com.hk.ijournal.feed.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -31,7 +30,6 @@ constructor(
     }
 
     fun getAllPages() = runBlocking {
-        Log.d("DEBDEB", "${feedUseCase.getAllPages(userId)}")
         _allPages.value = feedUseCase.getAllPages(userId)
     }
 
