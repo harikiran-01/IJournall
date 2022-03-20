@@ -1,5 +1,6 @@
 package com.hk.ijournal.feed.views
 
+import android.util.Log
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -7,17 +8,16 @@ import com.hk.ijournal.common.base.BaseFragment
 import com.hk.ijournal.databinding.FragmentFeedBinding
 import com.hk.ijournal.decoration.VerticalItemDecoration
 import com.hk.ijournal.feed.adapters.FeedAdapter
+import com.hk.ijournal.feed.adapters.viewbinders.LandingFeedBinder
 import com.hk.ijournal.feed.viewmodel.FeedViewModel
 import com.hk.ijournal.views.LaunchActivity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
     private val safeArgs: FeedFragmentArgs by navArgs()
 
-    @Inject
     lateinit var feedAdapter: FeedAdapter
 
     override fun getViewModelClass(): Class<FeedViewModel> {
@@ -35,6 +35,9 @@ class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
     }
 
     private fun initAdapter() {
+        feedAdapter = FeedAdapter(LandingFeedBinder {
+            findNavController().navigate(FeedFragmentDirections.feedToDayEntry(safeArgs.diaryUser, it))
+        })
         with(binding) {
             miniPageRv.apply {
                 layoutManager = LinearLayoutManager(requireContext())
@@ -48,6 +51,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
         super.setUpListeners()
         binding.addEntryBtn.setOnClickListener {
             (requireActivity() as LaunchActivity).supportActionBar?.hide()
+            Log.d("DEBDEB", safeArgs.diaryUser.toString())
             findNavController().navigate(FeedFragmentDirections.feedToDayEntry(safeArgs.diaryUser))
         }
 

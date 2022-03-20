@@ -40,6 +40,12 @@
         <argument
             android:name="diaryUser"
             app:argType="com.hk.ijournal.repository.data.source.local.entities.User" />
+
+        <argument
+            android:name="pageId"
+            app:argType="long"
+            android:defaultValue="0L"/>
+
     </fragment>
 
     <fragment

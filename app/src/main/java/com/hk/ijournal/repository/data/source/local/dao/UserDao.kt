@@ -7,7 +7,7 @@ import androidx.room.Query
 import com.hk.ijournal.repository.data.source.local.entities.User
 
 @Dao
-interface UserDao {
+interface UserDao : RoomDao {
     @Insert
     suspend fun insertUser(user: User): Long
 

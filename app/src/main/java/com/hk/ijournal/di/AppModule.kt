@@ -6,13 +6,19 @@ import androidx.annotation.RequiresApi
 import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.hk.ijournal.dayentry.models.content.BaseEntity
+import com.hk.ijournal.dayentry.repo.DayEntryRepo
+import com.hk.ijournal.dayentry.repo.DayEntryRepoImpl
+import com.hk.ijournal.dayentry.repo.data.source.local.datasource.DayEntryLocalDataSource
 import com.hk.ijournal.domain.FeedUseCase
 import com.hk.ijournal.domain.FeedUseCaseImpl
 import com.hk.ijournal.domain.PageUseCase
 import com.hk.ijournal.domain.PageUseCaseImpl
-import com.hk.ijournal.repository.*
+import com.hk.ijournal.repository.AccessRepository
+import com.hk.ijournal.repository.AccessRepositoryImpl
+import com.hk.ijournal.repository.FeedRepo
+import com.hk.ijournal.repository.FeedRepoImpl
 import com.hk.ijournal.repository.data.source.local.IJDatabase
-import com.hk.ijournal.repository.data.source.local.datasource.DiaryLocalDataSource
 import com.hk.ijournal.repository.data.source.local.datasource.FeedLocalDataSource
 import com.hk.ijournal.repository.data.source.local.datasource.UserLocalDataSource
 import com.hk.ijournal.utils.ContentTypeAdapter
@@ -36,100 +42,10 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    @Qualifier
-    @Retention(AnnotationRetention.RUNTIME)
-    annotation class LocalUserDataSource
-
-    @Qualifier
-    @Retention(AnnotationRetention.RUNTIME)
-    annotation class LocalDiaryDataSource
-
-    @Qualifier
-    @Retention(AnnotationRetention.RUNTIME)
-    annotation class LocalFeedDataSource
-
-    @Qualifier
-    @Retention(AnnotationRetention.RUNTIME)
-    annotation class DiaryRepo
-
-    @Qualifier
-    @Retention(AnnotationRetention.RUNTIME)
-    annotation class FeedRepo
-
-    @Singleton
-    @LocalUserDataSource
-    @Provides
-    fun provideUserLocalDataSource(
-        database: IJDatabase,
-        ioDispatcher: CoroutineDispatcher
-    ): UserLocalDataSource {
-        return UserLocalDataSource(
-            database.userDao(), ioDispatcher
-        )
-    }
-
-    @Singleton
-    @LocalDiaryDataSource
-    @Provides
-    fun provideDiaryLocalDataSource(
-        database: IJDatabase,
-        ioDispatcher: CoroutineDispatcher
-    ): DiaryLocalDataSource {
-        return DiaryLocalDataSource(
-            database.diaryDao(), ioDispatcher
-        )
-    }
-
-//    @Singleton
-//    @LocalAlbumDataSource
-//    @Provides
-//    fun provideAlbumLocalDataSource(
-//        database: IJDatabase,
-//        ioDispatcher: CoroutineDispatcher
-//    ): AlbumLocalDataSource {
-//        return AlbumLocalDataSource(
-//            database.albumDao(), ioDispatcher
-//        )
-//    }
-
-    @Singleton
-    @LocalFeedDataSource
-    @Provides
-    fun provideFeedLocalDataSource(
-        database: IJDatabase,
-        ioDispatcher: CoroutineDispatcher
-    ): FeedLocalDataSource {
-        return FeedLocalDataSource(
-            database.diaryDao(), ioDispatcher
-        )
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Singleton
-    @DiaryRepo
-    @Provides
-    fun provideDiaryRepository(
-        @AppModule.LocalDiaryDataSource diaryLocalDataSource: DiaryLocalDataSource,
-        ioDispatcher: CoroutineDispatcher
-    ): DiaryRepository {
-        return DiaryRepositoryImpl(diaryLocalDataSource, ioDispatcher)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Singleton
-    @FeedRepo
-    @Provides
-    fun provideFeedRepository(
-        @AppModule.LocalFeedDataSource feedLocalDataSource: FeedLocalDataSource,
-        ioDispatcher: CoroutineDispatcher
-    ): com.hk.ijournal.repository.FeedRepo {
-        return FeedRepoImpl(feedLocalDataSource, ioDispatcher)
-    }
-
     @Singleton
     @Provides
     fun provideGson(): Gson {
-        return GsonBuilder().registerTypeAdapter(ContentTypeAdapter::class.java, ContentTypeAdapter()).create()
+        return GsonBuilder().registerTypeAdapter(BaseEntity::class.java, ContentTypeAdapter()).create()
     }
 
     @Singleton
@@ -154,39 +70,107 @@ object AppModule {
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object UserRepositoryModule {
+object UserModule {
+
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class LocalUserDataSource
+
+    @Singleton
+    @LocalUserDataSource
+    @Provides
+    fun provideUserLocalDataSource(database: IJDatabase, ioDispatcher: CoroutineDispatcher): UserLocalDataSource {
+        return UserLocalDataSource(database.userDao(), ioDispatcher)
+    }
 
     @Singleton
     @Provides
     fun provideUserRepository(
-        @AppModule.LocalUserDataSource userLocalDataSource: UserLocalDataSource,
-        ioDispatcher: CoroutineDispatcher
-    ): AccessRepository {
+        @LocalUserDataSource userLocalDataSource: UserLocalDataSource,
+        ioDispatcher: CoroutineDispatcher): AccessRepository {
         return AccessRepositoryImpl(userLocalDataSource, ioDispatcher)
     }
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
-object HomeUseCaseModule {
+object PageModule {
+
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class LocalDiaryDataSource
+
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class DiaryRepo
+
+    @Singleton
+    @LocalDiaryDataSource
+    @Provides
+    fun provideDiaryLocalDataSource(
+        database: IJDatabase,
+        ioDispatcher: CoroutineDispatcher
+    ): DayEntryLocalDataSource {
+        return DayEntryLocalDataSource(database.dayEntryDao(), ioDispatcher)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @Singleton
+    @DiaryRepo
+    @Provides
+    fun provideDiaryRepository(
+        @LocalDiaryDataSource diaryLocalDataSource: DayEntryLocalDataSource,
+        ioDispatcher: CoroutineDispatcher
+    ): DayEntryRepo {
+        return DayEntryRepoImpl(diaryLocalDataSource, ioDispatcher)
+    }
 
     @Singleton
     @Provides
     fun providePageUseCase(
-        @AppModule.DiaryRepo diaryRepository: DiaryRepository
+        @DiaryRepo diaryRepository: DayEntryRepo
     ): PageUseCase {
         return PageUseCaseImpl(diaryRepository)
     }
-
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
-object FeedRepositoryModule {
+object FeedModule {
+
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class LocalFeedDataSource
+
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class FeedRepository
+
+    @Singleton
+    @LocalFeedDataSource
+    @Provides
+    fun provideFeedLocalDataSource(
+        database: IJDatabase,
+        ioDispatcher: CoroutineDispatcher
+    ): FeedLocalDataSource {
+        return FeedLocalDataSource(database.dayEntryDao(), ioDispatcher)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @Singleton
+    @FeedRepository
+    @Provides
+    fun provideFeedRepository(
+        @LocalFeedDataSource feedLocalDataSource: FeedLocalDataSource,
+        ioDispatcher: CoroutineDispatcher
+    ): FeedRepo {
+        return FeedRepoImpl(feedLocalDataSource, ioDispatcher)
+    }
+
     @Singleton
     @Provides
     fun provideFeedUseCase(
-        @AppModule.FeedRepo feedRepo: FeedRepo
+        @FeedRepository feedRepo: FeedRepo
     ): FeedUseCase {
         return FeedUseCaseImpl(feedRepo)
     }

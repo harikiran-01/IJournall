@@ -4,15 +4,14 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import com.hk.ijournal.common.base.ITEM_DAY_IMAGE
-import com.hk.ijournal.common.base.ITEM_DAY_TEXT
-import com.hk.ijournal.dayentry.models.ImageContent
-import com.hk.ijournal.dayentry.models.PageContentModel
-import com.hk.ijournal.dayentry.models.TextModel
+import com.hk.ijournal.dayentry.models.*
+import com.hk.ijournal.dayentry.models.content.BaseEntity
+import com.hk.ijournal.dayentry.models.content.ContentData
+import com.hk.ijournal.dayentry.models.content.ImageContent
+import com.hk.ijournal.dayentry.models.content.TextContent
 import java.lang.reflect.Type
 
-
-class ContentTypeAdapter : JsonDeserializer<PageContentModel?> {
+class ContentTypeAdapter : JsonDeserializer<BaseEntity<ContentData>> {
     private val LOG_TAG = ContentTypeAdapter::class.java.simpleName
 
     @Throws(JsonParseException::class)
@@ -20,26 +19,24 @@ class ContentTypeAdapter : JsonDeserializer<PageContentModel?> {
         jsonElement: JsonElement,
         type: Type?,
         jsonDeserializationContext: JsonDeserializationContext
-    ): PageContentModel? {
-            val jsonObject = jsonElement.asJsonObject
-            val viewType = jsonObject[VIEW_TYPE].asInt
-            return when (viewType) {
-                ITEM_DAY_TEXT -> jsonDeserializationContext.deserialize(jsonObject, TextModel::class.java)
-                ITEM_DAY_IMAGE -> jsonDeserializationContext.deserialize(jsonObject, ImageContent::class.java)
-                else -> null
+    ): BaseEntity<ContentData>? {
+        if (jsonElement.isJsonObject) {
+                val jsonObject = jsonElement.asJsonObject
+                if (jsonObject[TYPE] != null) {
+                    val viewType = jsonObject[TYPE].asString
+                    val objType = when (viewType) {
+                        CONTENT_TEXT -> TextContent::class.java
+                        CONTENT_IMAGE -> ImageContent::class.java
+                        else -> null
+                    }
+                    val value: JsonElement = jsonObject.get("data")
+                    return BaseEntity(viewType, jsonDeserializationContext.deserialize(value, objType))
+                }
             }
-
-
-//            return when (jsonObject[VIEW_TYPE].asNumber) {
-//            ITEM_DAY_TEXT -> jsonDeserializationContext.deserialize(jsonObject, TextModel::class.java)
-//            ITEM_DAY_IMAGE -> jsonDeserializationContext.deserialize(jsonObject, ImageContent::class.java)
-//            else -> {
-//                null
-//            }
-//        }
+        return null
     }
 
     companion object {
-        private const val VIEW_TYPE = "viewType"
+        private const val TYPE = "type"
     }
 }

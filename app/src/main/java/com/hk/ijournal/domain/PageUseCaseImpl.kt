@@ -1,24 +1,28 @@
 package com.hk.ijournal.domain
 
-import com.hk.ijournal.repository.DiaryRepository
-import com.hk.ijournal.repository.data.source.local.entities.Page
+import com.hk.ijournal.dayentry.models.Page
+import com.hk.ijournal.dayentry.repo.DayEntryRepo
 import java.time.LocalDate
 
-class PageUseCaseImpl internal constructor(private val diaryRepository: DiaryRepository): PageUseCase {
+class PageUseCaseImpl internal constructor(private val dayEntryRepo: DayEntryRepo): PageUseCase {
 
     override suspend fun insertPage(page: Page): Long? {
-        return diaryRepository.insertPage(page)
+        return dayEntryRepo.insertPage(page)
     }
 
     override suspend fun updatePage(page: Page) {
-        return diaryRepository.updatePage(page)
+        return dayEntryRepo.updatePage(page)
     }
 
     override suspend fun getPageforDate(selectedDate: LocalDate, uid: Long): Page? {
-        return diaryRepository.getPageforDate(selectedDate, uid)
+        return dayEntryRepo.getPageforDate(selectedDate, uid)
+    }
+
+    override suspend fun getPageForId(pid: Long): Page? {
+        return dayEntryRepo.getPageForId(pid)
     }
 
     override suspend fun getPageIdForDate(selectedDate: LocalDate, uid: Long): Long? {
-        return diaryRepository.getPageIdForDate(selectedDate, uid)
+        return dayEntryRepo.getPageIdForDate(selectedDate, uid)
     }
 }

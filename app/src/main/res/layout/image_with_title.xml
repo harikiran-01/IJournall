@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout>
+    <data>
+
+        <variable
+            name="ImageContent"
+            type="com.hk.ijournal.dayentry.models.content.ImageContent" />
+
+    </data>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,7 +28,7 @@
         android:textColor="@color/colorWhite"
         android:textColorHint="@color/colorGray"
         android:hint="@string/diary_image_with_title_hint"
-        android:inputType="textMultiLine"
+        android:text="@={ImageContent.description}"
         app:layout_constraintTop_toBottomOf="@id/image"
         app:layout_constraintStart_toStartOf="parent"/>
 

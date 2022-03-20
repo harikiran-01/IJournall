@@ -8,17 +8,17 @@ import android.widget.DatePicker
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hk.ijournal.common.base.BaseAdapterViewType
 import com.hk.ijournal.common.base.BaseFragment
 import com.hk.ijournal.databinding.FragmentDayEntryBinding
 import com.hk.ijournal.dayentry.adapters.EntryContentAdapter
+import com.hk.ijournal.dayentry.models.content.ImageContent
 import com.hk.ijournal.dayentry.viewmodel.DayEntryViewModel
 import com.hk.ijournal.decoration.VerticalItemDecoration
 import com.hk.ijournal.repository.data.source.local.IJDatabase
-import com.hk.ijournal.dayentry.models.ImageContent
 import com.hk.ijournal.viewmodels.RelayViewModel
 import com.wajahatkarim3.roomexplorer.RoomExplorer
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,13 +57,18 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
     @RequiresApi(Build.VERSION_CODES.O)
     override fun setUpViews() {
         super.setUpViews()
-        setupDatePicker()
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             dayEntryViewModel = dayEntryVM
             dayEntryFragment = this@DayEntryFragment
         }
         initAdapter()
+        if (safeArgs.pageId != 0L) {
+
+        }
+        else {
+            setupDatePicker()
+        }
     }
 
     private fun initAdapter() {
@@ -120,12 +125,11 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
     @RequiresApi(Build.VERSION_CODES.O)
     override fun observeData() {
         super.observeData()
-
-        dayEntryVM.currentPage.observe(viewLifecycleOwner, Observer {
-            binding.title.setText(it.title)
-            entryContentAdapter.setItems(it.contentList)
-        })
-
+        dayEntryVM.currentPage.observe(viewLifecycleOwner) { page ->
+            binding.title.setText(page.title)
+            val contentListForAdapter = page.contentList.map { it.data as BaseAdapterViewType }
+            entryContentAdapter.setItems(contentListForAdapter)
+        }
     }
 
     fun showDatePicker() {

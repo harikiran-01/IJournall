@@ -5,11 +5,9 @@ import com.hk.ijournal.common.base.BaseAdapterViewType
 import com.hk.ijournal.common.base.BaseRecyclerAdapter
 import com.hk.ijournal.common.base.ViewDataBinder
 import com.hk.ijournal.feed.adapters.viewbinders.LandingFeedBinder
-import javax.inject.Inject
 
-class FeedAdapter @Inject constructor (
+class FeedAdapter (
     private val landingFeedBinder: LandingFeedBinder): BaseRecyclerAdapter<BaseAdapterViewType>() {
-
     init {
         initViewDataBinders()
     }
@@ -19,5 +17,4 @@ class FeedAdapter @Inject constructor (
         viewDataBinders.add(landingFeedBinder)
         return viewDataBinders as List<ViewDataBinder<ViewDataBinding, BaseAdapterViewType>>
     }
-
 }

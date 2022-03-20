@@ -4,19 +4,15 @@ import androidx.annotation.IntDef
 
 const val ITEM_NONE = 0
 const val ITEM_MINI_PAGE = 1
-
-// ITEM_DAY_CONTENT = parent view of all the ITEM_DAY_* view types
-const val ITEM_DAY_CONTENT = 2
-const val ITEM_DAY_TEXT = 3
-const val ITEM_DAY_IMAGE = 4
+const val ITEM_DAY_TEXT = 2
+const val ITEM_DAY_IMAGE = 3
 
 @IntDef(
     ITEM_NONE,
     ITEM_MINI_PAGE,
-    ITEM_DAY_CONTENT,
     ITEM_DAY_TEXT,
-    ITEM_DAY_IMAGE
-)
+    ITEM_DAY_IMAGE)
+
 @Target(
     AnnotationTarget.PROPERTY,
     AnnotationTarget.FIELD,

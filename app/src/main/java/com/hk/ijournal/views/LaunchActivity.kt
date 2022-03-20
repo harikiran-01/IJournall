@@ -17,7 +17,6 @@ import com.hk.ijournal.repository.data.source.local.entities.User
 import com.hk.ijournal.utils.SessionAuthManager
 import com.hk.ijournal.viewmodels.RelayViewModel
 import com.hk.ijournal.views.access.AccessFragmentDirections
-import com.hk.ijournal.views.home.HomeFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -53,7 +52,6 @@ class LaunchActivity : AppCompatActivity() {
             } }
         relayViewModel.onUserAuthorized.observe(this) { navigateFromAccessToLanding(it) }
         logoutCallback = relayViewModel.onSessionEnd.observe { if (it.get()) {
-            navigateFromHomeToAccess()
             it.set(false)
             } }
     }
@@ -133,11 +131,6 @@ class LaunchActivity : AppCompatActivity() {
         SessionAuthManager.createUserLoginSession(diaryUser.uid)
         supportActionBar?.hide()
         navController.navigate(AccessFragmentDirections.accessToLanding(diaryUser))
-    }
-
-    private fun navigateFromHomeToAccess() {
-        supportActionBar?.hide()
-        navController.navigate(HomeFragmentDirections.homeToAccess())
     }
 
     override fun onDestroy() {

@@ -4,23 +4,24 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.hk.ijournal.dayentry.models.PageContentModel
+import com.hk.ijournal.dayentry.models.content.BaseEntity
+import com.hk.ijournal.dayentry.models.content.ContentData
 
 object DayEntryConverter {
 
-    private val gson: Gson = GsonBuilder().registerTypeAdapter(ArrayList::class.java, ContentTypeAdapter()).create()
+    private val gson: Gson = GsonBuilder().registerTypeAdapter(BaseEntity::class.java, ContentTypeAdapter()).create()
 
     @JvmStatic
     @TypeConverter
-    fun fromPageContentToJson(contentList : List<PageContentModel>) : String {
-        val type = object : TypeToken<ArrayList<PageContentModel>>(){}.type
+    fun fromPageContentToJson(contentList : List<BaseEntity<ContentData>>) : String {
+        val type = object : TypeToken<ArrayList<BaseEntity<ContentData>>>(){}.type
         return gson.toJson(contentList,type)
     }
 
     @JvmStatic
     @TypeConverter
-    fun fromJsonToPageContent(pageContentJson : String): List<PageContentModel> {
-        val type = object : TypeToken<ArrayList<PageContentModel>>(){}.type
+    fun fromJsonToPageContent(pageContentJson : String): List<BaseEntity<ContentData>> {
+        val type = object : TypeToken<ArrayList<BaseEntity<ContentData>>>(){}.type
         return gson.fromJson(pageContentJson, type)
     }
 }

@@ -2,22 +2,18 @@ package com.hk.ijournal.dayentry.adapters.binders
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.hk.ijournal.common.base.ITEM_DAY_CONTENT
+import com.hk.ijournal.common.base.BaseAdapterViewType
 import com.hk.ijournal.common.base.ITEM_DAY_TEXT
 import com.hk.ijournal.common.base.ViewDataBinder
 import com.hk.ijournal.databinding.DayEntryContentBinding
-import com.hk.ijournal.dayentry.models.PageContentModel
-import com.hk.ijournal.dayentry.models.TextModel
+import com.hk.ijournal.dayentry.models.content.TextContent
 import javax.inject.Inject
 
 class TextContentBinder @Inject constructor() :
-    ViewDataBinder<DayEntryContentBinding, TextModel>(), PageContentModel {
+    ViewDataBinder<DayEntryContentBinding, TextContent>(), BaseAdapterViewType {
 
     override val viewType: Int
         get() = ITEM_DAY_TEXT
-
-    override val parentViewType: Int
-        get() = ITEM_DAY_CONTENT
 
     override fun createBinder(parent: ViewGroup): DayEntryContentBinding {
         val binding = DayEntryContentBinding.inflate(
@@ -25,13 +21,8 @@ class TextContentBinder @Inject constructor() :
         return binding
     }
 
-    override fun bindData(binding: DayEntryContentBinding, data: TextModel, position: Int) {
-        with(binding) {
-            content.apply {
-                setText(data.content)
-                //TODO add and bind formatting data
-            }
-        }
-
+    override fun bindData(binding: DayEntryContentBinding, data: TextContent, position: Int) {
+        // two way data binding for text
+        binding.textContent = data
     }
 }

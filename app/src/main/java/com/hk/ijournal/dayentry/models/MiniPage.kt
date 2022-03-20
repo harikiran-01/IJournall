@@ -1,4 +1,4 @@
-package com.hk.ijournal.repository.data.source.local.entities
+package com.hk.ijournal.dayentry.models
 
 import java.time.LocalDate
 

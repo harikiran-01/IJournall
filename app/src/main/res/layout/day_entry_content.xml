@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="TextModel"
-            type="com.hk.ijournal.dayentry.models.TextModel" />
+            name="TextContent"
+            type="com.hk.ijournal.dayentry.models.content.TextContent" />
 
     </data>
 
@@ -19,7 +19,7 @@
     android:background="@null"
     android:gravity="start|top"
     android:hint="@string/diary_content_hint"
-    android:text="@={TextModel.content}"
+    android:text="@={TextContent.content}"
     android:inputType="textMultiLine"
     android:textColor="@color/colorWhite"
     android:textColorHint="@color/colorGray"
