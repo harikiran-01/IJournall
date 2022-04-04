@@ -2,7 +2,7 @@ package com.hk.ijournal.repository.data.source.local.datasource
 
 import com.hk.ijournal.repository.data.source.UserDataSource
 import com.hk.ijournal.repository.data.source.local.dao.UserDao
-import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
+import com.hk.ijournal.repository.data.source.local.entities.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -15,10 +15,10 @@ class UserLocalDataSource internal constructor(
     private val userDao: UserDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UserDataSource {
-    override suspend fun insertUser(user: DiaryUser) =
+    override suspend fun insertUser(user: User) =
         withContext(ioDispatcher) { userDao.insertUser(user) }
 
-    override suspend fun deleteUser(user: DiaryUser) =
+    override suspend fun deleteUser(user: User) =
         withContext(ioDispatcher) { userDao.deleteUser(user) }
 
     override suspend fun getUserbyName(userName: String) = withContext(ioDispatcher) {

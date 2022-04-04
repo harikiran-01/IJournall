@@ -87,8 +87,12 @@ abstract class BaseRecyclerAdapter<T : BaseAdapterViewType> :
     }
 
     fun setItems(items: List<T>) {
-        dataList = items as ArrayList<T>
-        notifyDataSetChanged()
+        if (items.isNotEmpty()) {
+            dataList = items as ArrayList<T>
+            notifyDataSetChanged()
+        }
+        else
+            clear()
     }
 
     fun update(pos: Int, item: T) {
@@ -97,9 +101,13 @@ abstract class BaseRecyclerAdapter<T : BaseAdapterViewType> :
     }
 
     fun addItems(items: List<T>) {
-        val start = dataList.size
-        dataList.addAll(items as ArrayList<T>)
-        notifyItemRangeInserted(start, items.size)
+        if (items.isNotEmpty()) {
+            val start = dataList.size
+            dataList.addAll(items as ArrayList<T>)
+            notifyItemRangeInserted(start, dataList.size)
+        }
+        else
+            clear()
     }
 
     fun addItem(item: T) {

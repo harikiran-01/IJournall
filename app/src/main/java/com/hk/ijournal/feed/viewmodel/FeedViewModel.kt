@@ -1,12 +1,14 @@
 package com.hk.ijournal.feed.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import com.hk.ijournal.common.Constants
 import com.hk.ijournal.domain.FeedUseCase
-import com.hk.ijournal.repository.data.source.local.entities.DiaryPage
-import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
+import com.hk.ijournal.dayentry.models.Page
+import com.hk.ijournal.repository.data.source.local.entities.User
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -18,19 +20,20 @@ constructor(
 ) : ViewModel() {
     private var userId: Long = 0
 
-    init {
-        userId = savedStateHandle.get<DiaryUser>(Constants.DIARY_USER)!!.uid
-        getAllPages()
-    }
-    private val _allPages = MutableLiveData<List<DiaryPage>>()
-    val allPages: LiveData<List<DiaryPage>>
+    private val _allPages = MutableLiveData<List<Page>>(mutableListOf())
+    val allPages: LiveData<List<Page>>
         get() = _allPages
 
-    private fun getAllPages() = runBlocking {
-        viewModelScope.launch {
-            println("DEBDEB ${feedUseCase.getAllPages(userId)}")
-            _allPages.value = feedUseCase.getAllPages(userId)
-            print("DEBDEB ${_allPages.value}")
-        }
+    init {
+        userId = savedStateHandle.get<User>(Constants.DIARY_USER)!!.uid
+        getAllPages()
+    }
+
+    fun getAllPages() = runBlocking {
+        _allPages.value = feedUseCase.getAllPages(userId)
+    }
+
+    fun resetAllPages() {
+        _allPages.value = mutableListOf()
     }
 }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="TextContent"
+            type="com.hk.ijournal.dayentry.models.content.TextContent" />
+
+    </data>
+
+<EditText xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:autofillHints="@string/diary_content_hint"
+    android:background="@null"
+    android:gravity="start|top"
+    android:hint="@string/diary_content_hint"
+    android:text="@={TextContent.content}"
+    android:inputType="textMultiLine"
+    android:textColor="@color/colorWhite"
+    android:textColorHint="@color/colorGray"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/title" />
+</layout>

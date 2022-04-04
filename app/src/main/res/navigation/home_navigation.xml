@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_diary"
-        android:name="com.hk.ijournal.views.home.diary.DiaryFragment"
+        android:name="com.hk.ijournal.dayentry.views.DayEntryFragment"
         android:label="@string/title_diary"
-        tools:layout="@layout/fragment_diary">
+        tools:layout="@layout/fragment_day_entry">
 
         <argument
             android:name="diaryUser"
-            app:argType="com.hk.ijournal.repository.data.source.local.entities.DiaryUser" />
+            app:argType="com.hk.ijournal.repository.data.source.local.entities.User" />
 
     </fragment>
 

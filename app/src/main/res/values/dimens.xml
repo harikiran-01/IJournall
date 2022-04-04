@@ -10,6 +10,7 @@
 
     <!--login and register dimens-->
     <dimen name="buttonradius">27dp</dimen>
+    <dimen name="buttonradius_home">8dp</dimen>
 
     <!--feed dimens-->
     <dimen name="feed_minipage_item_radius">10dp</dimen>

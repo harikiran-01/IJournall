@@ -13,7 +13,7 @@ import com.hk.ijournal.common.CommonLib.LOGTAG
 import com.hk.ijournal.databinding.FragmentLoginBinding
 import com.hk.ijournal.repository.AccessRepositoryImpl
 import com.hk.ijournal.repository.AccessRepositoryImpl.AccessStatus
-import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
+import com.hk.ijournal.repository.data.source.local.entities.User
 import com.hk.ijournal.viewmodels.AccessViewModel
 import com.hk.ijournal.viewmodels.RelayViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,7 +63,7 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun launchHomeOnSuccessfulAuth(diaryUser: DiaryUser) {
+    private fun launchHomeOnSuccessfulAuth(diaryUser: User) {
         relayViewModel.onUserAuthorized(diaryUser)
     }
 

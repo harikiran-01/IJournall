@@ -72,10 +72,10 @@ abstract class BaseFragment<B : ViewBinding, VM : ViewModel> : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        onLifecycleStart()
         inject()
         init()
         receiveExtras()
-        onLifecycleStart()
     }
 
     override fun onCreateView(

@@ -2,7 +2,7 @@ package com.hk.ijournal.repository
 
 import android.text.TextUtils
 import com.hk.ijournal.repository.data.source.local.datasource.UserLocalDataSource
-import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
+import com.hk.ijournal.repository.data.source.local.entities.User
 import kotlinx.coroutines.*
 
 class AccessRepositoryImpl
@@ -13,7 +13,7 @@ class AccessRepositoryImpl
         LOGIN_SUCCESSFUL, USER_NOT_FOUND, INVALID_LOGIN, REGISTER_SUCCESSFULL, USER_ALREADY_EXISTS
     }
 
-    data class AccessUser(val accessStatus: AccessStatus, val diaryUser: DiaryUser?)
+    data class AccessUser(val accessStatus: AccessStatus, val diaryUser: User?)
 
     enum class AccessValidation {
         USERNAME_INVALID, PASSCODE_INVALID, DOB_INVALID
@@ -27,11 +27,11 @@ class AccessRepositoryImpl
         return passcode?.let { it.length < 4 } ?: true
     }
 
-    override fun processLoginAndGetAccessStatus(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessUser {
+    override fun processLoginAndGetAccessStatus(dbUser: User?, diaryUser: User): AccessUser {
         return isLoginSuccessful(dbUser, diaryUser)
     }
 
-    override fun isLoginSuccessful(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessUser {
+    override fun isLoginSuccessful(dbUser: User?, diaryUser: User): AccessUser {
         return when {
             dbUser == null -> AccessUser(AccessStatus.USER_NOT_FOUND, null)
             dbUser.passcode == diaryUser.passcode -> AccessUser(AccessStatus.LOGIN_SUCCESSFUL, dbUser)
@@ -39,18 +39,18 @@ class AccessRepositoryImpl
         }
     }
 
-    override suspend fun processRegisterAndGetAccessStatus(dbUser: DiaryUser?, diaryUser: DiaryUser): AccessUser {
+    override suspend fun processRegisterAndGetAccessStatus(dbUser: User?, diaryUser: User): AccessUser {
         return if (dbUser == null) {
             diaryUser.uid = insertUserInDbAndGetRowId(diaryUser)
             AccessUser(AccessStatus.REGISTER_SUCCESSFULL, diaryUser)
         } else AccessUser(AccessStatus.USER_ALREADY_EXISTS, null)
     }
 
-    override suspend fun getMatchingUserinDb(username: String): Result<DiaryUser> = withContext(ioDispatcher) {
+    override suspend fun getMatchingUserinDb(username: String): Result<User> = withContext(ioDispatcher) {
         return@withContext userLocalDataSource.getUserbyName(username)
     }
 
-    override suspend fun getUser(uid: Long): Result<DiaryUser> = userLocalDataSource.getUserbyId(uid)
+    override suspend fun getUser(uid: Long): Result<User> = userLocalDataSource.getUserbyId(uid)
 
-    override suspend fun insertUserInDbAndGetRowId(diaryUser: DiaryUser) = userLocalDataSource.insertUser(diaryUser)
+    override suspend fun insertUserInDbAndGetRowId(diaryUser: User) = userLocalDataSource.insertUser(diaryUser)
 }

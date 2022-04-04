@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.hk.ijournal.repository.AccessRepository
-import com.hk.ijournal.repository.data.source.local.entities.DiaryUser
+import com.hk.ijournal.repository.data.source.local.entities.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -19,21 +19,21 @@ class RelayViewModel @Inject constructor(private val accessRepository: AccessRep
     }
 
     val imagePickerClicked = ObservableBoolean(false)
-    val onUserAuthorized: LiveData<DiaryUser>
+    val onUserAuthorized: LiveData<User>
         get() = _onUserAuthorized
     var onSessionEnd = ObservableBoolean(false)
 
     val imageUriList: LiveData<List<String>>
         get() = _imageUriList
 
-    private val _onUserAuthorized = MutableLiveData<DiaryUser>()
+    private val _onUserAuthorized = MutableLiveData<User>()
     private val _imageUriList = MutableLiveData<List<String>>()
 
     fun onImagesPicked(imagesUriList: List<String>) {
         _imageUriList.value = imagesUriList
     }
 
-    fun onUserAuthorized(diaryUser: DiaryUser) {
+    fun onUserAuthorized(diaryUser: User) {
         _onUserAuthorized.value = diaryUser
     }
 
