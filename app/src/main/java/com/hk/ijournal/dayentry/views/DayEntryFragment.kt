@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hk.ijournal.common.base.BaseAdapterViewType
 import com.hk.ijournal.common.base.BaseFragment
+import com.hk.ijournal.common.toPx
 import com.hk.ijournal.databinding.FragmentDayEntryBinding
 import com.hk.ijournal.dayentry.adapters.EntryContentAdapter
 import com.hk.ijournal.dayentry.models.content.ImageContent
@@ -64,7 +65,7 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
         }
         initAdapter()
         if (safeArgs.pageId != 0L) {
-
+            //TODO disable datepicker when in preview mode
         }
         else {
             setupDatePicker()
@@ -74,10 +75,8 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
     private fun initAdapter() {
         with(binding) {
             contentRv.apply {
-                layoutManager = object : LinearLayoutManager(requireContext()) {
-                    override fun canScrollVertically(): Boolean { return false }
-                }
-                addItemDecoration(VerticalItemDecoration(30))
+                layoutManager = LinearLayoutManager(requireContext())
+                addItemDecoration(VerticalItemDecoration(20.toPx.toInt()))
                 adapter = entryContentAdapter
             }
         }

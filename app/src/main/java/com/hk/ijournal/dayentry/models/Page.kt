@@ -19,7 +19,7 @@ import java.time.LocalDate
                 childColumns = ["uid"],
                 onDelete = CASCADE)], indices = [Index("pid", "uid")])
 @TypeConverters(DateConverter::class, DayEntryConverter::class)
-data class Page(val selectedDate: LocalDate, val uid: Long, var title: String, var contentList: List<BaseEntity<ContentData>>) : BaseAdapterViewType {
+data class Page(var selectedDate: LocalDate, val uid: Long, var title: String, var contentList: List<BaseEntity<ContentData>>) : BaseAdapterViewType {
     @PrimaryKey(autoGenerate = true)
     var pid = 0L
 

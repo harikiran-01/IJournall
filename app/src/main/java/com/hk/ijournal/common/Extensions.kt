@@ -1,5 +1,7 @@
 package com.hk.ijournal.common
 
+import android.content.res.Resources
+import android.util.TypedValue
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +10,12 @@ fun <T> MutableLiveData<T>.notifyListChanged() {
     this.value = this.value
 }
 
+val Number.toPx
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this.toFloat(),
+        Resources.getSystem().displayMetrics
+    )
 
 fun <T> List<T>.getItemInList(position: Int): T? {
     if (position < 0 || position >= this.size) {

@@ -27,43 +27,48 @@ import javax.inject.Inject
 class DayEntryViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val pageUseCase: PageUseCase) : ViewModel() {
+    companion object {
+        private const val NEW_PAGE = 0L
+    }
     private var userId = 0L
     private var previewPageId = 0L
 
     private val _pageIdLive = MutableLiveData<Long>()
 
-    private val _selectedDateLive = MutableLiveData<LocalDate>()
-    val selectedDateLive: LiveData<LocalDate>
-        get() = _selectedDateLive
-
     private val _currentPage = Transformations.map(_pageIdLive) {
-        return@map if (it == 0L) Page(LocalDate.now(),
+        return@map if (it == NEW_PAGE) Page(LocalDate.now(),
             userId, "",
             listOf(BaseEntity(CONTENT_TEXT, TextContent("", "#A02B55"))))
         else runBlocking { return@runBlocking pageUseCase.getPageForId(it) }
     } as MutableLiveData<Page>
 
+    val currentPage : LiveData<Page>
+        get() = _currentPage
+
+    private val _selectedDateLive = Transformations.map(_currentPage) {
+         return@map it.selectedDate
+    } as MutableLiveData<LocalDate>
+
+    val selectedDateLive: LiveData<LocalDate>
+        get() = _selectedDateLive
+
     init {
         userId = savedStateHandle.get<User>(Constants.DIARY_USER)!!.uid
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            navigateToSelectedPage(LocalDate.now())
-        }
         previewPageId = savedStateHandle.get<Long>(Constants.PAGE_ID)!!
         _pageIdLive.value = previewPageId
     }
 
-    val currentPage : LiveData<Page>
-        get() = _currentPage
-
     fun navigateToPrevPage() {
-        selectedDateLive.value?.minusDays(1)?.let {
+        _selectedDateLive.value?.minusDays(1)?.let {
             navigateToSelectedPage(it)
+            _currentPage.value?.selectedDate = it
         }
     }
 
     fun navigateToNextPage() {
         selectedDateLive.value?.plusDays(1)?.let {
             navigateToSelectedPage(it)
+            _currentPage.value?.selectedDate = it
         }
     }
 
@@ -78,8 +83,13 @@ class DayEntryViewModel @Inject constructor(
                 title = pageTitle
                 this.contentList = contentListWithType
             }
+
             _currentPage.value?.let {
-                pageUseCase.insertPage(it)
+                if (_pageIdLive.value == NEW_PAGE) {
+                    _pageIdLive.value = pageUseCase.insertPage(it)
+                }
+                else
+                    pageUseCase.updatePage(it)
             }
         }
     }

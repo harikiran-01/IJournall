@@ -104,7 +104,7 @@ abstract class BaseRecyclerAdapter<T : BaseAdapterViewType> :
         if (items.isNotEmpty()) {
             val start = dataList.size
             dataList.addAll(items as ArrayList<T>)
-            notifyItemRangeInserted(start, items.size)
+            notifyItemRangeInserted(start, dataList.size)
         }
         else
             clear()

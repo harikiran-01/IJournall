@@ -1,7 +1,6 @@
 package com.hk.ijournal.dayentry.models.content
 
 import com.google.gson.annotations.SerializedName
-import com.hk.ijournal.dayentry.models.EntityType
 import java.io.Serializable
 
 data class BaseEntity<WD : ContentData> (
@@ -10,9 +9,6 @@ data class BaseEntity<WD : ContentData> (
     val type: String,
 
     @SerializedName("data")
-    val data: WD,
-
-    @get:EntityType
-    val entityType: Int = 0,
+    val data: WD
 
 ) : Serializable
