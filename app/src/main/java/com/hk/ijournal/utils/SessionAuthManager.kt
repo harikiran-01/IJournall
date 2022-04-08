@@ -2,22 +2,17 @@ package com.hk.ijournal.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import com.hk.ijournal.R
 
 object SessionAuthManager {
-    // Shared Preferences reference
     private lateinit var pref: SharedPreferences
-
-    // Editor reference for Shared preferences
     private lateinit var editor: SharedPreferences.Editor
 
     private var userId: Long = 0
 
     fun setContext(ctx: Context) {
-        // Context
-        pref = PreferenceManager.getDefaultSharedPreferences(ctx)
+        pref = ctx.getSharedPreferences(ctx.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         editor = pref.edit()
-        editor.apply()
     }
 
     //Create login session
@@ -27,19 +22,12 @@ object SessionAuthManager {
         editor.apply()
     }
 
-    /**
-     * Clear session details
-     */
+    //Clear session details
     fun logoutUser() {
         editor.clear()
         editor.apply()
     }
 
-    /**
-     * Check login method will check user login status
-     * If false it will redirect user to login page
-     * Else do anything
-     */
     // Check for login
     fun isUserLoggedIn(): Boolean {
         println("sessdeb " + getUID())

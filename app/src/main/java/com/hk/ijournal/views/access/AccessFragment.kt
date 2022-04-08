@@ -1,11 +1,11 @@
 package com.hk.ijournal.views.access
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -15,9 +15,11 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy
 import com.hk.ijournal.R
+import com.hk.ijournal.common.CommonLib
 import com.hk.ijournal.databinding.FragmentAccessBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class AccessFragment : Fragment() {
 
     companion object {
@@ -35,16 +37,19 @@ class AccessFragment : Fragment() {
      */
     private var viewPager: ViewPager2? = null
 
-    private lateinit var accessBinding: FragmentAccessBinding
+    private var _accessBinding: FragmentAccessBinding? = null
+    private val accessBinding get() = _accessBinding!!
 
     /**
      * The pager adapter, which provides the pages to the view pager widget.
      */
     private var pagerAdapter: FragmentStateAdapter? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        accessBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_access, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _accessBinding = FragmentAccessBinding.inflate(inflater, container, false)
         return accessBinding.root
     }
 
@@ -61,13 +66,22 @@ class AccessFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        Log.d(CommonLib.LOGTAG, "AccessFragment onDestroyView")
+        pagerAdapter = null
+        viewPager?.adapter = null
         viewPager = null
-
         accessBinding.unbind()
+        _accessBinding = null
+        super.onDestroyView()
     }
 
-    private class ScreenSlidePagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fm, lifecycle) {
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(CommonLib.LOGTAG, "AccessFragment onDestroy")
+    }
+
+    private class ScreenSlidePagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
+        FragmentStateAdapter(fm, lifecycle) {
         // The number of tabs.
         private val tabCount = 2
         override fun createFragment(position: Int): Fragment {

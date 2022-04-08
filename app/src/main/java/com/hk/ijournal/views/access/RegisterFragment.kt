@@ -4,34 +4,41 @@ import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import androidx.annotation.RequiresApi
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.hk.ijournal.R
+import androidx.fragment.app.viewModels
 import com.hk.ijournal.adapters.AccessBindingAdapter
+import com.hk.ijournal.common.CommonLib
 import com.hk.ijournal.databinding.FragmentRegisterBinding
-import com.hk.ijournal.repository.AccessRepository.RegisterStatus
+import com.hk.ijournal.repository.AccessRepositoryImpl
+import com.hk.ijournal.repository.AccessRepositoryImpl.AccessStatus
+import com.hk.ijournal.repository.data.source.local.entities.User
 import com.hk.ijournal.viewmodels.AccessViewModel
 import com.hk.ijournal.viewmodels.RelayViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import java.util.*
 
+@AndroidEntryPoint
 class RegisterFragment : Fragment(), OnDateSetListener {
     private lateinit var datePickerDialog: DatePickerDialog
-    private lateinit var accessViewModel: AccessViewModel
-    private lateinit var registerBinding: FragmentRegisterBinding
+    private var _registerBinding: FragmentRegisterBinding? = null
+    private val registerBinding get() = _registerBinding!!
     private val relayViewModel by activityViewModels<RelayViewModel>()
+    private val accessViewModel: AccessViewModel by viewModels(
+        ownerProducer = { requireParentFragment() })
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        registerBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _registerBinding = FragmentRegisterBinding.inflate(inflater, container, false)
         return registerBinding.root
     }
 
@@ -44,29 +51,35 @@ class RegisterFragment : Fragment(), OnDateSetListener {
                 Calendar.getInstance()[Calendar.DAY_OF_MONTH])
         datePickerDialog.datePicker.maxDate = Calendar.getInstance().timeInMillis
         datePickerDialog.setOnDateSetListener(this)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        accessViewModel = ViewModelProvider(requireParentFragment()).get(AccessViewModel::class.java)
+        registerBinding.lifecycleOwner = viewLifecycleOwner
         registerBinding.accessViewModel = accessViewModel
         registerBinding.registerFragment = this
-        registerBinding.lifecycleOwner = viewLifecycleOwner
         registerBinding.accessBindingAdapter = AccessBindingAdapter
-        observeViewModel(accessViewModel)
+        observeViewModel()
     }
 
-    private fun observeViewModel(accessViewModel: AccessViewModel) {
-        accessViewModel.registerStatus.observe(this.viewLifecycleOwner, Observer { accessStatus: RegisterStatus? ->
-            when (accessStatus) {
-                RegisterStatus.REGISTER_SUCCESSFULL -> {
-                    launchHomeOnAccessValidation()
-                    Toasty.info(requireActivity(), "Register Successful!", Toasty.LENGTH_SHORT, true).show()
+    private fun observeViewModel() {
+        accessViewModel.registerStatus.observe(this.viewLifecycleOwner) { accessUser: AccessRepositoryImpl.AccessUser ->
+            when (accessUser.accessStatus) {
+                AccessStatus.REGISTER_SUCCESSFULL -> {
+                    accessUser.diaryUser?.let { launchHomeOnSuccessfulAuth(it) }
+                    Toasty.info(
+                        requireActivity(),
+                        "Register Successful!",
+                        Toasty.LENGTH_SHORT,
+                        true
+                    ).show()
                 }
-                RegisterStatus.USER_ALREADY_EXISTS ->
-                    Toasty.info(requireActivity(), "User already exists!", Toasty.LENGTH_SHORT, true).show()
+                AccessStatus.USER_ALREADY_EXISTS ->
+                    Toasty.info(
+                        requireActivity(),
+                        "User already exists!",
+                        Toasty.LENGTH_SHORT,
+                        true
+                    ).show()
+                else -> {}
             }
-        })
+        }
     }
 
     fun showDatePicker() {
@@ -78,12 +91,22 @@ class RegisterFragment : Fragment(), OnDateSetListener {
         accessViewModel.onDateSelected(year, month, dayOfMonth)
     }
 
-    private fun launchHomeOnAccessValidation() {
-        val args = Bundle()
-        args.putLong("uid", accessViewModel.getUid())
-        requireParentFragment().arguments = args
-        relayViewModel.isAccessAuthorized.set(true)
-        relayViewModel.isAccessAuthorized.set(false)
+    private fun launchHomeOnSuccessfulAuth(diaryUser: User) {
+        relayViewModel.onUserAuthorized(diaryUser)
     }
 
+    override fun onDestroyView() {
+        registerBinding.accessBindingAdapter = null
+        registerBinding.accessViewModel = null
+        registerBinding.registerFragment = null
+        registerBinding.unbind()
+        _registerBinding = null
+        Log.d(CommonLib.LOGTAG, "RegisterFrag onDestroyView")
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(CommonLib.LOGTAG, "RegisterFrag onDestroy")
+    }
 }

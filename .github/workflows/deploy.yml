@@ -1,0 +1,30 @@
+name: Deploy to Playstore
+
+on:
+  workflow_dispatch:
+    inputs:
+      track:
+        description: 'Release Track'
+        required: true
+        default: 'publish_testing'
+      rollout:
+        description: 'Rollout Fraction'
+        required: true
+        default: '0.1'
+      releasenotes:
+        description: 'Release notes of the App. This must have all whitespaces replaced with #. The script will restore it to whitespaced text. This is to prevent the args passed to script being overflown because space is the delimiter when passing sys args to python script.'
+        required: true
+        default: 'Brand#new#design#for#Pocket#FM#users#\nBug#fixes#and#performance#improvements'
+
+  push:
+    branches:
+      - release/*
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: App Checkout
+        uses: actions/checkout@v2

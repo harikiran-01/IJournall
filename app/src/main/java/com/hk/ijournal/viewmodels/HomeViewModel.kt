@@ -1,11 +1,11 @@
 package com.hk.ijournal.viewmodels
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(private val savedStateHandle: SavedStateHandle): ViewModel() {
     var lastActiveFragTag: String = ""
-
-    fun setLastActiveFragmentTag(tag: String) {
-        lastActiveFragTag = tag
-    }
 }

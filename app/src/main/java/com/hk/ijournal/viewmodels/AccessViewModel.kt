@@ -1,73 +1,100 @@
 package com.hk.ijournal.viewmodels
 
-import android.app.Application
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.hk.ijournal.common.CommonLib.LOGTAG
 import com.hk.ijournal.repository.AccessRepository
-import com.hk.ijournal.repository.AccessRepository.AccessValidation
-import com.hk.ijournal.repository.AccessRepository.LoginStatus
-import com.hk.ijournal.repository.local.IJDatabase
+import com.hk.ijournal.repository.AccessRepositoryImpl
+import com.hk.ijournal.repository.data.source.local.entities.User
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
-class AccessViewModel(application: Application) : AndroidViewModel(application) {
-    private val ijDatabase: IJDatabase
-    private val accessRepository: AccessRepository
+@HiltViewModel
+class AccessViewModel @Inject constructor(private val accessRepositoryImpl: AccessRepository) : ViewModel() {
+
     //login livedata
-    val loginUsernameLive: MutableLiveData<String>
-    val loginPasscodeLive: MutableLiveData<String>
-
-    val loginUserValidation: LiveData<AccessValidation>
-    val loginPasscodeValidation: LiveData<AccessValidation>
-
+    val loginUsernameLive: MutableLiveData<String> = MutableLiveData()
+    val loginPasscodeLive: MutableLiveData<String> = MutableLiveData()
 
     //register livedata
-    val registerUsernameLive: MutableLiveData<String>
-    val registerPasscodeLive: MutableLiveData<String>
-    val dobLiveData: MutableLiveData<LocalDate>
+    val registerUsernameLive: MutableLiveData<String> = MutableLiveData()
+    val registerPasscodeLive: MutableLiveData<String> = MutableLiveData()
+    val dobLiveData: MutableLiveData<LocalDate> = MutableLiveData()
 
-    val registerUserValidation: LiveData<AccessValidation>
-    val registerPasscodeValidation: LiveData<AccessValidation>
+    //access livedata
+    val loginStatus: MutableLiveData<AccessRepositoryImpl.AccessUser> = MutableLiveData()
+    val registerStatus: MutableLiveData<AccessRepositoryImpl.AccessUser> = MutableLiveData()
 
-    val loginStatus: LiveData<LoginStatus>
-        get() = _loginStatus
+    fun getLoginUserValidation(): LiveData<AccessRepositoryImpl.AccessValidation> {
+        //transforming based on username live data
+        return Transformations.map(loginUsernameLive) {
+            return@map if (accessRepositoryImpl.isUsernameInvalid(it)) AccessRepositoryImpl.AccessValidation.USERNAME_INVALID
+            else
+                null
+        }
+    }
 
-    private val _loginStatus: MutableLiveData<LoginStatus>
+    fun getLoginPasscodeValidation(): LiveData<AccessRepositoryImpl.AccessValidation> {
+        //transforming based on passcode live data
+        return Transformations.map(loginPasscodeLive) {
+            return@map if (accessRepositoryImpl.isPassCodeInvalid(it)) AccessRepositoryImpl.AccessValidation.PASSCODE_INVALID
+            else
+                null
+        }
+    }
 
-    val registerStatus: LiveData<AccessRepository.RegisterStatus>
-        get() = _registerStatus
+    fun getRegisterUserValidation(): LiveData<AccessRepositoryImpl.AccessValidation> {
+        //transforming based on username live data
+        return Transformations.map(registerUsernameLive) {
+            return@map if (accessRepositoryImpl.isUsernameInvalid(it)) AccessRepositoryImpl.AccessValidation.USERNAME_INVALID
+            else
+                null
+        }
+    }
 
-    private val _registerStatus: MutableLiveData<AccessRepository.RegisterStatus>
-
-    init {
-        ijDatabase = IJDatabase.getDatabase(application.applicationContext)
-        accessRepository = AccessRepository(ijDatabase.userDao(), viewModelScope)
-        //login binding
-        loginUsernameLive = accessRepository.loginUsernameLive
-        loginPasscodeLive = accessRepository.loginPasscodeLive
-        loginUserValidation = accessRepository.getLoginUserValidation()
-        loginPasscodeValidation = accessRepository.getLoginPasscodeValidation()
-        //register binding
-        registerUsernameLive = accessRepository.registerUsernameLive
-        registerPasscodeLive = accessRepository.registerPasscodeLive
-        registerUserValidation = accessRepository.getRegisterUserValidation()
-        registerPasscodeValidation = accessRepository.getRegisterPasscodeValidation()
-        dobLiveData = accessRepository.dobLiveData
-        _loginStatus = accessRepository.loginStatus
-        _registerStatus = accessRepository.registerStatus
+    fun getRegisterPasscodeValidation(): LiveData<AccessRepositoryImpl.AccessValidation> {
+        //transforming based on passcode live data
+        return Transformations.map(registerPasscodeLive) {
+            return@map if (accessRepositoryImpl.isPassCodeInvalid(it)) AccessRepositoryImpl.AccessValidation.PASSCODE_INVALID
+            else
+                null
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {
-        accessRepository.setDobLiveData(LocalDate.of(year, month, dayOfMonth))
+        dobLiveData.value = LocalDate.of(year, month + 1, dayOfMonth)
     }
 
-    fun loginUser() = accessRepository.loginUserAndUpdateAccessStatus()
+    fun loginUser() = viewModelScope.launch {
+        val diaryUser = User(loginUsernameLive.value.toString(), loginPasscodeLive.value.toString())
+        val dbUser = accessRepositoryImpl.getMatchingUserinDb(loginUsernameLive.value.toString())
+        dbUser.let {
+            if (it.isSuccess) {
+                loginStatus.value = accessRepositoryImpl.processLoginAndGetAccessStatus(it.getOrNull(), diaryUser)
+            }
+            else
+                loginStatus.value = accessRepositoryImpl.processLoginAndGetAccessStatus(null, diaryUser)
+        }
+    }
 
-    fun registerUser() = accessRepository.registerUserAndUpdateAccessStatus()
+    fun registerUser() = viewModelScope.launch {
+        val diaryUser = User(registerUsernameLive.value.toString(), registerPasscodeLive.value.toString(), dobLiveData.value)
+        val dbUser = accessRepositoryImpl.getMatchingUserinDb(registerUsernameLive.value.toString())
+        dbUser.let {
+            if (it.isSuccess) {
+                registerStatus.value = accessRepositoryImpl.processRegisterAndGetAccessStatus(it.getOrNull(), diaryUser)
+            } else
+                registerStatus.value = accessRepositoryImpl.processRegisterAndGetAccessStatus(null, diaryUser)
+        }
+    }
 
-    fun getUid(): Long = accessRepository.uid
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(LOGTAG, "AccessVM Cleared")
+    }
 }

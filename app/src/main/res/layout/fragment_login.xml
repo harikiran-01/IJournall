@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="com.hk.ijournal.repository.AccessRepository.AccessValidation" />
+        <import type="com.hk.ijournal.repository.AccessRepositoryImpl.AccessValidation" />
 
         <variable
             name="AccessViewModel"
@@ -22,12 +22,14 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/usernamefieldwrap"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/edittext_horizontal_margin"
+            android:layout_marginEnd="@dimen/edittext_horizontal_margin"
             android:gravity="start"
             android:hint="@string/username_label"
             android:textAlignment="viewStart"
-            app:errorMsg='@{AccessViewModel.loginUserValidation}'
+            app:errorMsg="@{AccessViewModel.loginUserValidation}"
             app:errorTextColor="@color/red"
             app:focusState="@{AccessBindingAdapter.loginusernameFocusLiveData}"
             android:textColorHint="@color/colorPrimary"
@@ -41,7 +43,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/loginusername"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="12"
                 android:inputType="textEmailAddress"
@@ -53,13 +55,15 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passcodewrap"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/edittext_horizontal_margin"
+            android:layout_marginEnd="@dimen/edittext_horizontal_margin"
             android:layout_marginTop="40dp"
             android:hint="@string/passcode_label"
             android:textAlignment="viewStart"
             android:textColorHint="@color/colorPrimary"
-            app:errorMsg='@{AccessViewModel.loginPasscodeValidation}'
+            app:errorMsg="@{AccessViewModel.loginPasscodeValidation}"
             app:errorTextColor="@color/red"
             app:focusState="@{AccessBindingAdapter.loginpasscodeFocusLiveData}"
             app:layout_constraintBottom_toTopOf="@+id/loginbutton"
@@ -71,7 +75,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/loginpasscode"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="12"
                 android:inputType="textPassword"

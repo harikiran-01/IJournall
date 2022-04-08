@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="14dp"
+    android:background="@color/colorBlack"
+    tools:context=".feed.views.FeedFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mini_page_rv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical"
+        android:nestedScrollingEnabled="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/add_entry_btn"
+        tools:listitem="@layout/feed_mini_page_item"/>
+
+    <ImageButton
+        android:id="@+id/calendar_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="30dp"
+        android:src="@drawable/calendar_btn_selector"
+        android:background="?android:selectableItemBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/add_entry_btn"
+        app:layout_constraintTop_toTopOf="@id/add_entry_btn"
+        app:layout_constraintBottom_toBottomOf="@id/add_entry_btn"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"/>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/add_entry_btn"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="addentry_animicon.json"
+        app:lottie_loop="true"
+        app:lottie_speed="1"
+        app:layout_constraintStart_toEndOf="@id/calendar_btn"
+        app:layout_constraintEnd_toStartOf="@id/profile_btn"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/profile_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/profile_btn_selector"
+        android:background="@null"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintStart_toEndOf="@id/add_entry_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/add_entry_btn"
+        app:layout_constraintBottom_toBottomOf="@id/add_entry_btn" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
