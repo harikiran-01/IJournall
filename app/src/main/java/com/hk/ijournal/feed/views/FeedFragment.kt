@@ -5,8 +5,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hk.ijournal.common.base.BaseFragment
+import com.hk.ijournal.common.decoration.VerticalItemDecoration
 import com.hk.ijournal.databinding.FragmentFeedBinding
-import com.hk.ijournal.decoration.VerticalItemDecoration
 import com.hk.ijournal.feed.adapters.FeedAdapter
 import com.hk.ijournal.feed.adapters.viewbinders.LandingFeedBinder
 import com.hk.ijournal.feed.viewmodel.FeedViewModel
@@ -36,7 +36,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
 
     private fun initAdapter() {
         feedAdapter = FeedAdapter(LandingFeedBinder {
-            findNavController().navigate(FeedFragmentDirections.feedToDayEntry(safeArgs.diaryUser, it))
+            findNavController().navigate(FeedFragmentDirections.feedToDayEntryPreview(safeArgs.diaryUser, it))
         })
         with(binding) {
             miniPageRv.apply {

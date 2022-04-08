@@ -1,4 +1,4 @@
-package com.hk.ijournal.dayentry.adapters.binders
+package com.hk.ijournal.dayentry.edit.adapters.binders
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

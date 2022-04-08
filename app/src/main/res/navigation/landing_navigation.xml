@@ -10,8 +10,16 @@
         android:label="FeedFragment">
 
         <action
+            android:id="@+id/feed_to_day_entry_preview"
+            app:destination="@id/dayentry_preview_dest"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+        <action
             android:id="@+id/feed_to_day_entry"
-            app:destination="@id/dayentry_dest"
+            app:destination="@id/dayentry_edit_dest"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -33,8 +41,32 @@
     </fragment>
 
     <fragment
-        android:id="@+id/dayentry_dest"
-        android:name="com.hk.ijournal.dayentry.views.DayEntryFragment"
+        android:id="@+id/dayentry_preview_dest"
+        android:name="com.hk.ijournal.dayentry.preview.views.DayEntryPreviewFragment"
+        android:label="DayEntryPreviewFragment">
+
+        <action
+            android:id="@+id/dayentry_preview_to_dayentry_edit"
+            app:destination="@id/dayentry_edit_dest"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+        <argument
+            android:name="diaryUser"
+            app:argType="com.hk.ijournal.repository.data.source.local.entities.User" />
+
+        <argument
+            android:name="pageId"
+            app:argType="long"
+            android:defaultValue="0L"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/dayentry_edit_dest"
+        android:name="com.hk.ijournal.dayentry.edit.views.DayEntryFragment"
         android:label="DayEntryFragment">
 
         <argument

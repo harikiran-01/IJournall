@@ -1,11 +1,11 @@
-package com.hk.ijournal.dayentry.adapters
+package com.hk.ijournal.dayentry.edit.adapters
 
 import androidx.databinding.ViewDataBinding
 import com.hk.ijournal.common.base.BaseAdapterViewType
 import com.hk.ijournal.common.base.BaseRecyclerAdapter
 import com.hk.ijournal.common.base.ViewDataBinder
-import com.hk.ijournal.dayentry.adapters.binders.ImageContentBinder
-import com.hk.ijournal.dayentry.adapters.binders.TextContentBinder
+import com.hk.ijournal.dayentry.edit.adapters.binders.ImageContentBinder
+import com.hk.ijournal.dayentry.edit.adapters.binders.TextContentBinder
 import javax.inject.Inject
 
 class EntryContentAdapter @Inject constructor (

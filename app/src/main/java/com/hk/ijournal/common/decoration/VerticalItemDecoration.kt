@@ -1,4 +1,4 @@
-package com.hk.ijournal.decoration
+package com.hk.ijournal.common.decoration
 
 import android.graphics.Rect
 import android.view.View

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_diary"
-        android:name="com.hk.ijournal.dayentry.views.DayEntryFragment"
+        android:name="com.hk.ijournal.dayentry.edit.views.DayEntryFragment"
         android:label="@string/title_diary"
         tools:layout="@layout/fragment_day_entry">
 

@@ -1,4 +1,4 @@
-package com.hk.ijournal.dayentry.viewmodel
+package com.hk.ijournal.dayentry.edit.viewmodel
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -24,14 +24,13 @@ import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
-class DayEntryViewModel @Inject constructor(
+class DayEntryVM @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val pageUseCase: PageUseCase) : ViewModel() {
     companion object {
         private const val NEW_PAGE = 0L
     }
     private var userId = 0L
-    private var previewPageId = 0L
 
     private val _pageIdLive = MutableLiveData<Long>()
 
@@ -54,8 +53,7 @@ class DayEntryViewModel @Inject constructor(
 
     init {
         userId = savedStateHandle.get<User>(Constants.DIARY_USER)!!.uid
-        previewPageId = savedStateHandle.get<Long>(Constants.PAGE_ID)!!
-        _pageIdLive.value = previewPageId
+        _pageIdLive.value = savedStateHandle.get<Long>(Constants.PAGE_ID)!!
     }
 
     fun navigateToPrevPage() {

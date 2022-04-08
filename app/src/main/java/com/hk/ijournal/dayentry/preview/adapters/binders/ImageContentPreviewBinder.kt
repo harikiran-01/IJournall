@@ -1,4 +1,4 @@
-package com.hk.ijournal.dayentry.adapters.binders
+package com.hk.ijournal.dayentry.preview.adapters.binders
 
 import android.net.Uri
 import android.view.LayoutInflater
@@ -9,22 +9,22 @@ import com.hk.ijournal.R
 import com.hk.ijournal.common.base.ITEM_DAY_IMAGE
 import com.hk.ijournal.common.base.ViewDataBinder
 import com.hk.ijournal.common.toPx
-import com.hk.ijournal.databinding.ImageWithTitleBinding
+import com.hk.ijournal.databinding.ImageWithTitlePreviewBinding
 import com.hk.ijournal.dayentry.models.content.ImageContent
 import javax.inject.Inject
 
-class ImageContentBinder @Inject constructor() :
-    ViewDataBinder<ImageWithTitleBinding, ImageContent>() {
+class ImageContentPreviewBinder @Inject constructor() :
+    ViewDataBinder<ImageWithTitlePreviewBinding, ImageContent>() {
 
     override val viewType: Int
         get() = ITEM_DAY_IMAGE
 
-    override fun createBinder(parent: ViewGroup): ImageWithTitleBinding {
-        return ImageWithTitleBinding.inflate(
+    override fun createBinder(parent: ViewGroup): ImageWithTitlePreviewBinding {
+        return ImageWithTitlePreviewBinding.inflate(
             LayoutInflater.from(parent.context), parent, false)
     }
 
-    override fun bindData(binding: ImageWithTitleBinding, data: ImageContent, position: Int) {
+    override fun bindData(binding: ImageWithTitlePreviewBinding, data: ImageContent, position: Int) {
         with(binding) {
             // two way data binding for description
             imageContent = data

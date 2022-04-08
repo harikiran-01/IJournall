@@ -1,10 +1,13 @@
-package com.hk.ijournal.dayentry.views
+package com.hk.ijournal.dayentry.edit.views
 
 import android.app.DatePickerDialog
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.DatePicker
+import android.widget.ScrollView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -13,12 +16,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hk.ijournal.common.base.BaseAdapterViewType
 import com.hk.ijournal.common.base.BaseFragment
+import com.hk.ijournal.common.decoration.VerticalItemDecoration
 import com.hk.ijournal.common.toPx
 import com.hk.ijournal.databinding.FragmentDayEntryBinding
-import com.hk.ijournal.dayentry.adapters.EntryContentAdapter
+import com.hk.ijournal.dayentry.edit.adapters.EntryContentAdapter
+import com.hk.ijournal.dayentry.edit.viewmodel.DayEntryVM
 import com.hk.ijournal.dayentry.models.content.ImageContent
-import com.hk.ijournal.dayentry.viewmodel.DayEntryViewModel
-import com.hk.ijournal.decoration.VerticalItemDecoration
+import com.hk.ijournal.dayentry.preview.views.DayEntryPreviewFragmentArgs
 import com.hk.ijournal.repository.data.source.local.IJDatabase
 import com.hk.ijournal.viewmodels.RelayViewModel
 import com.wajahatkarim3.roomexplorer.RoomExplorer
@@ -31,11 +35,12 @@ import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
 class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DatePickerDialog.OnDateSetListener {
-    private val safeArgs : DayEntryFragmentArgs by navArgs()
+    private val safeArgs : DayEntryPreviewFragmentArgs by navArgs()
     private val relayViewModel by activityViewModels<RelayViewModel>()
-    private val dayEntryVM : DayEntryViewModel by viewModels()
+    private val dayEntryVM : DayEntryVM by viewModels()
     private lateinit var datePickerDialog: DatePickerDialog
 
     @Inject
@@ -64,19 +69,14 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
             dayEntryFragment = this@DayEntryFragment
         }
         initAdapter()
-        if (safeArgs.pageId != 0L) {
-            //TODO disable datepicker when in preview mode
-        }
-        else {
-            setupDatePicker()
-        }
+        setupDatePicker()
     }
 
     private fun initAdapter() {
         with(binding) {
             contentRv.apply {
                 layoutManager = LinearLayoutManager(requireContext())
-                addItemDecoration(VerticalItemDecoration(20.toPx.toInt()))
+                addItemDecoration(VerticalItemDecoration(25.toPx.toInt()))
                 adapter = entryContentAdapter
             }
         }
@@ -115,6 +115,11 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
                     viewLifecycleOwner.lifecycleScope.launchWhenCreated {
                         val imageContentList = imageUris.map { ImageContent(it, "") }
                         entryContentAdapter.addItems(imageContentList)
+                        scrollView.isSmoothScrollingEnabled = true
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.postDelayed({
+                            scrollView.fullScroll(ScrollView.FOCUS_DOWN)
+                        }, 300)
                     }
                 }
             }
@@ -138,6 +143,11 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         dayEntryVM.navigateToSelectedPage(LocalDate.of(year, month+1, dayOfMonth))
+    }
+
+    override fun doViewCleanup() {
+        super.doViewCleanup()
+        binding.contentRv.adapter = null
     }
 }
 
