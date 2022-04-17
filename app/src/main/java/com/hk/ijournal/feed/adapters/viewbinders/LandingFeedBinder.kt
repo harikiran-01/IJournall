@@ -6,8 +6,8 @@ import com.hk.ijournal.common.base.ITEM_MINI_PAGE
 import com.hk.ijournal.common.base.ViewDataBinder
 import com.hk.ijournal.databinding.FeedMiniPageItemBinding
 import com.hk.ijournal.dayentry.models.CONTENT_TEXT
-import com.hk.ijournal.dayentry.models.content.TextContent
 import com.hk.ijournal.dayentry.models.Page
+import com.hk.ijournal.dayentry.models.content.TextContent
 
 class LandingFeedBinder (private val onPageSelectedListener : (Long) -> Unit) : ViewDataBinder<FeedMiniPageItemBinding, Page>() {
     override val viewType: Int
@@ -19,7 +19,12 @@ class LandingFeedBinder (private val onPageSelectedListener : (Long) -> Unit) : 
             LayoutInflater.from(parent.context), parent, false)
     }
 
-    override fun bindData(binding: FeedMiniPageItemBinding, data: Page, position: Int) {
+    override fun bindData(
+        binding: FeedMiniPageItemBinding,
+        data: Page,
+        position: Int,
+        adapterPosition: Int
+    ) {
         binding.apply {
             dateWithMonth.text = data.selectedDate.toString()
             title.text = data.title

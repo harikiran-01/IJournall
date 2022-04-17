@@ -12,7 +12,7 @@ import com.hk.ijournal.dayentry.models.CONTENT_TEXT
 import com.hk.ijournal.dayentry.models.Page
 import com.hk.ijournal.dayentry.models.content.BaseEntity
 import com.hk.ijournal.dayentry.models.content.ContentData
-import com.hk.ijournal.dayentry.models.content.ImageContent
+import com.hk.ijournal.dayentry.models.content.MediaContent
 import com.hk.ijournal.dayentry.models.content.TextContent
 import com.hk.ijournal.domain.PageUseCase
 import com.hk.ijournal.repository.data.source.local.entities.User
@@ -73,7 +73,7 @@ class DayEntryVM @Inject constructor(
     fun savePage(pageTitle: String, contentList: List<BaseAdapterViewType>) {
         val contentListWithType = contentList.map { when(it.viewType){
             ITEM_DAY_TEXT -> BaseEntity<ContentData>(CONTENT_TEXT, it as TextContent)
-            ITEM_DAY_IMAGE -> BaseEntity<ContentData>(CONTENT_IMAGE, it as ImageContent)
+            ITEM_DAY_IMAGE -> BaseEntity<ContentData>(CONTENT_IMAGE, it as MediaContent)
             else -> BaseEntity<ContentData>(CONTENT_TEXT, it as TextContent)
         } }
         viewModelScope.launch {

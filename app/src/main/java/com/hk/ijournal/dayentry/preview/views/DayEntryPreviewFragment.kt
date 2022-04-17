@@ -63,6 +63,9 @@ class DayEntryPreviewFragment : BaseFragment<FragDayEntryPreviewBinding, Nothing
                 adapter = entryContentPreviewAdapter
             }
         }
+        entryContentPreviewAdapter.setMediaContentClickListener {
+            findNavController().navigate(DayEntryPreviewFragmentDirections.dayentryPreviewToMediadetail(it))
+        }
     }
 
     override fun setUpListeners() {

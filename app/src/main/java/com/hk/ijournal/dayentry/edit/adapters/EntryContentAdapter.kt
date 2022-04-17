@@ -4,13 +4,13 @@ import androidx.databinding.ViewDataBinding
 import com.hk.ijournal.common.base.BaseAdapterViewType
 import com.hk.ijournal.common.base.BaseRecyclerAdapter
 import com.hk.ijournal.common.base.ViewDataBinder
-import com.hk.ijournal.dayentry.edit.adapters.binders.ImageContentBinder
+import com.hk.ijournal.dayentry.edit.adapters.binders.MediaContentBinder
 import com.hk.ijournal.dayentry.edit.adapters.binders.TextContentBinder
 import javax.inject.Inject
 
 class EntryContentAdapter @Inject constructor (
     private val textContentBinder: TextContentBinder,
-    private val imageContentBinder: ImageContentBinder): BaseRecyclerAdapter<BaseAdapterViewType>() {
+    private val mediaContentBinder: MediaContentBinder): BaseRecyclerAdapter<BaseAdapterViewType>() {
 
     init {
         initViewDataBinders()
@@ -19,7 +19,7 @@ class EntryContentAdapter @Inject constructor (
     override fun getSupportedViewDataBinder(): List<ViewDataBinder<ViewDataBinding, BaseAdapterViewType>> {
         val viewDataBinders = ArrayList<ViewDataBinder<*, *>>(2)
         viewDataBinders.add(textContentBinder)
-        viewDataBinders.add(imageContentBinder)
+        viewDataBinders.add(mediaContentBinder)
         return viewDataBinders as List<ViewDataBinder<ViewDataBinding, BaseAdapterViewType>>
     }
 }

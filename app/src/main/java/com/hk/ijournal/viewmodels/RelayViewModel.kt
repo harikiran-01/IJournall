@@ -23,13 +23,13 @@ class RelayViewModel @Inject constructor(private val accessRepository: AccessRep
         get() = _onUserAuthorized
     var onSessionEnd = ObservableBoolean(false)
 
-    val imageUriList: LiveData<List<String>>
+    val imageUriList: LiveData<List<Pair<String, String>>>
         get() = _imageUriList
 
     private val _onUserAuthorized = MutableLiveData<User>()
-    private val _imageUriList = MutableLiveData<List<String>>()
+    private val _imageUriList = MutableLiveData<List<Pair<String, String>>>()
 
-    fun onImagesPicked(imagesUriList: List<String>) {
+    fun onImagesPicked(imagesUriList: List<Pair<String, String>>) {
         _imageUriList.value = imagesUriList
     }
 

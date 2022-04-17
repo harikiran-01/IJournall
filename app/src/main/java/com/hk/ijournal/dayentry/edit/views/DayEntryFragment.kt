@@ -2,12 +2,9 @@ package com.hk.ijournal.dayentry.edit.views
 
 import android.app.DatePickerDialog
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.DatePicker
-import android.widget.ScrollView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -21,8 +18,9 @@ import com.hk.ijournal.common.toPx
 import com.hk.ijournal.databinding.FragmentDayEntryBinding
 import com.hk.ijournal.dayentry.edit.adapters.EntryContentAdapter
 import com.hk.ijournal.dayentry.edit.viewmodel.DayEntryVM
-import com.hk.ijournal.dayentry.models.content.ImageContent
+import com.hk.ijournal.dayentry.models.content.MediaContent
 import com.hk.ijournal.dayentry.preview.views.DayEntryPreviewFragmentArgs
+import com.hk.ijournal.dayentry.preview.views.DebouncingEditTextWatcher
 import com.hk.ijournal.repository.data.source.local.IJDatabase
 import com.hk.ijournal.viewmodels.RelayViewModel
 import com.wajahatkarim3.roomexplorer.RoomExplorer
@@ -113,13 +111,9 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
             relayViewModel.imageUriList.observe(viewLifecycleOwner) { imageUris ->
                 imageUris?.let {
                     viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-                        val imageContentList = imageUris.map { ImageContent(it, "") }
+                        val imageContentList = imageUris.map { MediaContent(it.first, it.second,"") }
                         entryContentAdapter.addItems(imageContentList)
                         scrollView.isSmoothScrollingEnabled = true
-                        val handler = Handler(Looper.getMainLooper())
-                        handler.postDelayed({
-                            scrollView.fullScroll(ScrollView.FOCUS_DOWN)
-                        }, 300)
                     }
                 }
             }

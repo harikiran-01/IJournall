@@ -21,7 +21,12 @@ class TextContentPreviewBinder @Inject constructor() :
         return binding
     }
 
-    override fun bindData(binding: DayentryPreviewContentBinding, data: TextContent, position: Int) {
+    override fun bindData(
+        binding: DayentryPreviewContentBinding,
+        data: TextContent,
+        position: Int,
+        adapterPosition: Int
+    ) {
         // two way data binding for text
         binding.textContent = data
     }

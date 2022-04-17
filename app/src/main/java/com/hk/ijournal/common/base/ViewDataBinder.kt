@@ -11,7 +11,7 @@ abstract class ViewDataBinder<V : ViewDataBinding, T : BaseAdapterViewType> {
 
     abstract fun createBinder(parent: ViewGroup): V
 
-    abstract fun bindData(binding: V, data: T, position: Int)
+    abstract fun bindData(binding: V, data: T, position: Int, adapterPosition: Int)
 
     fun bindData(binding: V, data: Bundle?, position: Int) {}
 }

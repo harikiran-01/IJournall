@@ -47,7 +47,7 @@ abstract class BaseRecyclerAdapter<T : BaseAdapterViewType> :
             Log.e(TAG, "Please add the supported view binder to view binders list in adapter")
             return
         }
-        viewDataBinder.bindData(holder.binding, dataList[position], position)
+        viewDataBinder.bindData(holder.binding, dataList[position], position, holder.absoluteAdapterPosition)
         holder.binding.executePendingBindings()
     }
 

@@ -91,6 +91,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:text="@string/loginbtn_txt"
+            android:background="@drawable/button_state_selector"
             android:onClick="@{()-> AccessViewModel.loginUser()}"
             app:enableOnPassValid="@{AccessViewModel.loginPasscodeValidation}"
             app:enableOnUserValid="@{AccessViewModel.loginUserValidation}"

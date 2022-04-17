@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="ImageContent"
-            type="com.hk.ijournal.dayentry.models.content.ImageContent" />
+            name="MediaContent"
+            type="com.hk.ijournal.dayentry.models.content.MediaContent" />
 
     </data>
 
@@ -27,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"
-            android:text="@={ImageContent.description}"
+            android:text="@={MediaContent.description}"
             android:textSize="18sp"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@id/image"

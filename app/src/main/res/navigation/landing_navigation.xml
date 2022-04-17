@@ -53,6 +53,14 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
+        <action
+            android:id="@+id/dayentry_preview_to_mediadetail"
+            app:destination="@id/media_detail"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
         <argument
             android:name="diaryUser"
             app:argType="com.hk.ijournal.repository.data.source.local.entities.User" />
@@ -77,6 +85,17 @@
             android:name="pageId"
             app:argType="long"
             android:defaultValue="0L"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/media_detail"
+        android:name="com.hk.ijournal.mediadetail.view.MediaDetailFragment"
+        android:label="MediaDetailFragment">
+
+        <argument
+            android:name="mediaContent"
+            app:argType="com.hk.ijournal.dayentry.models.content.MediaContent" />
 
     </fragment>
 

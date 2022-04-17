@@ -3,6 +3,7 @@ package com.hk.ijournal.views
 
 import android.Manifest
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -20,6 +21,7 @@ import com.hk.ijournal.views.access.AccessFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+
 
 @AndroidEntryPoint
 class LaunchActivity : AppCompatActivity() {
@@ -73,13 +75,28 @@ class LaunchActivity : AppCompatActivity() {
         if (requestCode == RelayViewModel.RequestCode.IMAGEADDED.ordinal && resultCode == Activity.RESULT_OK && data != null) {
             //when single image is selected
             data.data?.let {
-                relayViewModel.onImagesPicked(listOf(it.toString()))
+
+                val mimeType = with(it.toString()) {
+                    when {
+                        contains("image") -> "image"
+                        contains("mp4") -> "video"
+                        else -> "image"
+                    }
+                }
+                relayViewModel.onImagesPicked(listOf(it.toString() to mimeType))
             } ?:
             //when multiple images are selected
             data.clipData?.let {
-                val imageUriListData = ArrayList<String>()
+                val imageUriListData = ArrayList<Pair<String, String>>()
                 for (pos in 0 until it.itemCount) {
-                    imageUriListData.add(it.getItemAt(pos).uri.toString())
+                    val mimeType = with(it.getItemAt(pos).uri.toString()) {
+                        when {
+                            contains("image") -> "image"
+                            contains("video") -> "video"
+                            else -> "image"
+                        }
+                    }
+                    imageUriListData.add(it.getItemAt(pos).uri.toString() to mimeType)
                 }
                 relayViewModel.onImagesPicked(imageUriListData)
             }
@@ -90,17 +107,23 @@ class LaunchActivity : AppCompatActivity() {
     private fun openImagePicker() {
         val perm = Manifest.permission.READ_EXTERNAL_STORAGE
         if (EasyPermissions.hasPermissions(this, perm)) {
-            val imgIntent = Intent()
+            val imgIntent = Intent(Intent.ACTION_GET_CONTENT).putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             imgIntent.type = "image/*"
-            imgIntent.addCategory(Intent.CATEGORY_OPENABLE).putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            imgIntent.action = Intent.ACTION_OPEN_DOCUMENT
-            startActivityForResult(Intent.createChooser(imgIntent, "Select Picture"), RelayViewModel.RequestCode.IMAGEADDED.ordinal)
+            //imgIntent.addCategory(Intent.CATEGORY_OPENABLE).putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            //imgIntent.action = Intent.ACTION_OPEN_DOCUMENT
+            try {
+                startActivityForResult(Intent.createChooser(imgIntent, "Select Picture"), RelayViewModel.RequestCode.IMAGEADDED.ordinal)
+            }
+            catch (e: ActivityNotFoundException) {
+                //no ops
+            }
+
         } else
             EasyPermissions.requestPermissions(this, "", 1, perm)
     }
 
     private fun conditionalNavigate() {
-        if (SessionAuthManager.isUserLoggedIn()){
+        if (SessionAuthManager.isUserLoggedIn()) {
             supportActionBar?.hide()
             val diaryUser = relayViewModel.getUser(SessionAuthManager.getUID())
             navController.navigate(AccessFragmentDirections.accessToLanding(diaryUser?: User()))
