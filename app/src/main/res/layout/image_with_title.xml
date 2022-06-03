@@ -5,7 +5,7 @@
 
         <variable
             name="MediaContent"
-            type="com.hk.ijournal.dayentry.models.content.MediaContent" />
+            type="com.hk.ijournal.features.dayentry.models.content.MediaContent" />
 
     </data>
 

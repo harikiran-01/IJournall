@@ -1,6 +1,6 @@
 package com.hk.ijournal.domain
 
-import com.hk.ijournal.dayentry.models.Page
+import com.hk.ijournal.features.dayentry.models.Page
 import java.time.LocalDate
 
 interface PageUseCase {

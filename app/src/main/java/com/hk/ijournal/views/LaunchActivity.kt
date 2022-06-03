@@ -14,10 +14,10 @@ import androidx.navigation.fragment.NavHostFragment
 import com.github.anrwatchdog.ANRWatchDog
 import com.hk.ijournal.R
 import com.hk.ijournal.databinding.ActivityLaunchBinding
+import com.hk.ijournal.features.access.views.AccessFragmentDirections
 import com.hk.ijournal.repository.data.source.local.entities.User
 import com.hk.ijournal.utils.SessionAuthManager
 import com.hk.ijournal.viewmodels.RelayViewModel
-import com.hk.ijournal.views.access.AccessFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -101,6 +101,8 @@ class LaunchActivity : AppCompatActivity() {
                 relayViewModel.onImagesPicked(imageUriListData)
             }
         }
+
+
     }
 
     @AfterPermissionGranted(1)

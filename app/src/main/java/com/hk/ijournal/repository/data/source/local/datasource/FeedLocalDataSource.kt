@@ -1,8 +1,8 @@
 package com.hk.ijournal.repository.data.source.local.datasource
 
 import com.hk.ijournal.repository.data.source.FeedDataSource
-import com.hk.ijournal.dayentry.repo.data.source.local.dao.DayEntryDao
-import com.hk.ijournal.dayentry.models.Page
+import com.hk.ijournal.features.dayentry.repo.data.source.local.dao.DayEntryDao
+import com.hk.ijournal.features.dayentry.models.Page
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

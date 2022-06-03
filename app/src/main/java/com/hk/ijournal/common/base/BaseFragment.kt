@@ -23,7 +23,7 @@ abstract class BaseFragment<B : ViewBinding, VM : ViewModel> : Fragment() {
 
     protected open val useSharedViewModel = false
 
-    protected open val keepBindingRetained = false
+    protected open var keepBindingRetained = false
 
     /**
      * Use to inject dagger as dagger cannot be injected into generic classes

@@ -8,7 +8,7 @@
 
         <variable
             name="AccessViewModel"
-            type="com.hk.ijournal.viewmodels.AccessViewModel" />
+            type="com.hk.ijournal.features.access.viewmodels.AccessViewModel" />
 
         <variable
             name="AccessBindingAdapter"
@@ -29,7 +29,7 @@
             android:gravity="start"
             android:hint="@string/username_label"
             android:textAlignment="viewStart"
-            app:errorMsg="@{AccessViewModel.loginUserValidation}"
+            errorMsg="Wrong"
             app:errorTextColor="@color/red"
             app:focusState="@{AccessBindingAdapter.loginusernameFocusLiveData}"
             android:textColorHint="@color/colorPrimary"

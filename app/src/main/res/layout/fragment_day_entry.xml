@@ -7,11 +7,11 @@
 
         <variable
             name="DayEntryViewModel"
-            type="com.hk.ijournal.dayentry.edit.viewmodel.DayEntryVM" />
+            type="com.hk.ijournal.features.dayentry.edit.viewmodel.DayEntryVM" />
 
         <variable
             name="DayEntryFragment"
-            type="com.hk.ijournal.dayentry.edit.views.DayEntryFragment" />
+            type="com.hk.ijournal.features.dayentry.edit.views.DayEntryFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -119,7 +119,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".dayentry.edit.views.DayEntryFragment">
+                tools:context=".features.dayentry.edit.views.DayEntryFragment">
 
                 <TextView
                     android:id="@+id/selectedDate"

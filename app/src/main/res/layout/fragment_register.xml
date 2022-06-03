@@ -8,11 +8,11 @@
 
         <variable
             name="AccessViewModel"
-            type="com.hk.ijournal.viewmodels.AccessViewModel" />
+            type="com.hk.ijournal.features.access.viewmodels.AccessViewModel" />
 
         <variable
             name="RegisterFragment"
-            type="com.hk.ijournal.views.access.RegisterFragment" />
+            type="com.hk.ijournal.features.access.views.RegisterFragment" />
 
         <variable
             name="AccessBindingAdapter"

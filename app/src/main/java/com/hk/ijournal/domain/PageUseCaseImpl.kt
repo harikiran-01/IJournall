@@ -1,7 +1,7 @@
 package com.hk.ijournal.domain
 
-import com.hk.ijournal.dayentry.models.Page
-import com.hk.ijournal.dayentry.repo.DayEntryRepo
+import com.hk.ijournal.features.dayentry.models.Page
+import com.hk.ijournal.features.dayentry.repo.DayEntryRepo
 import java.time.LocalDate
 
 class PageUseCaseImpl internal constructor(private val dayEntryRepo: DayEntryRepo): PageUseCase {

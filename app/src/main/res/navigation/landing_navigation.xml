@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/feed_dest"
-        android:name="com.hk.ijournal.feed.views.FeedFragment"
+        android:name="com.hk.ijournal.features.feed.views.FeedFragment"
         android:label="FeedFragment">
 
         <action
@@ -42,7 +42,7 @@
 
     <fragment
         android:id="@+id/dayentry_preview_dest"
-        android:name="com.hk.ijournal.dayentry.preview.views.DayEntryPreviewFragment"
+        android:name="com.hk.ijournal.features.dayentry.preview.views.DayEntryPreviewFragment"
         android:label="DayEntryPreviewFragment">
 
         <action
@@ -74,7 +74,7 @@
 
     <fragment
         android:id="@+id/dayentry_edit_dest"
-        android:name="com.hk.ijournal.dayentry.edit.views.DayEntryFragment"
+        android:name="com.hk.ijournal.features.dayentry.edit.views.DayEntryFragment"
         android:label="DayEntryFragment">
 
         <argument
@@ -90,18 +90,18 @@
 
     <fragment
         android:id="@+id/media_detail"
-        android:name="com.hk.ijournal.mediadetail.view.MediaDetailFragment"
+        android:name="com.hk.ijournal.features.mediadetail.view.MediaDetailFragment"
         android:label="MediaDetailFragment">
 
         <argument
             android:name="mediaContent"
-            app:argType="com.hk.ijournal.dayentry.models.content.MediaContent" />
+            app:argType="com.hk.ijournal.features.dayentry.models.content.MediaContent" />
 
     </fragment>
 
     <fragment
         android:id="@+id/calendar_dest"
-        android:name="com.hk.ijournal.calendar.views.CalendarFragment"
+        android:name="com.hk.ijournal.features.calendar.views.CalendarFragment"
         android:label="CalendarFragment">
 
         <argument

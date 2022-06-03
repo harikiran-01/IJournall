@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/access_dest"
-        android:name="com.hk.ijournal.views.access.AccessFragment"
+        android:name="com.hk.ijournal.features.access.views.AccessFragment"
         android:label="AccessFragment">
 
         <action

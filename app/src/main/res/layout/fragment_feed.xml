@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="14dp"
     android:background="@color/colorBlack"
-    tools:context=".feed.views.FeedFragment">
+    tools:context=".features.feed.views.FeedFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mini_page_rv"

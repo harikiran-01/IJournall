@@ -7,11 +7,11 @@
 
         <variable
             name="DayEntryPreviewViewModel"
-            type="com.hk.ijournal.dayentry.preview.viewmodel.DayEntryPreviewVM" />
+            type="com.hk.ijournal.features.dayentry.preview.viewmodel.DayEntryPreviewVM" />
 
         <variable
             name="DayEntryPreviewFragment"
-            type="com.hk.ijournal.dayentry.preview.views.DayEntryPreviewFragment" />
+            type="com.hk.ijournal.features.dayentry.preview.views.DayEntryPreviewFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,6 +52,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="60dp"
@@ -61,7 +62,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".dayentry.edit.views.DayEntryPreviewFragment">
+                tools:context=".features.dayentry.edit.views.DayEntryPreviewFragment">
 
                 <TextView
                     android:id="@+id/selectedDate"

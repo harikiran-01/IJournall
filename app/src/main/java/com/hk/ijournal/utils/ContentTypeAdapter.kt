@@ -4,12 +4,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import com.hk.ijournal.dayentry.models.CONTENT_IMAGE
-import com.hk.ijournal.dayentry.models.CONTENT_TEXT
-import com.hk.ijournal.dayentry.models.content.BaseEntity
-import com.hk.ijournal.dayentry.models.content.ContentData
-import com.hk.ijournal.dayentry.models.content.MediaContent
-import com.hk.ijournal.dayentry.models.content.TextContent
+import com.hk.ijournal.features.dayentry.models.content.*
 import java.lang.reflect.Type
 
 class ContentTypeAdapter : JsonDeserializer<BaseEntity<ContentData>> {

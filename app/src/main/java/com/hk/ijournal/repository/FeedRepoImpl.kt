@@ -1,7 +1,7 @@
 package com.hk.ijournal.repository
 
 import com.hk.ijournal.repository.data.source.local.datasource.FeedLocalDataSource
-import com.hk.ijournal.dayentry.models.Page
+import com.hk.ijournal.features.dayentry.models.Page
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
