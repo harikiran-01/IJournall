@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FeedViewModel @Inject
 constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val feedUseCase: FeedUseCase
 ) : ViewModel() {
     private var userId: Long = 0
