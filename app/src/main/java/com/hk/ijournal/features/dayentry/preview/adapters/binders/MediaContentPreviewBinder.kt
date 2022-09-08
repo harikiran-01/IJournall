@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import bliss.platform.android.components.android.ITEM_DAY_IMAGE
+import bliss.platform.android.components.android.ViewDataBinder
+import bliss.platform.android.extensions.toPx
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.hk.ijournal.common.base.ITEM_DAY_IMAGE
-import com.hk.ijournal.common.base.ViewDataBinder
-import com.hk.ijournal.common.toPx
 import com.hk.ijournal.databinding.ImageWithTitlePreviewBinding
 import com.hk.ijournal.features.dayentry.models.content.MediaContent
 import javax.inject.Inject
@@ -43,7 +43,7 @@ class MediaContentPreviewBinder @Inject constructor() :
             // two way data binding for description
             mediaContent = data
             Glide.with(root.context).load(Uri.parse(data.mediaUri)).apply(
-                RequestOptions().override(250.toPx.toInt(), 250.toPx.toInt()).diskCacheStrategy(
+                RequestOptions().override(250.toPx, 250.toPx).diskCacheStrategy(
                     DiskCacheStrategy.AUTOMATIC)).into(image)
             image.setOnClickListener {
                 onItemClickListener?.invoke(data)

@@ -1,7 +1,7 @@
 package com.hk.ijournal.features.dayentry.models.content
 
-import com.hk.ijournal.common.base.BaseAdapterViewType
-import com.hk.ijournal.common.base.ITEM_DAY_IMAGE
+import bliss.platform.android.components.android.BaseAdapterViewType
+import bliss.platform.android.components.android.ITEM_DAY_IMAGE
 
 data class MediaContent (val mediaUri: String, val mimeType: String, var description: String) :
     ContentData(), BaseAdapterViewType {

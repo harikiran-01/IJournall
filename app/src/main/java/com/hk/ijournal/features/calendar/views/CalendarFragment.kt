@@ -2,9 +2,9 @@ package com.hk.ijournal.features.calendar.views
 
 import android.util.Log
 import android.view.View
-import com.hk.ijournal.features.calendar.viewmodel.CalendarViewModel
-import com.hk.ijournal.common.base.BaseFragment
+import bliss.platform.android.components.android.BaseFragment
 import com.hk.ijournal.databinding.CalendarFragmentBinding
+import com.hk.ijournal.features.calendar.viewmodel.CalendarViewModel
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
 import com.kizitonwose.calendarview.ui.DayBinder

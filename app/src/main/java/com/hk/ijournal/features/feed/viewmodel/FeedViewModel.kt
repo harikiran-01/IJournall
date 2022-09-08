@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.hk.ijournal.common.Constants
-import com.hk.ijournal.domain.FeedUseCase
 import com.hk.ijournal.features.dayentry.models.Page
+import com.hk.ijournal.features.feed.usecases.FeedUseCase
 import com.hk.ijournal.repository.data.source.local.entities.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.runBlocking
@@ -26,7 +26,6 @@ constructor(
 
     init {
         userId = savedStateHandle.get<User>(Constants.DIARY_USER)!!.uid
-        getAllPages()
     }
 
     fun getAllPages() = runBlocking {
@@ -34,6 +33,6 @@ constructor(
     }
 
     fun resetAllPages() {
-        _allPages.value = mutableListOf()
+        _allPages.value = emptyList()
     }
 }

@@ -6,20 +6,26 @@ import androidx.annotation.RequiresApi
 import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.hk.ijournal.domain.PageUseCase
+import com.hk.ijournal.domain.PageUseCaseImpl
 import com.hk.ijournal.features.dayentry.models.content.BaseEntity
 import com.hk.ijournal.features.dayentry.repo.DayEntryRepo
 import com.hk.ijournal.features.dayentry.repo.DayEntryRepoImpl
 import com.hk.ijournal.features.dayentry.repo.data.source.local.datasource.DayEntryLocalDataSource
-import com.hk.ijournal.domain.FeedUseCase
-import com.hk.ijournal.domain.FeedUseCaseImpl
-import com.hk.ijournal.domain.PageUseCase
-import com.hk.ijournal.domain.PageUseCaseImpl
+import com.hk.ijournal.features.feed.datasource.FeedLocalDataSource
+import com.hk.ijournal.features.feed.repo.FeedRepo
+import com.hk.ijournal.features.feed.repo.FeedRepoImpl
+import com.hk.ijournal.features.feed.usecases.FeedUseCase
+import com.hk.ijournal.features.feed.usecases.FeedUseCaseImpl
+import com.hk.ijournal.features.search.datasource.SearchDataSource
+import com.hk.ijournal.features.search.datasource.SearchLocalDataSource
+import com.hk.ijournal.features.search.repo.SearchRepo
+import com.hk.ijournal.features.search.repo.SearchRepoImpl
+import com.hk.ijournal.features.search.usecases.SearchUseCase
+import com.hk.ijournal.features.search.usecases.SearchUseCaseImpl
 import com.hk.ijournal.repository.AccessRepository
 import com.hk.ijournal.repository.AccessRepositoryImpl
-import com.hk.ijournal.repository.FeedRepo
-import com.hk.ijournal.repository.FeedRepoImpl
 import com.hk.ijournal.repository.data.source.local.IJDatabase
-import com.hk.ijournal.repository.data.source.local.datasource.FeedLocalDataSource
 import com.hk.ijournal.repository.data.source.local.datasource.UserLocalDataSource
 import com.hk.ijournal.utils.ContentTypeAdapter
 import dagger.Module
@@ -173,5 +179,47 @@ object FeedModule {
         @FeedRepository feedRepo: FeedRepo
     ): FeedUseCase {
         return FeedUseCaseImpl(feedRepo)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object SearchModule {
+
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class LocalSearchDataSource
+
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class SearchRepository
+
+    @Singleton
+    @LocalSearchDataSource
+    @Provides
+    fun provideSearchLocalDataSource(
+        database: IJDatabase,
+        ioDispatcher: CoroutineDispatcher
+    ): SearchDataSource {
+        return SearchLocalDataSource(database.dayEntryDao(), ioDispatcher)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @Singleton
+    @SearchRepository
+    @Provides
+    fun provideSearchRepository(
+        @LocalSearchDataSource searchLocalDataSource: SearchDataSource,
+        ioDispatcher: CoroutineDispatcher
+    ): SearchRepo {
+        return SearchRepoImpl(searchLocalDataSource, ioDispatcher)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSearchUseCase(
+        @SearchRepository searchRepo: SearchRepo
+    ): SearchUseCase {
+        return SearchUseCaseImpl(searchRepo)
     }
 }

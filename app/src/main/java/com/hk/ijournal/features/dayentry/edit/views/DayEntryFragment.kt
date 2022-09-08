@@ -11,10 +11,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hk.ijournal.common.base.BaseAdapterViewType
-import com.hk.ijournal.common.base.BaseFragment
+import bliss.platform.android.components.android.BaseAdapterViewType
+import bliss.platform.android.components.android.BaseFragment
+import bliss.platform.android.extensions.toPx
 import com.hk.ijournal.common.decoration.VerticalItemDecoration
-import com.hk.ijournal.common.toPx
 import com.hk.ijournal.databinding.FragmentDayEntryBinding
 import com.hk.ijournal.features.dayentry.edit.adapters.EntryContentAdapter
 import com.hk.ijournal.features.dayentry.edit.viewmodel.DayEntryVM
@@ -74,7 +74,7 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
         with(binding) {
             contentRv.apply {
                 layoutManager = LinearLayoutManager(requireContext())
-                addItemDecoration(VerticalItemDecoration(25.toPx.toInt()))
+                addItemDecoration(VerticalItemDecoration(25.toPx))
                 adapter = entryContentAdapter
             }
         }

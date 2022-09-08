@@ -10,6 +10,6 @@
 
     <item
         android:id="@android:id/progress"
-        android:drawable="@drawable/ic_baseline_search_24" />
+        android:drawable="@drawable/ic_search_24" />
 
 </layer-list>

@@ -3,10 +3,10 @@ package com.hk.ijournal.features.dayentry.edit.viewmodel
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
+import bliss.platform.android.components.android.BaseAdapterViewType
+import bliss.platform.android.components.android.ITEM_DAY_IMAGE
+import bliss.platform.android.components.android.ITEM_DAY_TEXT
 import com.hk.ijournal.common.Constants
-import com.hk.ijournal.common.base.BaseAdapterViewType
-import com.hk.ijournal.common.base.ITEM_DAY_IMAGE
-import com.hk.ijournal.common.base.ITEM_DAY_TEXT
 import com.hk.ijournal.domain.PageUseCase
 import com.hk.ijournal.features.dayentry.models.Page
 import com.hk.ijournal.features.dayentry.models.content.*
@@ -47,8 +47,8 @@ class DayEntryVM @Inject constructor(
         get() = _selectedDateLive
 
     init {
-        userId = savedStateHandle.get<User>(Constants.DIARY_USER)!!.uid
-        _pageIdLive.value = savedStateHandle.get<Long>(Constants.PAGE_ID)!!
+        userId = savedStateHandle.get<User>(Constants.DIARY_USER)?.uid ?: 0
+        _pageIdLive.value = savedStateHandle.get<Long>(Constants.PAGE_ID)
     }
 
     fun navigateToPrevPage() {

@@ -26,4 +26,7 @@ interface DayEntryDao : RoomDao {
 
     @Query("select pid from diarytable where selectedDate=:selectedDate and uid=:uid")
     suspend fun getPageIdForDate(selectedDate: LocalDate, uid: Long): Long?
+
+    @Query("select * from diarytable where uid=:uid and title like :titleSearchQuery or contentList like :contentSearchQuery")
+    suspend fun getPageForSearchQuery(uid: Long, titleSearchQuery: String, contentSearchQuery: String): List<Page>
 }

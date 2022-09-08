@@ -1,2 +1,4 @@
 rootProject.name='IJournall'
 include ':app'
+include ':bliss-sdk'
+include ':bliss-design'

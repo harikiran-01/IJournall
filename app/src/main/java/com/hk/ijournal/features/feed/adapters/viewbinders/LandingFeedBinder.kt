@@ -2,8 +2,8 @@ package com.hk.ijournal.features.feed.adapters.viewbinders
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.hk.ijournal.common.base.ITEM_MINI_PAGE
-import com.hk.ijournal.common.base.ViewDataBinder
+import bliss.platform.android.components.android.ITEM_MINI_PAGE
+import bliss.platform.android.components.android.ViewDataBinder
 import com.hk.ijournal.databinding.FeedMiniPageItemBinding
 import com.hk.ijournal.features.dayentry.models.Page
 import com.hk.ijournal.features.dayentry.models.content.CONTENT_TEXT

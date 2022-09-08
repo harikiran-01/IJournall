@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.Observable
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.github.anrwatchdog.ANRWatchDog
 import com.hk.ijournal.R
 import com.hk.ijournal.databinding.ActivityLaunchBinding
 import com.hk.ijournal.features.access.views.AccessFragmentDirections
@@ -33,8 +32,6 @@ class LaunchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         println("lifecycled launchA onCreate")
-        setTheme(R.style.AppTheme)
-        ANRWatchDog().start()
         super.onCreate(savedInstanceState)
         launchBinding = ActivityLaunchBinding.inflate(layoutInflater)
         setContentView(launchBinding?.root)
@@ -131,26 +128,6 @@ class LaunchActivity : AppCompatActivity() {
             navController.navigate(AccessFragmentDirections.accessToLanding(diaryUser?: User()))
         }
     }
-
-//    private fun showAccessScreen() {
-//        supportActionBar?.hide()
-//        accessFragment = AccessFragment.newInstance()
-//        supportFragmentManager.beginTransaction().add(R.id.main_nav_host, accessFragment!!, "access_frag").commitNow()
-//    }
-//
-//    private fun showHomeScreen() {
-//        supportActionBar?.show()
-//        homeFragment = HomeFragment.newInstance(SessionAuthManager.getUID())
-//        supportFragmentManager.beginTransaction().add(R.id.main_nav_host, homeFragment!!, "home_frag").commit()
-//    }
-
-//    private fun navigateFromAccessToHome(diaryUser: DiaryUser) {
-//        supportActionBar?.hide()
-//        with(diaryUser){
-//            SessionAuthManager.createUserLoginSession(diaryUser.uid)
-//            navController.navigate(AccessFragmentDirections.accessToHome(this))
-//        }
-//    }
 
     private fun navigateFromAccessToLanding(diaryUser: User) {
         SessionAuthManager.createUserLoginSession(diaryUser.uid)

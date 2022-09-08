@@ -33,5 +33,6 @@
     <string name="next_date_button">next date button</string>
     <string name="page_album_pic">page album pic</string>
     <string name="save_btn">SAVE</string>
+    <string name="search_hint">Search Diary</string>
 
 </resources>

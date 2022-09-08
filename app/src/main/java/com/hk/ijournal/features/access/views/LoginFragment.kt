@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import bliss.platform.android.shared.LogConstants.LOGTAG
 import com.hk.ijournal.adapters.AccessBindingAdapter
-import com.hk.ijournal.common.CommonLib.LOGTAG
 import com.hk.ijournal.databinding.FragmentLoginBinding
+import com.hk.ijournal.features.access.viewmodels.AccessViewModel
 import com.hk.ijournal.repository.AccessRepositoryImpl
 import com.hk.ijournal.repository.AccessRepositoryImpl.AccessStatus
 import com.hk.ijournal.repository.data.source.local.entities.User
-import com.hk.ijournal.features.access.viewmodels.AccessViewModel
 import com.hk.ijournal.viewmodels.RelayViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
@@ -30,7 +30,7 @@ class LoginFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _loginBinding = FragmentLoginBinding.inflate(inflater, container, false)
         loginBinding.lifecycleOwner = viewLifecycleOwner
         return loginBinding.root
@@ -58,6 +58,9 @@ class LoginFragment : Fragment() {
                 AccessStatus.USER_NOT_FOUND -> {
                     Toasty.info(requireActivity(), "User doesn't exist!", Toasty.LENGTH_SHORT, true)
                         .show()
+                }
+                else -> {
+
                 }
             }
         }

@@ -8,7 +8,6 @@ import com.hk.ijournal.features.dayentry.models.content.*
 import java.lang.reflect.Type
 
 class ContentTypeAdapter : JsonDeserializer<BaseEntity<ContentData>> {
-    private val LOG_TAG = ContentTypeAdapter::class.java.simpleName
 
     @Throws(JsonParseException::class)
     override fun deserialize(

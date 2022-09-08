@@ -9,11 +9,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.hk.ijournal.common.base.BaseAdapterViewType
-import com.hk.ijournal.common.base.BaseFragment
+import bliss.platform.android.components.android.BaseAdapterViewType
+import bliss.platform.android.components.android.BaseFragment
+import bliss.platform.android.extensions.toPx
 import com.hk.ijournal.common.decoration.VerticalItemDecoration
-import com.hk.ijournal.common.toPx
 import com.hk.ijournal.databinding.FragDayEntryPreviewBinding
 import com.hk.ijournal.features.dayentry.preview.adapters.EntryContentPreviewAdapter
 import com.hk.ijournal.features.dayentry.preview.viewmodel.DayEntryPreviewVM
@@ -57,11 +56,10 @@ class DayEntryPreviewFragment : BaseFragment<FragDayEntryPreviewBinding, Nothing
     }
 
     private fun initAdapter() {
-        entryContentPreviewAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         with(binding) {
             contentRv.apply {
                 layoutManager = LinearLayoutManager(requireContext())
-                addItemDecoration(VerticalItemDecoration(25.toPx.toInt()))
+                addItemDecoration(VerticalItemDecoration(25.toPx))
                 adapter = entryContentPreviewAdapter
             }
         }
@@ -82,7 +80,7 @@ class DayEntryPreviewFragment : BaseFragment<FragDayEntryPreviewBinding, Nothing
     @RequiresApi(Build.VERSION_CODES.O)
     override fun observeData() {
         dayEntryPreviewVM.currentPage.observe(viewLifecycleOwner) { page ->
-            binding.title.setText(page.title)
+            binding.title.text = page.title
             val contentListForAdapter = page.contentList.map { it.data as BaseAdapterViewType }
             entryContentPreviewAdapter.setItems(contentListForAdapter)
         }

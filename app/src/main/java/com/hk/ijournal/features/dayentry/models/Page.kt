@@ -4,8 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
-import com.hk.ijournal.common.base.BaseAdapterViewType
-import com.hk.ijournal.common.base.ITEM_MINI_PAGE
+import bliss.platform.android.components.android.BaseAdapterViewType
+import bliss.platform.android.components.android.ITEM_MINI_PAGE
 import com.hk.ijournal.features.dayentry.models.content.BaseEntity
 import com.hk.ijournal.features.dayentry.models.content.ContentData
 import com.hk.ijournal.repository.data.source.local.entities.User
@@ -19,7 +19,8 @@ import java.time.LocalDate
                 childColumns = ["uid"],
                 onDelete = CASCADE)], indices = [Index("pid", "uid")])
 @TypeConverters(DateConverter::class, DayEntryConverter::class)
-data class Page(var selectedDate: LocalDate, val uid: Long, var title: String, var contentList: List<BaseEntity<ContentData>>) : BaseAdapterViewType {
+data class Page(var selectedDate: LocalDate, var uid: Long, var title: String, var contentList: List<BaseEntity<ContentData>>) :
+    BaseAdapterViewType {
     @PrimaryKey(autoGenerate = true)
     var pid = 0L
 

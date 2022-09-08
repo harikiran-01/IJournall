@@ -30,7 +30,6 @@ object SessionAuthManager {
 
     // Check for login
     fun isUserLoggedIn(): Boolean {
-        println("sessdeb " + getUID())
         return (getUID() > 0)
     }
 

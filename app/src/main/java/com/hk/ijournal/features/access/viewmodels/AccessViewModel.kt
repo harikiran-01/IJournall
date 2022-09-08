@@ -4,7 +4,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
-import com.hk.ijournal.common.CommonLib.LOGTAG
+import bliss.platform.android.shared.LogConstants.LOGTAG
 import com.hk.ijournal.repository.AccessRepository
 import com.hk.ijournal.repository.AccessRepositoryImpl
 import com.hk.ijournal.repository.data.source.local.entities.User

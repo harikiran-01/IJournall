@@ -1,15 +1,16 @@
 package com.hk.ijournal.features.feed.views
 
-import android.util.Log
+import android.content.Intent
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hk.ijournal.common.base.BaseFragment
+import bliss.platform.android.components.android.BaseFragment
 import com.hk.ijournal.common.decoration.VerticalItemDecoration
 import com.hk.ijournal.databinding.FragmentFeedBinding
 import com.hk.ijournal.features.feed.adapters.FeedAdapter
 import com.hk.ijournal.features.feed.adapters.viewbinders.LandingFeedBinder
 import com.hk.ijournal.features.feed.viewmodel.FeedViewModel
+import com.hk.ijournal.features.search.views.SearchableActivity
 import com.hk.ijournal.views.LaunchActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,15 +50,23 @@ class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
 
     override fun setUpListeners() {
         super.setUpListeners()
-        binding.addEntryBtn.setOnClickListener {
-            (requireActivity() as LaunchActivity).supportActionBar?.hide()
-            Log.d("DEBDEB", safeArgs.diaryUser.toString())
-            findNavController().navigate(FeedFragmentDirections.feedToDayEntry(safeArgs.diaryUser))
+        with(binding) {
+            addEntryBtn.setOnClickListener {
+                (requireActivity() as LaunchActivity).supportActionBar?.hide()
+                findNavController().navigate(FeedFragmentDirections.feedToDayEntry(safeArgs.diaryUser))
+            }
+
+            calendarBtn.setOnClickListener {
+                findNavController().navigate(FeedFragmentDirections.feedToCalendar(safeArgs.diaryUser))
+            }
+
+            fullSearch.setOnClickListener {
+                startActivity(Intent(requireActivity(), SearchableActivity::class.java).apply {
+                    putExtra("uid", safeArgs.diaryUser.uid)
+                })
+            }
         }
 
-        binding.calendarBtn.setOnClickListener {
-            findNavController().navigate(FeedFragmentDirections.feedToCalendar(safeArgs.diaryUser))
-        }
     }
 
     override fun observeData() {

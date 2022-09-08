@@ -13,8 +13,8 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import bliss.platform.android.shared.LogConstants.LOGTAG
 import com.hk.ijournal.adapters.AccessBindingAdapter
-import com.hk.ijournal.common.CommonLib
 import com.hk.ijournal.databinding.FragmentRegisterBinding
 import com.hk.ijournal.features.access.viewmodels.AccessViewModel
 import com.hk.ijournal.repository.AccessRepositoryImpl
@@ -37,7 +37,7 @@ class RegisterFragment : Fragment(), OnDateSetListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _registerBinding = FragmentRegisterBinding.inflate(inflater, container, false)
         return registerBinding.root
     }
@@ -101,12 +101,12 @@ class RegisterFragment : Fragment(), OnDateSetListener {
         registerBinding.registerFragment = null
         registerBinding.unbind()
         _registerBinding = null
-        Log.d(CommonLib.LOGTAG, "RegisterFrag onDestroyView")
+        Log.d(LOGTAG, "RegisterFrag onDestroyView")
         super.onDestroyView()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(CommonLib.LOGTAG, "RegisterFrag onDestroy")
+        Log.d(LOGTAG, "RegisterFrag onDestroy")
     }
 }

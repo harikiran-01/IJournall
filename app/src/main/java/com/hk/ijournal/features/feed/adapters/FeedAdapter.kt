@@ -1,9 +1,9 @@
 package com.hk.ijournal.features.feed.adapters
 
 import androidx.databinding.ViewDataBinding
-import com.hk.ijournal.common.base.BaseAdapterViewType
-import com.hk.ijournal.common.base.BaseRecyclerAdapter
-import com.hk.ijournal.common.base.ViewDataBinder
+import bliss.platform.android.components.android.BaseAdapterViewType
+import bliss.platform.android.components.android.BaseRecyclerAdapter
+import bliss.platform.android.components.android.ViewDataBinder
 import com.hk.ijournal.features.feed.adapters.viewbinders.LandingFeedBinder
 
 class FeedAdapter (

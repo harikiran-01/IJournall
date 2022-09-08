@@ -11,11 +11,11 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import bliss.platform.android.shared.LogConstants.LOGTAG
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy
 import com.hk.ijournal.R
-import com.hk.ijournal.common.CommonLib
 import com.hk.ijournal.databinding.FragmentAccessBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -66,7 +66,7 @@ class AccessFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        Log.d(CommonLib.LOGTAG, "AccessFragment onDestroyView")
+        Log.d(LOGTAG, "AccessFragment onDestroyView")
         pagerAdapter = null
         viewPager?.adapter = null
         viewPager = null
@@ -77,7 +77,7 @@ class AccessFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(CommonLib.LOGTAG, "AccessFragment onDestroy")
+        Log.d(LOGTAG, "AccessFragment onDestroy")
     }
 
     private class ScreenSlidePagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :

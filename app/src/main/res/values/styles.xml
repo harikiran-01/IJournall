@@ -5,16 +5,25 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    </style>
-
-    <style name="SplashScreenTheme" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/splash_screen_bg</item>
-        <!-- enable window content transitions -->
-        <item name="android:windowActivityTransitions">true</item>
 
         <!-- specify enter and exit transitions -->
         <item name="android:windowEnterTransition">@android:transition/slide_left</item>
         <item name="android:windowExitTransition">@android:transition/slide_right</item>
+    </style>
+
+    <!-- Base application theme without actionbar. -->
+    <style name="AppThemeWithoutActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">@android:transition/slide_left</item>
+        <item name="android:windowExitTransition">@android:transition/slide_right</item>
+    </style>
+
+    <style name="SplashScreenTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash_screen_bg</item>
     </style>
 
     <style name="HomeTheme" parent="AppTheme">
@@ -33,6 +42,16 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/button_state_selector</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SearchViewTheme" parent="Widget.AppCompat.SearchView">
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:editTextColor">@android:color/white</item>
+    </style>
+
+    <style name="SearchViewStyle">
+        <item name="searchIcon">@drawable/ic_search_24</item>
+        <item name="android:background">@drawable/white_rounded_border</item>
     </style>
 
 </resources>

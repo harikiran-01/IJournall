@@ -3,13 +3,13 @@ package com.hk.ijournal.features.dayentry.edit.adapters.binders
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import bliss.platform.android.components.android.ITEM_DAY_IMAGE
+import bliss.platform.android.components.android.ViewDataBinder
+import bliss.platform.android.extensions.toPx
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.hk.ijournal.R
-import com.hk.ijournal.common.base.ITEM_DAY_IMAGE
-import com.hk.ijournal.common.base.ViewDataBinder
 import com.hk.ijournal.common.gone
-import com.hk.ijournal.common.toPx
 import com.hk.ijournal.common.visible
 import com.hk.ijournal.databinding.ImageWithTitleBinding
 import com.hk.ijournal.features.dayentry.models.content.MediaContent
@@ -38,7 +38,7 @@ class MediaContentBinder @Inject constructor() :
             when (data.mimeType) {
                 "image" -> {
                     Glide.with(binding.root).load(Uri.parse(data.mediaUri)).placeholder(R.drawable.spinnerloop).apply(
-                        RequestOptions().override(250.toPx.toInt(), 250.toPx.toInt()))
+                        RequestOptions().override(250.toPx, 250.toPx))
                         .into(image)
                     image.visible()
                     video.gone()
