@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.bliss.auth.repo.AccessRepositoryImpl.AccessValidation" />
+
+        <variable
+            name="AccessViewModel"
+            type="com.bliss.auth.viewmodels.AccessViewModel" />
+
+        <variable
+            name="AccessBindingAdapter"
+            type="com.bliss.auth.ui.adapters.AccessBindingAdapter" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loginlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/usernamefieldwrap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/edittext_horizontal_margin"
+            android:layout_marginEnd="@dimen/edittext_horizontal_margin"
+            android:gravity="start"
+            android:hint="@string/username_label"
+            android:textAlignment="viewStart"
+            errorMsg="Wrong"
+            app:errorTextColor="@color/red"
+            app:focusState="@{AccessBindingAdapter.loginusernameFocusLiveData}"
+            android:textColorHint="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/passcodewrap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3"
+            app:layout_constraintVertical_chainStyle="packed">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/loginusername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="12"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:text="@={AccessViewModel.loginUsernameLive}"
+                app:onFocusChange="@{AccessBindingAdapter.focusChangeListener}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passcodewrap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/edittext_horizontal_margin"
+            android:layout_marginEnd="@dimen/edittext_horizontal_margin"
+            android:layout_marginTop="40dp"
+            android:hint="@string/passcode_label"
+            android:textAlignment="viewStart"
+            android:textColorHint="@color/colorPrimary"
+            app:errorMsg="@{AccessViewModel.loginPasscodeValidation}"
+            app:errorTextColor="@color/red"
+            app:focusState="@{AccessBindingAdapter.loginpasscodeFocusLiveData}"
+            app:layout_constraintBottom_toTopOf="@+id/loginbutton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/usernamefieldwrap"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/loginpasscode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="12"
+                android:inputType="textPassword"
+                android:text="@={AccessViewModel.loginPasscodeLive}"
+                app:onFocusChange="@{AccessBindingAdapter.focusChangeListener}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/loginbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/loginbtn_txt"
+            android:background="@drawable/button_state_selector"
+            android:onClick="@{()-> AccessViewModel.loginUser()}"
+            app:enableOnPassValid="@{AccessViewModel.loginPasscodeValidation}"
+            app:enableOnUserValid="@{AccessViewModel.loginUserValidation}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/passcodewrap" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

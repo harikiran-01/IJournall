@@ -2,7 +2,6 @@ package com.hk.ijournal.features.calendar.views
 
 import android.util.Log
 import android.view.View
-import bliss.platform.android.components.android.BaseFragment
 import com.hk.ijournal.databinding.CalendarFragmentBinding
 import com.hk.ijournal.features.calendar.viewmodel.CalendarViewModel
 import com.kizitonwose.calendarview.model.CalendarDay
@@ -10,13 +9,14 @@ import com.kizitonwose.calendarview.model.CalendarMonth
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import dagger.hilt.android.AndroidEntryPoint
+import omni.platform.android.components.android.BaseBindingFragment
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.*
 
 @AndroidEntryPoint
-class CalendarFragment : BaseFragment<CalendarFragmentBinding, CalendarViewModel>() {
+class CalendarFragment : BaseBindingFragment<CalendarFragmentBinding, CalendarViewModel>() {
 
     val daySelected: ((date : LocalDate) -> Unit) = {
         Log.d("CalTest", it.toString())

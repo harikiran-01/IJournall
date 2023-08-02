@@ -1,11 +1,10 @@
 package com.hk.ijournal.di
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.hk.ijournal.IJDatabase
 import com.hk.ijournal.domain.PageUseCase
 import com.hk.ijournal.domain.PageUseCaseImpl
 import com.hk.ijournal.features.dayentry.models.content.BaseEntity
@@ -23,18 +22,12 @@ import com.hk.ijournal.features.search.repo.SearchRepo
 import com.hk.ijournal.features.search.repo.SearchRepoImpl
 import com.hk.ijournal.features.search.usecases.SearchUseCase
 import com.hk.ijournal.features.search.usecases.SearchUseCaseImpl
-import com.hk.ijournal.repository.AccessRepository
-import com.hk.ijournal.repository.AccessRepositoryImpl
-import com.hk.ijournal.repository.data.source.local.IJDatabase
-import com.hk.ijournal.repository.data.source.local.datasource.UserLocalDataSource
 import com.hk.ijournal.utils.ContentTypeAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -52,49 +45,6 @@ object AppModule {
     @Provides
     fun provideGson(): Gson {
         return GsonBuilder().registerTypeAdapter(BaseEntity::class.java, ContentTypeAdapter()).create()
-    }
-
-    @Singleton
-    @Provides
-    fun provideDataBase(@ApplicationContext context: Context): IJDatabase {
-        synchronized(this) {
-            return Room.databaseBuilder(
-                context.applicationContext,
-                IJDatabase::class.java,
-                IJDatabase.DBNAME
-            ).fallbackToDestructiveMigration().build()
-        }
-    }
-
-    @Singleton
-    @Provides
-    fun provideIoDispatcher() = Dispatchers.IO
-}
-
-/**
- * The binding for TasksRepository is on its own module so that we can replace it easily in tests.
- */
-@Module
-@InstallIn(SingletonComponent::class)
-object UserModule {
-
-    @Qualifier
-    @Retention(AnnotationRetention.RUNTIME)
-    annotation class LocalUserDataSource
-
-    @Singleton
-    @LocalUserDataSource
-    @Provides
-    fun provideUserLocalDataSource(database: IJDatabase, ioDispatcher: CoroutineDispatcher): UserLocalDataSource {
-        return UserLocalDataSource(database.userDao(), ioDispatcher)
-    }
-
-    @Singleton
-    @Provides
-    fun provideUserRepository(
-        @LocalUserDataSource userLocalDataSource: UserLocalDataSource,
-        ioDispatcher: CoroutineDispatcher): AccessRepository {
-        return AccessRepositoryImpl(userLocalDataSource, ioDispatcher)
     }
 }
 

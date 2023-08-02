@@ -1,13 +1,14 @@
 package com.hk.ijournal.features.feed.adapters
 
 import androidx.databinding.ViewDataBinding
-import bliss.platform.android.components.android.BaseAdapterViewType
-import bliss.platform.android.components.android.BaseRecyclerAdapter
-import bliss.platform.android.components.android.ViewDataBinder
 import com.hk.ijournal.features.feed.adapters.viewbinders.LandingFeedBinder
+import omni.platform.android.components.android.adapters.BaseAdapterViewType
+import omni.platform.android.components.android.adapters.BaseRecyclerAdapter
+import omni.platform.android.components.android.adapters.ViewDataBinder
 
 class FeedAdapter (
-    private val landingFeedBinder: LandingFeedBinder): BaseRecyclerAdapter<BaseAdapterViewType>() {
+    private val landingFeedBinder: LandingFeedBinder
+): BaseRecyclerAdapter<BaseAdapterViewType>() {
     init {
         initViewDataBinders()
     }

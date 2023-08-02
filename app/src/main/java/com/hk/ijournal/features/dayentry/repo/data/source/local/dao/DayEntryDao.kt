@@ -2,13 +2,12 @@ package com.hk.ijournal.features.dayentry.repo.data.source.local.dao
 
 import androidx.room.*
 import com.hk.ijournal.features.dayentry.models.Page
-import com.hk.ijournal.repository.data.source.local.dao.RoomDao
 import com.hk.ijournal.utils.DateConverter
 import com.hk.ijournal.utils.DayEntryConverter
 import java.time.LocalDate
 @Dao
 @TypeConverters(DateConverter::class, DayEntryConverter::class)
-interface DayEntryDao : RoomDao {
+interface DayEntryDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertPage(page: Page): Long?
 

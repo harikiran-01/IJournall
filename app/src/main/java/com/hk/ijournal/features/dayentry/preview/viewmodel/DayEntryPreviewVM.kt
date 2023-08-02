@@ -3,13 +3,11 @@ package com.hk.ijournal.features.dayentry.preview.viewmodel
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
-import com.hk.ijournal.common.Constants
 import com.hk.ijournal.domain.PageUseCase
 import com.hk.ijournal.features.dayentry.models.Page
 import com.hk.ijournal.features.dayentry.models.content.BaseEntity
 import com.hk.ijournal.features.dayentry.models.content.CONTENT_TEXT
 import com.hk.ijournal.features.dayentry.models.content.TextContent
-import com.hk.ijournal.repository.data.source.local.entities.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
@@ -45,7 +43,7 @@ class DayEntryPreviewVM @Inject constructor(
         get() = _selectedDateLive
 
     init {
-        userId = savedStateHandle.get<User>(Constants.DIARY_USER)!!.uid
+//        userId = savedStateHandle.get<User>(Constants.DIARY_USER)!!.uid
     }
 
     fun navigateToPrevPage() {

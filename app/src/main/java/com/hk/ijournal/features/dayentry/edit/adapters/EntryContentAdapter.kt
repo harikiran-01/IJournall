@@ -1,11 +1,11 @@
 package com.hk.ijournal.features.dayentry.edit.adapters
 
 import androidx.databinding.ViewDataBinding
-import bliss.platform.android.components.android.BaseAdapterViewType
-import bliss.platform.android.components.android.BaseRecyclerAdapter
-import bliss.platform.android.components.android.ViewDataBinder
 import com.hk.ijournal.features.dayentry.edit.adapters.binders.MediaContentBinder
 import com.hk.ijournal.features.dayentry.edit.adapters.binders.TextContentBinder
+import omni.platform.android.components.android.adapters.BaseAdapterViewType
+import omni.platform.android.components.android.adapters.BaseRecyclerAdapter
+import omni.platform.android.components.android.adapters.ViewDataBinder
 import javax.inject.Inject
 
 class EntryContentAdapter @Inject constructor (

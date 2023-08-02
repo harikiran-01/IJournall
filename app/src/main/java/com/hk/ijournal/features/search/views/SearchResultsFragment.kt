@@ -1,16 +1,16 @@
 package com.hk.ijournal.features.search.views
 
 import androidx.recyclerview.widget.LinearLayoutManager
-import bliss.platform.android.components.android.BaseFragment
 import com.hk.ijournal.common.decoration.VerticalItemDecoration
 import com.hk.ijournal.databinding.FragSearchResultsBinding
 import com.hk.ijournal.features.search.adapters.SearchAdapter
 import com.hk.ijournal.features.search.adapters.binders.SearchResultsBinder
 import com.hk.ijournal.features.search.viewmodels.SearchResultsVM
 import dagger.hilt.android.AndroidEntryPoint
+import omni.platform.android.components.android.BaseBindingFragment
 
 @AndroidEntryPoint
-class SearchResultsFragment: BaseFragment<FragSearchResultsBinding, SearchResultsVM>() {
+class SearchResultsFragment: BaseBindingFragment<FragSearchResultsBinding, SearchResultsVM>() {
 
     private lateinit var searchAdapter: SearchAdapter
 

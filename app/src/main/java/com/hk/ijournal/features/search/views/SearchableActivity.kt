@@ -5,13 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.SearchView
-import bliss.platform.android.components.android.BaseActivity
 import com.hk.ijournal.databinding.ActivitySearchableBinding
 import dagger.hilt.android.AndroidEntryPoint
+import omni.platform.android.components.android.BaseActivityConfig
 
 @AndroidEntryPoint
-class SearchableActivity : BaseActivity<ActivitySearchableBinding, Nothing>() {
+class SearchableActivity : omni.platform.android.components.android.BaseActivity<ActivitySearchableBinding, Nothing>() {
     private var userId = 0L
+
+    override val config: BaseActivityConfig by SearchActivityConfig()
 
     override fun onLifecycleStart() {
         super.onLifecycleStart()

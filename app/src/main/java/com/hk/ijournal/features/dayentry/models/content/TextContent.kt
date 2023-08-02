@@ -1,8 +1,8 @@
 package com.hk.ijournal.features.dayentry.models.content
 
 import androidx.annotation.Keep
-import bliss.platform.android.components.android.BaseAdapterViewType
-import bliss.platform.android.components.android.ITEM_DAY_TEXT
+import omni.platform.android.components.android.adapters.BaseAdapterViewType
+import omni.platform.android.components.android.adapters.ITEM_DAY_TEXT
 
 @Keep
 data class TextContent constructor(

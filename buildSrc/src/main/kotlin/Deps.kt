@@ -2,10 +2,10 @@
  * Plugins
  */
 object BuildPlugins {
-    const val gradle = "com.android.tools.build:gradle:${Versions.gradlePlugin}"
-    const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
-    const val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.safeArgs}"
-    const val hilt = "com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt}"
+    const val gradle = "com.android.tools.build:gradle:${PluginVersions.gradlePlugin}"
+    const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${PluginVersions.kotlin}"
+    const val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${PluginVersions.safeArgs}"
+    const val hilt = "com.google.dagger:hilt-android-gradle-plugin:${PluginVersions.hilt}"
 }
 
 object AppPlugins {
@@ -20,7 +20,31 @@ object AppPlugins {
 }
 
 object Deps {
-    const val androidCore = "androidx.core:core-ktx:${Versions.androidCore}"
-    const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
-    const val materialDesign = "com.google.android.material:material:${Versions.materialDesign}"
+    const val androidCore = "androidx.core:core-ktx:${DepsVersions.androidCore}"
+    const val appCompat = "androidx.appcompat:appcompat:${DepsVersions.appCompat}"
+    const val materialDesign = "com.google.android.material:material:${DepsVersions.materialDesign}"
+
+    // Navigation
+    const val navigationFragment = "androidx.navigation:navigation-fragment-ktx:${DepsVersions.navigation}"
+    const val navigationUi = "androidx.navigation:navigation-ui-ktx:${DepsVersions.navigation}"
+    // DI
+    const val hilt = "com.google.dagger:hilt-android:${DepsVersions.hilt}"
+    const val hiltCompiler = "com.google.dagger:hilt-android-compiler:${DepsVersions.hilt}"
+    const val hiltNavigation = "androidx.hilt:hilt-navigation-fragment:${DepsVersions.hiltNav}"
+
+    // room
+    const val room = "androidx.room:room-runtime:${DepsVersions.room}"
+    const val roomKtx = "androidx.room:room-ktx:${DepsVersions.room}"
+    const val roomCompiler = "androidx.room:room-compiler:${DepsVersions.room}"
+
+    // lifecycle
+    const val lifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${DepsVersions.lifecycle}"
+    const val lifecycleLiveData = "androidx.lifecycle:lifecycle-livedata-ktx:${DepsVersions.lifecycle}"
+
+
+    const val fragmentKtx = "androidx.fragment:fragment-ktx:${DepsVersions.fragmentKtx}"
+}
+
+object TestDeps {
+    const val jUnit = "junit:junit:${TestDepsVersions.jUnit}"
 }

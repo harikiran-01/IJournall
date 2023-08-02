@@ -1,24 +1,28 @@
 package com.hk.ijournal.features.feed.views
 
 import android.content.Intent
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import bliss.platform.android.components.android.BaseFragment
 import com.hk.ijournal.common.decoration.VerticalItemDecoration
 import com.hk.ijournal.databinding.FragmentFeedBinding
 import com.hk.ijournal.features.feed.adapters.FeedAdapter
 import com.hk.ijournal.features.feed.adapters.viewbinders.LandingFeedBinder
 import com.hk.ijournal.features.feed.viewmodel.FeedViewModel
 import com.hk.ijournal.features.search.views.SearchableActivity
-import com.hk.ijournal.views.LaunchActivity
+import com.hk.ijournal.viewmodels.RelayViewModel
+import com.hk.ijournal.views.RootActivity
 import dagger.hilt.android.AndroidEntryPoint
+import omni.platform.android.components.android.BaseBindingFragment
 
 
 @AndroidEntryPoint
-class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
-    private val safeArgs: FeedFragmentArgs by navArgs()
+class FeedFragment : BaseBindingFragment<FragmentFeedBinding, FeedViewModel>() {
+    companion object {
+        const val TAG = "FeedFragment"
+    }
 
+    private val relayViewModel by activityViewModels<RelayViewModel>()
     lateinit var feedAdapter: FeedAdapter
 
     override fun getViewModelClass(): Class<FeedViewModel> {
@@ -37,7 +41,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
 
     private fun initAdapter() {
         feedAdapter = FeedAdapter(LandingFeedBinder {
-            findNavController().navigate(FeedFragmentDirections.feedToDayEntryPreview(safeArgs.diaryUser, it))
+            findNavController().navigate(FeedFragmentDirections.feedToDayEntryPreview(it))
         })
         with(binding) {
             miniPageRv.apply {
@@ -52,18 +56,23 @@ class FeedFragment : BaseFragment<FragmentFeedBinding, FeedViewModel>() {
         super.setUpListeners()
         with(binding) {
             addEntryBtn.setOnClickListener {
-                (requireActivity() as LaunchActivity).supportActionBar?.hide()
-                findNavController().navigate(FeedFragmentDirections.feedToDayEntry(safeArgs.diaryUser))
+                (requireActivity() as RootActivity).supportActionBar?.hide()
+//                findNavController().navigate(FeedFragmentDirections.feedToDayEntry(safeArgs.diaryUser))
             }
 
             calendarBtn.setOnClickListener {
-                findNavController().navigate(FeedFragmentDirections.feedToCalendar(safeArgs.diaryUser))
+//                findNavController().navigate(FeedFragmentDirections.feedToCalendar(safeArgs.diaryUser))
             }
 
             fullSearch.setOnClickListener {
                 startActivity(Intent(requireActivity(), SearchableActivity::class.java).apply {
-                    putExtra("uid", safeArgs.diaryUser.uid)
+//                    putExtra("uid", safeArgs.diaryUser.uid)
                 })
+            }
+
+            fullSearch.setOnLongClickListener {
+                relayViewModel.onSessionEnd.set(true)
+                return@setOnLongClickListener true
             }
         }
 

@@ -4,9 +4,6 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.hk.ijournal.repository.data.source.local.IJDatabase
-import com.hk.ijournal.repository.data.source.local.dao.UserDao
-import com.hk.ijournal.repository.data.source.local.entities.User
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert

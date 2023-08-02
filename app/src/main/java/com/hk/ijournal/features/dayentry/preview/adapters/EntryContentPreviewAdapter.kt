@@ -1,12 +1,12 @@
 package com.hk.ijournal.features.dayentry.preview.adapters
 
 import androidx.databinding.ViewDataBinding
-import bliss.platform.android.components.android.BaseAdapterViewType
-import bliss.platform.android.components.android.BaseRecyclerAdapter
-import bliss.platform.android.components.android.ViewDataBinder
 import com.hk.ijournal.features.dayentry.models.content.MediaContent
 import com.hk.ijournal.features.dayentry.preview.adapters.binders.MediaContentPreviewBinder
 import com.hk.ijournal.features.dayentry.preview.adapters.binders.TextContentPreviewBinder
+import omni.platform.android.components.android.adapters.BaseAdapterViewType
+import omni.platform.android.components.android.adapters.BaseRecyclerAdapter
+import omni.platform.android.components.android.adapters.ViewDataBinder
 import javax.inject.Inject
 
 class EntryContentPreviewAdapter @Inject constructor (

@@ -6,11 +6,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
 
-    <dimen name="edittext_horizontal_margin">60dp</dimen>
-
-    <!--login and register dimens-->
-    <dimen name="buttonradius">27dp</dimen>
-    <dimen name="buttonradius_home">8dp</dimen>
 
     <!--feed dimens-->
     <dimen name="feed_minipage_item_radius">10dp</dimen>

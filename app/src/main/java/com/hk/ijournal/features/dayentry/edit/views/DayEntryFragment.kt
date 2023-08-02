@@ -11,9 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import bliss.platform.android.components.android.BaseAdapterViewType
-import bliss.platform.android.components.android.BaseFragment
-import bliss.platform.android.extensions.toPx
 import com.hk.ijournal.common.decoration.VerticalItemDecoration
 import com.hk.ijournal.databinding.FragmentDayEntryBinding
 import com.hk.ijournal.features.dayentry.edit.adapters.EntryContentAdapter
@@ -21,21 +18,22 @@ import com.hk.ijournal.features.dayentry.edit.viewmodel.DayEntryVM
 import com.hk.ijournal.features.dayentry.models.content.MediaContent
 import com.hk.ijournal.features.dayentry.preview.views.DayEntryPreviewFragmentArgs
 import com.hk.ijournal.features.dayentry.preview.views.DebouncingEditTextWatcher
-import com.hk.ijournal.repository.data.source.local.IJDatabase
 import com.hk.ijournal.viewmodels.RelayViewModel
-import com.wajahatkarim3.roomexplorer.RoomExplorer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import omni.platform.android.components.android.BaseBindingFragment
+import omni.platform.android.components.android.adapters.BaseAdapterViewType
+import omni.platform.android.extensions.toPx
 import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DatePickerDialog.OnDateSetListener {
+class DayEntryFragment : BaseBindingFragment<FragmentDayEntryBinding, Nothing>(), DatePickerDialog.OnDateSetListener {
     private val safeArgs : DayEntryPreviewFragmentArgs by navArgs()
     private val relayViewModel by activityViewModels<RelayViewModel>()
     private val dayEntryVM : DayEntryVM by viewModels()
@@ -96,10 +94,6 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
         super.setUpListeners()
         with(binding) {
 
-            pageSearch.setOnClickListener {
-                RoomExplorer.show(requireActivity(), IJDatabase::class.java, "Journals.db")
-            }
-
             saveBtn.setOnClickListener {
                 dayEntryViewModel?.savePage(binding.title.text.toString(), entryContentAdapter.dataList)
             }
@@ -142,6 +136,10 @@ class DayEntryFragment : BaseFragment<FragmentDayEntryBinding, Nothing>(), DateP
     override fun doViewCleanup() {
         super.doViewCleanup()
         binding.contentRv.adapter = null
+    }
+
+    companion object {
+        const val TAG = "DayEntryFragment"
     }
 }
 

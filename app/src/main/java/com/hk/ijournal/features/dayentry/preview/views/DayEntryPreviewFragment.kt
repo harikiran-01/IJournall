@@ -9,9 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import bliss.platform.android.components.android.BaseAdapterViewType
-import bliss.platform.android.components.android.BaseFragment
-import bliss.platform.android.extensions.toPx
 import com.hk.ijournal.common.decoration.VerticalItemDecoration
 import com.hk.ijournal.databinding.FragDayEntryPreviewBinding
 import com.hk.ijournal.features.dayentry.preview.adapters.EntryContentPreviewAdapter
@@ -21,10 +18,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import omni.platform.android.components.android.BaseBindingFragment
+import omni.platform.android.components.android.adapters.BaseAdapterViewType
+import omni.platform.android.extensions.toPx
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DayEntryPreviewFragment : BaseFragment<FragDayEntryPreviewBinding, Nothing>() {
+class DayEntryPreviewFragment : BaseBindingFragment<FragDayEntryPreviewBinding, Nothing>() {
     private val safeArgs : DayEntryPreviewFragmentArgs by navArgs()
     private val dayEntryPreviewVM : DayEntryPreviewVM by viewModels()
 
@@ -72,7 +72,7 @@ class DayEntryPreviewFragment : BaseFragment<FragDayEntryPreviewBinding, Nothing
         super.setUpListeners()
         with(binding) {
             editBtn.setOnClickListener {
-                findNavController().navigate(DayEntryPreviewFragmentDirections.dayentryPreviewToDayentryEdit(safeArgs.diaryUser, safeArgs.pageId))
+                findNavController().navigate(DayEntryPreviewFragmentDirections.dayentryPreviewToDayentryEdit(safeArgs.pageId))
             }
         }
     }
@@ -89,6 +89,10 @@ class DayEntryPreviewFragment : BaseFragment<FragDayEntryPreviewBinding, Nothing
     override fun doViewCleanup() {
         super.doViewCleanup()
         binding.contentRv.adapter = null
+    }
+
+    companion object {
+        const val TAG = "DayEntryPreviewFragment"
     }
 }
 

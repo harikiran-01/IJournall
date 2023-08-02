@@ -1,10 +1,10 @@
 package com.hk.ijournal.features.search.adapters
 
 import androidx.databinding.ViewDataBinding
-import bliss.platform.android.components.android.BaseAdapterViewType
-import bliss.platform.android.components.android.BaseRecyclerAdapter
-import bliss.platform.android.components.android.ViewDataBinder
 import com.hk.ijournal.features.search.adapters.binders.SearchResultsBinder
+import omni.platform.android.components.android.adapters.BaseAdapterViewType
+import omni.platform.android.components.android.adapters.BaseRecyclerAdapter
+import omni.platform.android.components.android.adapters.ViewDataBinder
 
 class SearchAdapter(
     private val searchResultsBinder: SearchResultsBinder

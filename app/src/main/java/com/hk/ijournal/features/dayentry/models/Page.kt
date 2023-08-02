@@ -4,13 +4,13 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
-import bliss.platform.android.components.android.BaseAdapterViewType
-import bliss.platform.android.components.android.ITEM_MINI_PAGE
+import com.bliss.auth.repo.User
 import com.hk.ijournal.features.dayentry.models.content.BaseEntity
 import com.hk.ijournal.features.dayentry.models.content.ContentData
-import com.hk.ijournal.repository.data.source.local.entities.User
 import com.hk.ijournal.utils.DateConverter
 import com.hk.ijournal.utils.DayEntryConverter
+import omni.platform.android.components.android.adapters.BaseAdapterViewType
+import omni.platform.android.components.android.adapters.ITEM_MINI_PAGE
 import java.time.LocalDate
 
 @Entity(tableName = "diarytable",

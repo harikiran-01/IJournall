@@ -4,15 +4,10 @@ import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.hk.ijournal.repository.AccessRepository
-import com.hk.ijournal.repository.data.source.local.entities.User
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
+import com.bliss.auth.repo.User
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
-@HiltViewModel
-class RelayViewModel @Inject constructor(private val accessRepository: AccessRepository) : ViewModel() {
+class RelayViewModel : ViewModel() {
 
     enum class RequestCode {
         IMAGEADDED
@@ -38,12 +33,12 @@ class RelayViewModel @Inject constructor(private val accessRepository: AccessRep
     }
 
     fun getUser(uid: Long) = runBlocking {
-        val userJob = async { accessRepository.getUser(uid) }
-        val userResult = userJob.await()
-        if (userResult.isSuccess)
-            return@runBlocking userResult.getOrNull()
-        else
-            return@runBlocking null
+//        val userJob = async { accessRepository.getUser(uid) }
+//        val userResult = userJob.await()
+//        if (userResult.isSuccess)
+//            return@runBlocking userResult.getOrNull()
+//        else
+//            return@runBlocking null
     }
 
     fun resetImagesPickedLiveData() {

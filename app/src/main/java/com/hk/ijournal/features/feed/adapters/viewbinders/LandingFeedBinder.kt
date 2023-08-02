@@ -2,12 +2,12 @@ package com.hk.ijournal.features.feed.adapters.viewbinders
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import bliss.platform.android.components.android.ITEM_MINI_PAGE
-import bliss.platform.android.components.android.ViewDataBinder
 import com.hk.ijournal.databinding.FeedMiniPageItemBinding
 import com.hk.ijournal.features.dayentry.models.Page
 import com.hk.ijournal.features.dayentry.models.content.CONTENT_TEXT
 import com.hk.ijournal.features.dayentry.models.content.TextContent
+import omni.platform.android.components.android.adapters.ITEM_MINI_PAGE
+import omni.platform.android.components.android.adapters.ViewDataBinder
 
 class LandingFeedBinder (private val onPageSelectedListener : (Long) -> Unit) : ViewDataBinder<FeedMiniPageItemBinding, Page>() {
     override val viewType: Int

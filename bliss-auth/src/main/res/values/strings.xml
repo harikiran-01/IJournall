@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--login and register strings-->
+    <string name="username_label">Username</string>
+    <string name="passcode_label">Passcode</string>
+    <string name="loginbtn_txt">LOGIN</string>
+    <string name="registerbtn_txt">REGISTER</string>
+    <string name="dateformat">DD-MM-YYYY</string>
+    <string name="dob_label">DOB</string>
+    <string name="login_tab_text">LOGIN</string>
+    <string name="register_tab_text">REGISTER</string>
+
+    <string name="calendar_description">Calendar</string>
+    <string name="logo_description">LOGO</string>
+    <string name="field">loginu</string>
+</resources>

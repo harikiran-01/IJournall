@@ -4,14 +4,14 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import bliss.platform.android.components.android.ITEM_DAY_IMAGE
-import bliss.platform.android.components.android.ViewDataBinder
-import bliss.platform.android.extensions.toPx
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.hk.ijournal.databinding.ImageWithTitlePreviewBinding
 import com.hk.ijournal.features.dayentry.models.content.MediaContent
+import omni.platform.android.components.android.adapters.ITEM_DAY_IMAGE
+import omni.platform.android.components.android.adapters.ViewDataBinder
+import omni.platform.android.extensions.toPx
 import javax.inject.Inject
 
 class MediaContentPreviewBinder @Inject constructor() :

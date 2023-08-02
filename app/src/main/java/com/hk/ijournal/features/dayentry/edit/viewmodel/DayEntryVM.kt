@@ -3,17 +3,16 @@ package com.hk.ijournal.features.dayentry.edit.viewmodel
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
-import bliss.platform.android.components.android.BaseAdapterViewType
-import bliss.platform.android.components.android.ITEM_DAY_IMAGE
-import bliss.platform.android.components.android.ITEM_DAY_TEXT
 import com.hk.ijournal.common.Constants
 import com.hk.ijournal.domain.PageUseCase
 import com.hk.ijournal.features.dayentry.models.Page
 import com.hk.ijournal.features.dayentry.models.content.*
-import com.hk.ijournal.repository.data.source.local.entities.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import omni.platform.android.components.android.adapters.BaseAdapterViewType
+import omni.platform.android.components.android.adapters.ITEM_DAY_IMAGE
+import omni.platform.android.components.android.adapters.ITEM_DAY_TEXT
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -47,7 +46,7 @@ class DayEntryVM @Inject constructor(
         get() = _selectedDateLive
 
     init {
-        userId = savedStateHandle.get<User>(Constants.DIARY_USER)?.uid ?: 0
+//        userId = savedStateHandle.get<User>(Constants.DIARY_USER)?.uid ?: 0
         _pageIdLive.value = savedStateHandle.get<Long>(Constants.PAGE_ID)
     }
 
@@ -66,11 +65,13 @@ class DayEntryVM @Inject constructor(
     }
 
     fun savePage(pageTitle: String, contentList: List<BaseAdapterViewType>) {
-        val contentListWithType = contentList.map { when(it.viewType){
-            ITEM_DAY_TEXT -> BaseEntity<ContentData>(CONTENT_TEXT, it as TextContent)
-            ITEM_DAY_IMAGE -> BaseEntity<ContentData>(CONTENT_IMAGE, it as MediaContent)
-            else -> BaseEntity<ContentData>(CONTENT_TEXT, it as TextContent)
-        } }
+        val contentListWithType = contentList.map {
+            when (it.viewType) {
+                ITEM_DAY_TEXT -> BaseEntity<ContentData>(CONTENT_TEXT, it as TextContent)
+                ITEM_DAY_IMAGE -> BaseEntity<ContentData>(CONTENT_IMAGE, it as MediaContent)
+                else -> BaseEntity<ContentData>(CONTENT_TEXT, it as TextContent)
+            }
+        }
         viewModelScope.launch {
             _currentPage.value?.apply {
                 title = pageTitle
